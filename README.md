@@ -10,8 +10,7 @@
   * `python main.py`
 
 ## Usage
-#### ONLY SUPPORT THESE SETTINGS
-
+#### ONLY SUPPORT THESE SETTINGS:
 - LD Player Emulator with tablet resolution (960x540, 1280x720, 1600x900, 1920x1080)
 - Game language ENGLISH (99%) or VIETNAMESE (99%)
 
@@ -19,7 +18,7 @@
 - Open config.py with a text editor
 - Change the value behind lov or wb to True
 
-#### To run the script
+#### To run the script:
 - Open the emulator and login to your account
 - Claim all rewards and end all dispatch
 - Set up all team can clear all stockage dungeons. (If you want to auto world boss or league of victory, please also set up all team and make sure the auto mode is on)
