@@ -213,7 +213,6 @@ class Missions:
 
 
     def do_mission(self, mission, device, pos, data, res, lang):
-        mission = '*grumble... gruuuuumble...*'
         with open('./languages.json', encoding='utf-8') as j:
             lang_data = json.load(j)[lang]
         lst = []
@@ -274,7 +273,7 @@ class Missions:
                 return 'not'
             if self.lil_ == True:
                 return 'not'
-            return self.lil(device, '0 0', data, res)
+            return self.lil(device, pos, data, res)
         elif re == 'dungeons':
             return 'not'
         elif re == 'stamina':
