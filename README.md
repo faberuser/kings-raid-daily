@@ -25,7 +25,7 @@
 - Set up all team can clear all stockage dungeons. (If you want to auto world boss or league of victory, please also set up all team and make sure the auto mode is on)
 - Make sure the mission button on the top left is visible
 - Run the shortcut kings-raid-daily
-*Note: If the script can't find your emulator, try to restart your emulator and try again*
+###### *Note: If the script can't find your emulator, try to restart your emulator and try again*
 
 #### Note:
 - Please don't touch anything or start a new emulator while the script is running
