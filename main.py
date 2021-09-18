@@ -221,7 +221,7 @@ class Missions:
         ext = extractOne(mission, lst)
         re = lang_data[ext[0]]
         with open('./config.json') as m:
-            config = m.load(m)
+            config = json.load(m)
         if re == 'dragon':
             if config['dragon'] == False:
                 return 'not'
