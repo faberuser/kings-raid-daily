@@ -2,7 +2,7 @@ from threading import Thread
 from random import choice
 from time import sleep as slp
 from os import mkdir, getcwd, system, path
-import config, logging, json
+import logging, json
 
 from ppadb.client import Client
 from PIL import Image
@@ -220,56 +220,58 @@ class Missions:
             lst.append(name)
         ext = extractOne(mission, lst)
         re = lang_data[ext[0]]
+        with open('./config.json') as m:
+            config = m.load(m)
         if re == 'dragon':
-            if config.dragon == False:
+            if config['dragon'] == False:
                 return 'not'
             if self.dragon_ == True:
                 return 'not'
             return self.dragon(device, pos, data, lang)
         elif re == 'friendship':
-            if config.friendship == False:
+            if config['friendship'] == False:
                 return 'not'
             if self.friendship_ == True:
                 return 'not'
             return self.friendship(device, pos, data)
         elif re == 'inn':
-            if config.inn == False:
+            if config['inn'] == False:
                 return 'not'
             if self.inn_ == True:
                 return 'not'
             return self.inn(device, pos, data)
         elif re == 'lov':
-            if config.lov == False:
+            if config['lov'] == False:
                 return 'not'
             if self.lov_ == True:
                 return 'not'
             return self.lov(device, pos, data)
         elif re == 'shop':
-            if config.shop == False:
+            if config['shop'] == False:
                 return 'not'
             if self.shop_ == True:
                 return 'not'
             return self.shop(device, pos, data)
         elif re == 'stockage':
-            if config.stockage == False:
+            if config['stockage'] == False:
                 return 'not'
             if self.stockage_ == True:
                 return 'not'
             return self.stockage(device, pos, data)
         elif re == 'tower':
-            if config.tower == False:
+            if config['tower'] == False:
                 return 'not'
             if self.tower_ == True:
                 return 'not'
             return self.tower(device, pos, data, lang)
         elif re == 'wb':
-            if config.wb == False:
+            if config['wb'] == False:
                 return 'not'
             if self.wb_ == True:
                 return 'not'
             return self.wb(device, pos, data)
         elif re == 'lil':
-            if config.lil == False:
+            if config['lil'] == False:
                 return 'not'
             if self.lil_ == True:
                 return 'not'

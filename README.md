@@ -15,7 +15,7 @@
 - Game language ENGLISH (99%) or VIETNAMESE (99%)
 
 #### If you want to let the script suicide in lov and wb (turned off by default):
-- Open config.py with a text editor
+- Open config.json with a text editor
 - Change the value behind lov or wb to True
 
 #### To run the script:
