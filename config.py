@@ -3,9 +3,9 @@
 dragon = True
 friendship = True
 inn = True
-lov = False # scoring content
+lov = True # scoring content
 shop = True
 stockage = True
 tower = True
-wb = False # scoring content
+wb = True # scoring content
 lil = True # not working as expected, the recorded script sometimes or somehow scuffed whatever recorded again

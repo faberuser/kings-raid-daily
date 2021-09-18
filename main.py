@@ -395,7 +395,7 @@ class Missions:
         logger.info(device.serial+': loaded from mission shortcut')
 
         # open inn
-        make_sure_loaded('./base/inn/inn.png', device, data['inn']['2']['dms'], data['inn']['2']['shell'])
+        make_sure_loaded('./base/inn/inn.png', device, data['inn']['2']['dms'], data['inn']['2']['shell'], second_img='./base/inn/inn_.png', cutoff=15)
         logger.info(device.serial+': opened inn')
 
         # give gifts
@@ -758,7 +758,7 @@ class Missions:
         logger.info(device.serial+': loaded from mission shortcut')
 
         # click get ready for battle
-        make_sure_loaded('./base/wb/party.png', device, data['wb']['2']['dms'], data['wb']['2']['shell'], sleep_duration=2, cutoff=10)
+        make_sure_loaded('./base/wb/party.png', device, data['wb']['2']['dms'], data['wb']['2']['shell'], sleep_duration=2, cutoff=20)
         logger.info(device.serial+': loaded from get ready for battle')
 
         # check avalible team
@@ -775,7 +775,7 @@ class Missions:
         logger.info(device.serial+': clicked start battle')
 
         # wait until finish
-        make_sure_loaded('./base/wb/end.png', device, data['wb']['6']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/wb/end.png', device, data['wb']['6']['dms'], sleep_duration=15, cutoff=20)
         logger.info(device.serial+': battle completed')
 
         # click exit battle
@@ -849,6 +849,9 @@ if __name__ == "__main__":
             print('no device was found, retrying...')
             devices, working_dir, adb = load_devices()
         else:
+            slp(10)
+            system(working_dir+'\\adb devices')
+            devices = adb.devices()
             print('device(s) detected')
             print('----------------------------------------------------------------\n')
             if path.exists('./cache') == False:
