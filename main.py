@@ -849,7 +849,7 @@ if __name__ == "__main__":
             print('no device was found, retrying...')
             devices, working_dir, adb = load_devices()
         else:
-            slp(10)
+            slp(10) 
             system(working_dir+'\\adb devices')
             devices = adb.devices()
             print('device(s) detected')
