@@ -11,7 +11,7 @@
 
 ## Usage
 #### ONLY SUPPORT THESE SETTINGS:
-- LD Player Emulator with tablet resolution (960x540, 1280x720, 1600x900, 1920x1080)
+- Multiple LD Player Emulator with tablet resolution (960x540, 1280x720, 1600x900, 1920x1080)
 - Game language ENGLISH (99%) or VIETNAMESE (99%)
 
 #### If you want to let the script suicide in lov and wb (turned off by default):
