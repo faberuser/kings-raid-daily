@@ -1,0 +1,11 @@
+{
+    "dragon": true,
+    "friendship": true,
+    "inn": true,
+    "lov": false,
+    "shop": true,
+    "stockage": true,
+    "tower": true,
+    "wb": false,
+    "lil": true
+}
