@@ -150,9 +150,11 @@ class Missions:
         # get game language
         im = update_cache(device)
         first_misison = crop(im, data['first mission'])
-        text_lang = image_to_string(first_misison).splitlines()[0].lower()
+        image = filter(first_misison)
+        text_lang = image_to_string(image).splitlines()[0].lower()
         lang = detect(text_lang)
-        if lang == 'en' or lang == 'da':
+        print(lang)
+        if lang == 'en' or lang == 'da' or lang == 'fr':
             lang = 'eng'
         elif lang == 'ja':
             lang = 'jpn'
@@ -163,16 +165,17 @@ class Missions:
                 langs = json.load(j)
             lang = None
             for lang__ in langs:
-                text_lang = image_to_string(first_misison, lang__).splitlines()[0].lower()
+                text_lang = image_to_string(image, lang__).splitlines()[0].lower()
                 lang_ = detect(text_lang)
-                if lang_ == 'en' or lang_ == 'da':
+                if lang_ == 'en' or lang_ == 'da' or lang == 'fr':
                     lang = 'eng'
                 elif lang_ == 'ja':
                     lang = 'jpn'
                 elif lang_ == 'vi':
                     lang = 'vie'
+            print(lang)
             if lang is None:
-                print('language not supported, script eneded')
+                print(device.serial+': language not supported, script eneded')
                 return
 
         # check for undone missions
@@ -308,10 +311,6 @@ class Missions:
             img = filter(pil_image)
             text = image_to_string(img, lang)
             text_ = text.splitlines()[0].lower().replace(' ', '')
-            # if text_.startswith('1'):
-            #     text_ = 't'+text_[1:]
-            # if '†' in text_:
-            #     text_ = text_.replace('†', '')
             if SequenceMatcher(None, self.dragon_text, text_).ratio() > 0.9:
                 device.shell(data['dragon']['3']['shell'])
                 break
@@ -324,7 +323,7 @@ class Missions:
         logger.info(device.serial+': clicked single raid')
 
         # click enter raid
-        make_sure_loaded('./base/dragon/party.png', device, data['dragon']['6']['dms'], data['dragon']['6']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/dragon/party.png', device, data['dragon']['6']['dms'], data['dragon']['6']['shell'], sleep_duration=0.5, cutoff=15)
         logger.info(device.serial+': clicked enter raid')
 
         # check avalible party
