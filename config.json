@@ -6,6 +6,6 @@
     "shop": true,
     "stockage": true,
     "tower": true,
-    "wb": true,
+    "wb": false,
     "lil": true
 }
