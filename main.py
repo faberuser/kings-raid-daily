@@ -292,7 +292,7 @@ class Missions:
         logger.info(device.serial+': hunting dragon')
 
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/dragon/raid_list.png', device, data['dragon']['1']['dms'], data['dragon']['1']['shell']+position, cutoff=20, loop=30)
+        shortcut = make_sure_loaded('./base/dragon/raid_list.png', device, data['dragon']['1']['dms'], data['dragon']['1']['shell']+position, cutoff=20, loop=30, sleep_duration=5)
         if shortcut == 'loop':
             self.dragon_ = True
             return 'not'
@@ -366,7 +366,7 @@ class Missions:
         logger.info(device.serial+': exchanging friendship points')
 
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/friendship/friends.png', device, data['friendship']['1']['dms'], data['friendship']['1']['shell']+position, loop=30, cutoff=20)
+        shortcut = make_sure_loaded('./base/friendship/friends.png', device, data['friendship']['1']['dms'], data['friendship']['1']['shell']+position, loop=30, cutoff=20, sleep_duration=5)
         if shortcut == 'loop':
             self.friendship_ = True
             return 'not'
@@ -389,7 +389,7 @@ class Missions:
         logger.info(device.serial+': doing stuffs in inn')
 
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/inn/visit_inn.png', device, data['inn']['1']['dms'], data['inn']['1']['shell']+position, cutoff=20, loop=30)
+        shortcut = make_sure_loaded('./base/inn/visit_inn.png', device, data['inn']['1']['dms'], data['inn']['1']['shell']+position, cutoff=20, loop=30, sleep_duration=5)
         if shortcut == 'loop':
             self.inn_ = True
             return 'not'
@@ -411,7 +411,8 @@ class Missions:
         
         # choose hero in inn
         def choose_hero(tap1, tap2):
-            make_sure_loaded('./base/inn/inn.png', device, data['inn']['6']['dms'], data['inn']['6']['shell']+str(tap1)+' '+str(tap2), shell_first=True, second_img='./base/inn/inn_.png', cutoff=15)
+            make_sure_loaded('./base/inn/inn.png', device, data['inn']['6']['dms'], data['inn']['6']['shell']+str(tap1)+' '+str(tap2),
+                shell_first=True, second_img='./base/inn/inn_.png', cutoff=15, second_shell=data['inn']['2']['shell'])
 
         # give gifts to first hero
         gift()
@@ -465,7 +466,7 @@ class Missions:
         logger.info(device.serial+': suiciding in lov')
         
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/lov/arena.png', device, data['lov']['1']['dms'], data['lov']['1']['shell']+position, loop=30, cutoff=20)
+        shortcut = make_sure_loaded('./base/lov/arena.png', device, data['lov']['1']['dms'], data['lov']['1']['shell']+position, loop=30, cutoff=20, sleep_duration=5)
         if shortcut == 'loop':
             self.lov_ = True
             return 'not'
@@ -514,7 +515,7 @@ class Missions:
         logger.info(device.serial+': buying stuffs in shop')
 
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/shop/use_shop.png', device, data['shop']['1']['dms'], data['shop']['1']['shell']+position, loop=30, cutoff=20)
+        shortcut = make_sure_loaded('./base/shop/use_shop.png', device, data['shop']['1']['dms'], data['shop']['1']['shell']+position, loop=30, cutoff=20, sleep_duration=5)
         if shortcut == 'loop':
             self.shop_ = True
             return 'not'
@@ -549,7 +550,7 @@ class Missions:
         logger.info(device.serial+': farming stuffs in stockage')
 
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/stockage/enter_dungeons.png', device, data['stockage']['1']['dms'], data['stockage']['1']['shell']+position, loop=30, cutoff=20)
+        shortcut = make_sure_loaded('./base/stockage/enter_dungeons.png', device, data['stockage']['1']['dms'], data['stockage']['1']['shell']+position, loop=30, cutoff=20, sleep_duration=5)
         if shortcut == 'loop':
             self.stockage_ = True
             return 'not'
@@ -686,7 +687,7 @@ class Missions:
         logger.info(device.serial+': battling in tower')
 
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/tower/tower.png', device, data['tower']['1']['dms'], data['tower']['1']['shell']+position, loop=30, cutoff=20)
+        shortcut = make_sure_loaded('./base/tower/tower.png', device, data['tower']['1']['dms'], data['tower']['1']['shell']+position, loop=30, cutoff=20, sleep_duration=5)
         if shortcut == 'loop':
             self.tower_ = True
             return 'not'
@@ -752,7 +753,7 @@ class Missions:
         logger.info(device.serial+': battling world boss')
 
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/wb/wb.png', device, data['wb']['1']['dms'], data['wb']['1']['shell']+position, loop=30, cutoff=20)
+        shortcut = make_sure_loaded('./base/wb/wb.png', device, data['wb']['1']['dms'], data['wb']['1']['shell']+position, loop=30, cutoff=20, sleep_duration=5)
         if shortcut == 'loop':
             self.wb_ = True
             return 'not'
@@ -796,7 +797,7 @@ class Missions:
         logger.info(device.serial+': feeding lil raider')
 
         # click mission shortcut
-        shortcut = make_sure_loaded('./base/lil/lil.png', device, data['lil']['1']['dms'], data['lil']['1']['shell']+position, cutoff=20, loop=30)
+        shortcut = make_sure_loaded('./base/lil/lil.png', device, data['lil']['1']['dms'], data['lil']['1']['shell']+position, cutoff=20, loop=30, sleep_duration=5)
         if shortcut == 'loop':
             self.lil_ = True
             return 'not'
