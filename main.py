@@ -5,6 +5,10 @@ from datetime import datetime
 from os import mkdir, getcwd, system, path
 import logging, json
 
+from sys import stdout, stdin
+from msvcrt import kbhit, getwche
+from time import monotonic
+
 from ppadb.client import Client
 from PIL import Image
 from numpy import array
@@ -16,7 +20,8 @@ from fuzzywuzzy.process import extractOne
 from difflib import SequenceMatcher
 from cv2 import bilateralFilter
 
-logger = None
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 pytesseract.tesseract_cmd = ('./tesseract/tesseract.exe')
 
 def update_cache(device):
@@ -848,6 +853,37 @@ class Missions:
         return 'success'
 
 
+class TimeoutOccurred(Exception):
+    pass
+
+def echo(string):
+    stdout.write(string)
+    stdout.flush()
+
+def inputimeout(prompt='', timeout=30.0):
+    echo(prompt)
+    begin = monotonic()
+    end = begin + timeout
+    line = ''
+    while monotonic() < end:
+        if kbhit():
+            c = getwche()
+            if c in ('\r', '\n'):
+                echo('\r' + '\n')
+                return line
+            if c == '\003':
+                raise KeyboardInterrupt
+            if c == '\b':
+                line = line[:-1]
+                cover = ' ' * len(prompt + line + ' ')
+                echo(''.join(['\r', cover, '\r', prompt, line]))
+            else:
+                line += c
+        slp(0.05)
+    echo('\r' + '\n')
+    raise TimeoutOccurred
+
+
 def load_devices():
     working_dir = getcwd()
     system(working_dir+'\\adb kill-server')
@@ -884,8 +920,6 @@ def run():
             print('----------------------------------------------------------------\n')
             if path.exists('./cache') == False:
                 mkdir('./cache')
-            logger = logging.getLogger()
-            logger.setLevel(logging.INFO)
             handler = logging.FileHandler("./cache/log.log", "a", "utf-8")
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             handler.setFormatter(formatter)
@@ -896,19 +930,27 @@ def run():
                 thread.start()
             break
         slp(5)
+        count+=9
+
 
 if __name__ == "__main__":
     print('please ignore this warning ↑')
-    auto_daily = input('do you want this script to auto run when new day (at 00:05) ? (Y/N) > ')
-    if auto_daily.lower().startswith('y'):
-        print("ok, this scripts will run in background to check for new day (at 00:05) (please don't close this window)")
-        while True:
-            now = datetime.now().strftime("%H:%M")
-            if str(now) != '00:05':
-                slp(60)
-                continue
+    try:
+        auto_daily = inputimeout('do you want this script to auto run when new day (at 00:05) ? (Y/N) > ', timeout=10)
+        if auto_daily.lower().startswith('y'):
+            print("ok, this scripts will run in background to check for new day (at 00:05) (please don't close this window)")
+            while True:
+                now = datetime.now().strftime("%H:%M")
+                print('checking at '+str(now))
+                if str(now) != '00:05':
+                    slp(60)
+                    continue
+                run()
+        elif auto_daily.lower().startswith('n'):
+            print('ok, running script for once')
             run()
-    elif auto_daily.lower().startswith('n'):
+        else:
+            input('invalid answer, press any key to exit...')
+    except TimeoutOccurred:
+        print('timeout, running script for once')
         run()
-    else:
-        input('invalid answer, press any key to exit...')
