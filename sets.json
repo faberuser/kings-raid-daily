@@ -6,14 +6,74 @@
             "2": "902 310",
             "3": "902 393"
         },
-        "claim": ["input tap 744 498", "input tap 877 500"],
-        "first mission": [547, 114, 197, 404],
-        "second mission": [547, 197, 197, 320],
-        "third mission": [547, 279, 197, 237],
-        "fourth mission": [547, 362, 197, 153],
+        "claim": [
+            "input tap 744 498",
+            "input tap 877 500"
+        ],
+        "first mission": [
+            547,
+            114,
+            197,
+            404
+        ],
+        "second mission": [
+            547,
+            197,
+            197,
+            320
+        ],
+        "third mission": [
+            547,
+            279,
+            197,
+            237
+        ],
+        "fourth mission": [
+            547,
+            362,
+            197,
+            153
+        ],
         "daily": {
-            "dms": [0, 90, 0, 0],
-            "shell": "input tap 22 120"
+            "dms": [
+                0,
+                90,
+                0,
+                0
+            ],
+            "shell": "input tap 22 120",
+            "second_shell": "input tap 185 403"
+        },
+        "buff": {
+            "1": {
+                "dms": [
+                    498,
+                    49,
+                    10,
+                    10
+                ],
+                "shell": "input tap 80 494"
+            },
+            "2": {
+                "dms": [
+                    228,
+                    105,
+                    230,
+                    105
+                ],
+                "shell": "input tap 900 108",
+                "second_shell": "input tap 498 389"
+            },
+            "3": {
+                "dms": [
+                    228,
+                    105,
+                    230,
+                    105
+                ],
+                "shell": "input tap 900 188",
+                "second_shell": "input tap 498 389"
+            }
         },
         "dragon": {
             "1": {

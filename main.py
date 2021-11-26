@@ -1,6 +1,7 @@
 from threading import Thread
 from random import choice
 from time import sleep as slp
+from datetime import datetime
 from os import mkdir, getcwd, system, path
 import logging, json
 
@@ -129,7 +130,7 @@ class Missions:
         im = update_cache(device)
         size_ = f"{im.size[0]}x{im.size[1]}"
         logger.info(device.serial+': size '+size_+' detected')
-        with open('./sets.json') as j:
+        with open('./sets.json', encoding='utf-8') as j:
             data = json.load(j)[size_]
 
         def claim():
@@ -144,8 +145,25 @@ class Missions:
 
         # open daily mission board
         make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'])
+
+        with open('./config.json') as m:
+            config = json.load(m)
+        if config['buff'] == True:
+            # claim exp and gold buff in etc
+            make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['1']['shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
+            # claim exp buff
+            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['2']['dms'], data['buff']['2']['shell'], cutoff=20, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['2']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
+            # claim gold buff 
+            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], cutoff=20, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['3']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
+
+            # click back to mission board
+            # open daily mission board
+            make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['second_shell'], shell_first=True)
+
         claim()
-        logger.info(device.serial+': opened and claimed rewards on daily mission board for the first time')
+        logger.info(device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board for the first time')
 
         # get game language
         im = update_cache(device)
@@ -160,20 +178,21 @@ class Missions:
         elif lang == 'vi':
             lang = 'vie'
         else:
+
             with open('./languages.json', encoding='utf-8') as j:
                 langs = json.load(j)
             lang = None
+            langs_ = []
+            _langs_ = {}
             for lang__ in langs:
-                text_lang = image_to_string(image, lang__).splitlines()[0].lower()
-                lang_ = detect(text_lang)
-                if lang_ == 'en' or lang_ == 'da' or lang == 'fr':
-                    lang = 'eng'
-                elif lang_ == 'ja':
-                    lang = 'jpn'
-                elif lang_ == 'vi':
-                    lang = 'vie'
-                else:
-                    lang = 'eng'
+                for _lang_ in langs[lang__]:
+                    langs_.append(_lang_)
+                    _langs_[_lang_] = lang__
+            text_lang = image_to_string(image, lang__).splitlines()[0].lower()
+            lang_ = extractOne(text_lang, langs_)
+            if lang_[1] > 80:
+                lang = _langs_[lang_[0]]
+
             if lang is None:
                 print(device.serial+': language not supported, script eneded')
                 return
@@ -843,9 +862,7 @@ def load_devices():
     return devices, working_dir, adb
 
 
-
-if __name__ == "__main__":
-    print('please ignore this warning ↑')
+def run():
     devices, working_dir, adb = load_devices()
     count=0
     while True:
@@ -874,15 +891,24 @@ if __name__ == "__main__":
             handler.setFormatter(formatter)
             logger.addHandler(handler)
             for device in devices:
-                # test
-                # im = update_cache(device)
-                # size_ = f"{im.size[0]}x{im.size[1]}"
-                # with open('./sets.json') as j:
-                #     data = json.load(j)[size_]
-                # thread = Thread(target=dragon, args=(device,'0 0',data,'eng'))
-
                 thread = Thread(target=Missions().execute, args=(device,))
                 print('executing on device '+device.serial)
                 thread.start()
             break
         slp(5)
+
+if __name__ == "__main__":
+    print('please ignore this warning ↑')
+    auto_daily = input('do you want this script to auto run when new day (at 00:05) ? (Y/N) > ')
+    if auto_daily.lower().startswith('y'):
+        print("ok, this scripts will run in background to check for new day (at 00:05) (please don't close this window)")
+        while True:
+            now = datetime.now().strftime("%H:%M")
+            if str(now) != '00:05':
+                slp(60)
+                continue
+            run()
+    elif auto_daily.lower().startswith('n'):
+        run()
+    else:
+        input('invalid answer, press any key to exit...')

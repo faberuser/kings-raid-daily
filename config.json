@@ -1,11 +1,14 @@
 {
+    "wb": true,
+    "lov": true,
+
     "dragon": true,
     "friendship": true,
     "inn": true,
-    "lov": false,
     "shop": true,
     "stockage": true,
     "tower": true,
-    "wb": true,
-    "lil": true
+    "lil": true,
+
+    "buff": true
 }
