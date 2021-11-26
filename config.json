@@ -8,7 +8,7 @@
     "shop": true,
     "stockage": true,
     "tower": true,
-    "lil": true,
+    "lil": false,
 
     "buff": true
 }
