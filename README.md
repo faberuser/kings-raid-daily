@@ -11,12 +11,13 @@
 
 ## Usage
 #### ONLY SUPPORT THESE SETTINGS:
-- Multiple LD Player Emulator with tablet resolution (960x540, 1280x720, 1600x900, 1920x1080)
-- Game language ENGLISH (99%) or VIETNAMESE (99%)
+- Multiple LD Player Emulator with tablet resolution (960x540-(best), 1280x720, 1600x900, 1920x1080)
+- Game language ENGLISH, VIETNAMESE or JAPANESE
 
 #### If you want to let the script suicide in lov and wb (turned off by default):
 - Open config.json with a text editor
 - Change the value behind lov or wb to True
+*Same as using exp and gold buff*
 
 #### To run the script:
 - Open emulator Settings and head to Other settings on the left menu, change @adb_debug to Open connection
