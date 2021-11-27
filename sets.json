@@ -217,7 +217,7 @@
             },
             "17": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         },
         "friendship": {
@@ -250,7 +250,7 @@
             },
             "4": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         },
         "inn": {
@@ -385,7 +385,7 @@
             },
             "17": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         },
         "lov": {
@@ -464,7 +464,7 @@
             },
             "9": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         },
         "shop": {
@@ -544,7 +544,7 @@
             },
             "6": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         },
         "stockage": {
@@ -956,7 +956,7 @@
             },
             "37": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         },
         "tower": {
@@ -1078,7 +1078,7 @@
             },
             "15": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         },
         "wb": {
@@ -1157,7 +1157,7 @@
             },
             "9": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         },
         "lil": {
@@ -1212,7 +1212,7 @@
             },
             "7": {
                 "dms": null,
-                "shell": "input tap 291 41"
+                "shell": "input tap 325 30"
             }
         }
     },
@@ -1434,7 +1434,7 @@
             },
             "17": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         },
         "friendship": {
@@ -1467,7 +1467,7 @@
             },
             "4": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         },
         "inn": {
@@ -1602,7 +1602,7 @@
             },
             "17": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         },
         "lov": {
@@ -1681,7 +1681,7 @@
             },
             "9": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         },
         "shop": {
@@ -1761,7 +1761,7 @@
             },
             "6": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         },
         "stockage": {
@@ -2173,7 +2173,7 @@
             },
             "37": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         },
         "tower": {
@@ -2295,7 +2295,7 @@
             },
             "15": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         },
         "wb": {
@@ -2374,7 +2374,7 @@
             },
             "9": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         },
         "lil": {
@@ -2429,7 +2429,7 @@
             },
             "7": {
                 "dms": null,
-                "shell": "input tap 388.0 54.666666666666664"
+                "shell": "input tap 433.3333333333333 40"
             }
         }
     },
@@ -2651,7 +2651,7 @@
             },
             "17": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         },
         "friendship": {
@@ -2684,7 +2684,7 @@
             },
             "4": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         },
         "inn": {
@@ -2819,7 +2819,7 @@
             },
             "17": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         },
         "lov": {
@@ -2898,7 +2898,7 @@
             },
             "9": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         },
         "shop": {
@@ -2978,7 +2978,7 @@
             },
             "6": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         },
         "stockage": {
@@ -3390,7 +3390,7 @@
             },
             "37": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         },
         "tower": {
@@ -3512,7 +3512,7 @@
             },
             "15": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         },
         "wb": {
@@ -3591,7 +3591,7 @@
             },
             "9": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         },
         "lil": {
@@ -3646,7 +3646,7 @@
             },
             "7": {
                 "dms": null,
-                "shell": "input tap 485.0 68.33333333333334"
+                "shell": "input tap 541.6666666666667 50"
             }
         }
     },
@@ -3868,7 +3868,7 @@
             },
             "17": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         },
         "friendship": {
@@ -3901,7 +3901,7 @@
             },
             "4": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         },
         "inn": {
@@ -4036,7 +4036,7 @@
             },
             "17": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         },
         "lov": {
@@ -4115,7 +4115,7 @@
             },
             "9": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         },
         "shop": {
@@ -4195,7 +4195,7 @@
             },
             "6": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         },
         "stockage": {
@@ -4643,7 +4643,7 @@
             },
             "37": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         },
         "tower": {
@@ -4765,7 +4765,7 @@
             },
             "15": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         },
         "wb": {
@@ -4844,7 +4844,7 @@
             },
             "9": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         },
         "lil": {
@@ -4899,7 +4899,7 @@
             },
             "7": {
                 "dms": null,
-                "shell": "input tap 582 82"
+                "shell": "input tap 650 60"
             }
         }
     }
