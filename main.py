@@ -24,6 +24,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 pytesseract.tesseract_cmd = ('./tesseract/tesseract.exe')
 
+
 def update_cache(device):
     try:
         device.shell('screencap -p /sdcard/screencap.png')
@@ -36,10 +37,84 @@ def update_cache(device):
     return im
 
 
-def make_sure_loaded(original_img, device, dimensions=None, shell_=None, loop=None, sleep_duration=None, \
-        shell_first=False, cutoff=6, second_img=None, third_img=None, oposite=False, second_shell=None):
+def check_login_rewards(device, once=False):
+    # get device resolution
+    im = update_cache(device)
+    size_ = f"{im.size[0]}x{im.size[1]}"
+    with open('./sets.json', encoding='utf-8') as j:
+        data = json.load(j)[size_]
+
     count = 0
     while True:
+        im = update_cache(device)
+
+        # pass community page
+        im1 = Image.open('./base/login/community.png')
+        im2 = crop(im, data['login']['community']['dms'])
+        community = check_similar(im1, im2, 10)
+        if community == 'similar':
+            make_sure_loaded('./base/login/sale.png', device, data['login']['sale']['dms'], data['login']['community']['shell'])
+
+        # pass sale page
+        im1 = Image.open('./base/login/sale.png')
+        im2 = crop(im, data['login']['sale']['dms'])
+        sale = check_similar(im1, im2, 10)
+        if sale == 'similar':
+            make_sure_loaded('./base/login/attendance.png', device, data['login']['attendance']['dms'], data['login']['sale']['shell'])
+
+        # claim login attendance
+        im1 = Image.open('./base/login/attendance.png')
+        im2 = crop(im, data['login']['attendance']['dms'])
+        attendance = check_similar(im1, im2, 10)
+        if attendance == 'similar':
+            make_sure_loaded('./base/login/event.png', device, data['login']['event']['dms'], data['login']['attendance']['shell'], second_shell=data['login']['attendance']['second_shell'])
+            logger.info(device.serial+': claimed login attendance')
+
+        # pass event page
+        im1 = Image.open('./base/login/event.png')
+        im2 = crop(im, data['login']['event']['dms'])
+        event = check_similar(im1, im2, 10)
+        if event == 'similar':
+            make_sure_loaded('./base/login/guild_attendance.png', device, data['login']['guild_attendance']['dms'], data['login']['event']['shell'])
+
+        # claim guild attendance
+        im1 = Image.open('./base/login/guild_attendance.png')
+        im2 = crop(im, data['login']['guild_attendance']['dms'])
+        guild_attendance = check_similar(im1, im2, 10)
+        if guild_attendance == 'similar':
+            for day in data['login']['guild_attendance']['days']:
+                device.shell(day)
+            device.shell(data['login']['guild_attendance']['row_reward'])
+            make_sure_loaded('./base/login/mission_button.png', device, data['login']['mission_button'], data['login']['guild_attendance']['exit'])
+            logger.info(device.serial+': claimed guild attendance')
+
+        # claim login accumualated
+        im1 = Image.open('./base/login/accumualated.png')
+        im2 = crop(im, data['login']['accumualated']['dms'])
+        accumualated = check_similar(im1, im2, 10)
+        if accumualated == 'similar':
+            make_sure_loaded('./base/login/guild_attendance.png', device, data['login']['guild_attendance']['dms'], data['login']['accumualated']['shell'], second_shell=data['login']['accumualated']['second_shell'])
+            logger.info(device.serial+': claimed login accumualated')
+
+        # return to main page
+        im1 = Image.open('./base/login/mission_button.png')
+        im2 = crop(im, data['login']['mission_button'])
+        mb = check_similar(im1, im2, 20)
+        if mb == 'similar':
+            break
+
+        if once == True:
+            count+=1
+            if count == 7:
+                break
+
+
+def make_sure_loaded(original_img, device, dimensions=None, shell_=None, loop=None, sleep_duration=None, \
+        shell_first=False, cutoff=6, second_img=None, third_img=None, oposite=False, second_shell=None, clr=False):
+    count = 0
+    while True:
+        if clr == True:
+            check_login_rewards(device, True)
         # do adb shell first if passed
         if shell_ is not None:
             if shell_first is True:
@@ -91,7 +166,6 @@ def make_sure_loaded(original_img, device, dimensions=None, shell_=None, loop=No
             count+=1
         if sleep_duration is not None:
             slp(sleep_duration)
-
 
 def crop(img, dimesions):
     # size of the image in pixels (size of original image)
@@ -149,7 +223,7 @@ class Missions:
                 count+=1
 
         # open daily mission board
-        make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'])
+        make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], clr=True)
 
         with open('./config.json') as m:
             config = json.load(m)
@@ -157,10 +231,11 @@ class Missions:
             # claim exp and gold buff in etc
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['1']['shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
             # claim exp buff
-            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['2']['dms'], data['buff']['2']['shell'], cutoff=20, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['2']['dms'], data['buff']['2']['shell'], cutoff=10, sleep_duration=1, loop=5)
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['2']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
+            slp(5)
             # claim gold buff 
-            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], cutoff=20, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], cutoff=10, sleep_duration=1, loop=5)
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['3']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
 
             # click back to mission board
@@ -378,7 +453,7 @@ class Missions:
         logger.info(device.serial+': exited battle')
 
         # click exit
-        make_sure_loaded('./base/dragon/my_info.png', device, data['dragon']['16']['dms'], data['dragon']['16']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/dragon/my_info.png', device, data['dragon']['16']['dms'], data['dragon']['16']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['dragon']['17']['shell'])
         logger.info(device.serial+': successfully did dragon mission')
         self.dragon_ = True
@@ -401,7 +476,7 @@ class Missions:
         logger.info(device.serial+': clicked exchange friendship points')
 
         # click exit
-        make_sure_loaded('./base/friendship/my_info.png', device, data['friendship']['3']['dms'], data['friendship']['3']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/friendship/my_info.png', device, data['friendship']['3']['dms'], data['friendship']['3']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['friendship']['4']['shell'])
         logger.info(device.serial+': successfully did friendship mission')
         self.friendship_ = True
@@ -471,14 +546,14 @@ class Missions:
             slp(0.5)
             device.shell(data['inn']['13']['shell'])
             slp(0.5)
-            make_sure_loaded('./base/inn/inn.png', device, data['inn']['14']['dms'], data['inn']['14']['shell'], cutoff=15)
+            make_sure_loaded('./base/inn/inn.png', device, data['inn']['14']['dms'], data['inn']['14']['shell'], cutoff=20, second_img='./base/inn/inn_.png')
             slp(1)
             count+=1
         logger.info(device.serial+': played minigames')
 
         # click exit
         make_sure_loaded('./base/inn/visit_inn.png', device, data['inn']['15']['dms'], data['inn']['15']['shell'], cutoff=20, sleep_duration=3)
-        make_sure_loaded('./base/inn/my_info.png', device, data['inn']['16']['dms'], data['inn']['16']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/inn/my_info.png', device, data['inn']['16']['dms'], data['inn']['16']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['inn']['17']['shell'])
         logger.info(device.serial+': successfully did some stuffs in inn mission')
         self.inn_ = True
@@ -527,7 +602,7 @@ class Missions:
         logger.info(device.serial+': exited match')
 
         # click exit
-        make_sure_loaded('./base/lov/my_info.png', device, data['lov']['8']['dms'], data['lov']['8']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/lov/my_info.png', device, data['lov']['8']['dms'], data['lov']['8']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['lov']['9']['shell'])
         logger.info(device.serial+': successfully did lov mission')
         self.lov_ = True
@@ -562,7 +637,7 @@ class Missions:
         logger.info(device.serial+': bought stuff')
 
         # click exit
-        make_sure_loaded('./base/shop/my_info.png', device, data['shop']['5']['dms'], data['shop']['5']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/shop/my_info.png', device, data['shop']['5']['dms'], data['shop']['5']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['shop']['6']['shell'])
         logger.info(device.serial+': successfully bought stuffs in shop in inn mission')
         self.shop_ = True
@@ -609,9 +684,9 @@ class Missions:
         make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['9']['dms'], data['stockage']['9']['shell'], loop=15, sleep_duration=0.5, second_shell=data['stockage']['8-1']['shell']+str(r[0])+' '+str(r[1]))
         logger.info(device.serial+': clicked ok to enter battle')
         # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15, cutoff=8)
         slp(5)
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15, cutoff=8)
         logger.info(device.serial+': battle completed')
         # click exit
         make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['11']['dms'], data['stockage']['11']['shell'])
@@ -647,9 +722,9 @@ class Missions:
         make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['19']['dms'], data['stockage']['19']['shell'], loop=15, sleep_duration=0.5, second_shell=data['stockage']['18-1']['shell']+str(r[0])+' '+str(r[1]))
         logger.info(device.serial+': clicked ok to enter battle')
         # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15, cutoff=8)
         slp(5)
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15, cutoff=8)
         logger.info(device.serial+': battle completed')
         # click exit
         make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['21']['dms'], data['stockage']['21']['shell'])
@@ -672,9 +747,9 @@ class Missions:
         make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['26']['dms'], data['stockage']['26']['shell'], loop=10, sleep_duration=0.5)
         logger.info(device.serial+': clicked ok to enter battle')
         # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15, cutoff=8)
         slp(5)
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15, cutoff=8)
         logger.info(device.serial+': battle completed')
         # click exit
         make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['28']['dms'], data['stockage']['28']['shell'])
@@ -697,9 +772,9 @@ class Missions:
         make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['33']['dms'], data['stockage']['33']['shell'], loop=10, sleep_duration=0.5)
         logger.info(device.serial+': clicked ok to enter battle')
         # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15, cutoff=8)
         slp(5)
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15, cutoff=8)
         logger.info(device.serial+': battle completed')
         # click exit
         make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['35']['dms'], data['stockage']['35']['shell'])
@@ -707,7 +782,7 @@ class Missions:
 
 
         # click exit
-        make_sure_loaded('./base/stockage/my_info.png', device, data['stockage']['36']['dms'], data['stockage']['36']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/stockage/my_info.png', device, data['stockage']['36']['dms'], data['stockage']['36']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['stockage']['37']['shell'])
         logger.info(device.serial+': successfully did stockage mission')
         self.stockage_ = True
@@ -773,7 +848,7 @@ class Missions:
         logger.info(device.serial+': exited battle')
 
         # click exit
-        make_sure_loaded('./base/tower/my_info.png', device, data['tower']['14']['dms'], data['tower']['14']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/tower/my_info.png', device, data['tower']['14']['dms'], data['tower']['14']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['tower']['15']['shell'])
         logger.info(device.serial+': successfully did toc mission')
         self.tower_ = True
@@ -792,7 +867,14 @@ class Missions:
         logger.info(device.serial+': loaded from mission shortcut')
 
         # click get ready for battle
-        make_sure_loaded('./base/wb/party.png', device, data['wb']['2']['dms'], data['wb']['2']['shell'], sleep_duration=2, cutoff=20)
+        close = make_sure_loaded('./base/wb/party.png', device, data['wb']['2']['dms'], data['wb']['2']['shell'], sleep_duration=2, cutoff=20, loop=20)
+        # wb close
+        if close == 'loop':
+            self.wb_ = True
+            # click exit
+            make_sure_loaded('./base/wb/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5, clr=True)
+            device.shell(data['wb']['9']['shell'])
+            return 'success'
         logger.info(device.serial+': loaded from get ready for battle')
 
         # check avalible team
@@ -817,7 +899,7 @@ class Missions:
         logger.info(device.serial+': exited battle')
         
         # click exit
-        make_sure_loaded('./base/friendship/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5)
+        make_sure_loaded('./base/wb/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['wb']['9']['shell'])
         logger.info(device.serial+': successfully did world boss mission')
         self.wb_ = True
@@ -846,7 +928,7 @@ class Missions:
         logger.info(device.serial+': exit treats')
 
         # click exit
-        make_sure_loaded('./base/lil/my_info.png', device, data['lil']['6']['dms'], data['lil']['6']['shell'])
+        make_sure_loaded('./base/lil/my_info.png', device, data['lil']['6']['dms'], data['lil']['6']['shell'], sleep_duration=0.5, clr=True)
         device.shell(data['lil']['7']['shell'])
         logger.info(device.serial+': successfully did lil raider mission')
         self.lil_ = True
@@ -902,11 +984,17 @@ def run():
     devices, working_dir, adb = load_devices()
     count=0
     while True:
-        if count == 9:
+        if count == 49:
             print('no device was found after 10 retries, script ended')
             break
         if devices == []:
             print('no device was found, retrying...')
+            # print('no device was found, launching from config and retrying...')
+            # with open('./config.json') as j:
+            #     re = json.load(j)
+            # for device in re['devices']:
+            #     system(working_dir+'\\ldconsole launch --index '+str(device))
+            #     print('launched device with index '+str(device))
             system(working_dir+'\\adb devices')
             devices = adb.devices()
         elif str(devices[0].serial).startswith('127'):
@@ -938,7 +1026,7 @@ if __name__ == "__main__":
     try:
         auto_daily = inputimeout('do you want this script to auto run when new day (at 00:05) ? (Y/N) > ', timeout=10)
         if auto_daily.lower().startswith('y'):
-            print("ok, this scripts will run in background to check for new day (at 00:05) (please don't close this window)")
+            print("ok, this scripts will run in background to check and run the script for new day (at 00:05) (please don't close this window)")
             while True:
                 now = datetime.now().strftime("%H:%M")
                 print('checking at '+str(now))

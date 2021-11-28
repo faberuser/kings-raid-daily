@@ -1,5 +1,6 @@
 {
     "960x540": {
+        "tap_to_play": "input tap 480 400",
         "shortcut": {
             "0": "902 143",
             "1": "902 227",
@@ -10,6 +11,80 @@
             "input tap 744 498",
             "input tap 877 500"
         ],
+        "login": {
+            "mission_button": [
+                14,
+                87,
+                890,
+                383
+            ],
+            "community": {
+                "dms": [
+                    16,
+                    17,
+                    17,
+                    467
+                ],
+                "shell": "input tap 918 50"
+            },
+            "sale": {
+                "dms": [
+                    0,
+                    490,
+                    0,
+                    0
+                ],
+                "shell": "input tap 27 514"
+            },
+            "attendance": {
+                "dms": [
+                    0,
+                    486,
+                    0,
+                    0
+                ],
+                "shell": "input tap 480 505",
+                "second_shell": "input tap 480 505"
+            },
+            "event": {
+                "dms": [
+                    16,
+                    17,
+                    17,
+                    467
+                ],
+                "shell": "input tap 918 50"
+            },
+            "guild_attendance": {
+                "dms": [
+                    0,
+                    0,
+                    0,
+                    466
+                ],
+                "days": [
+                    "input tap 325 150",
+                    "input tap 415 150",
+                    "input tap 505 150",
+                    "input tap 595 150",
+                    "input tap 690 150",
+                    "input tap 780 150",
+                    "input tap 875 150"
+                ],
+                "row_reward": "input tap 150 230",
+                "exit": "input tap 906 40"
+            },
+            "accumualated": {
+                "dms": [
+                    0,
+                    0,
+                    555,
+                    0
+                ],
+                "shell": "input tap 660 258.75",
+                "second_shell": "input tap 667.5 506.25"
+            }
+        },
         "first mission": [
             547,
             114,
@@ -1217,6 +1292,7 @@
         }
     },
     "1280x720": {
+        "tap_to_play": "input tap 640 533.3333333333333",
         "shortcut": {
             "0": "1202.6666666666665 190.66666666666666",
             "1": "1202.6666666666665 302.66666666666663",
@@ -1227,6 +1303,80 @@
             "input tap 992.0 664.0",
             "input tap 1169.3333333333333 666.6666666666666"
         ],
+        "login": {
+            "mission_button": [
+                18.666666666667,
+                116,
+                1186.666666666667,
+                510.6666666666667
+            ],
+            "community": {
+                "dms": [
+                    21.33333333333333,
+                    22.666666666667,
+                    22.666666666667,
+                    622.6666666666667
+                ],
+                "shell": "input tap 1224 66.6666666666667"
+            },
+            "sale": {
+                "dms": [
+                    0,
+                    653.333333333333,
+                    0,
+                    0
+                ],
+                "shell": "input tap 36 685.3333333333"
+            },
+            "attendance": {
+                "dms": [
+                    0,
+                    648,
+                    0,
+                    0
+                ],
+                "shell": "input tap 640 505673.3333333333333",
+                "second_shell": "input tap 640 673.3333333333333"
+            },
+            "event": {
+                "dms": [
+                    21.33333333333333,
+                    22.666666666667,
+                    22.666666666667,
+                    622.6666666666667
+                ],
+                "shell": "input tap 1224 66.6666666666667"
+            },
+            "guild_attendance": {
+                "dms": [
+                    0,
+                    0,
+                    0,
+                    621.3333333333333
+                ],
+                "days": [
+                    "input tap 433.3333333333333 200",
+                    "input tap 553.3333333333333 200",
+                    "input tap 673.3333333333333 200",
+                    "input tap 793.3333333333333 200",
+                    "input tap 920 200",
+                    "input tap 1040 200",
+                    "input tap 1166.6666666666667 200"
+                ],
+                "row_reward": "input tap 200 306.6666666666667",
+                "exit": "input tap 1208 53.3333333333333"
+            },
+            "accumualated": {
+                "dms": [
+                    0,
+                    0,
+                    740,
+                    0
+                ],
+                "shell": "input tap 880 345",
+                "second_shell": "input tap 890 675"
+            }
+        },
         "first mission": [
             729.3333333333333,
             152.0,
@@ -2434,6 +2584,7 @@
         }
     },
     "1600x900": {
+        "tap_to_play": "input tap 800 666.6666666666667",
         "shortcut": {
             "0": "1503.3333333333335 238.33333333333334",
             "1": "1503.3333333333335 378.33333333333337",
@@ -2444,6 +2595,80 @@
             "input tap 1240.0 830.0",
             "input tap 1461.6666666666667 833.3333333333334"
         ],
+        "login": {
+            "mission_button": [
+                23.33333333333333,
+                145,
+                1483.3333333333333,
+                638.33333333333333
+            ],
+            "community": {
+                "dms": [
+                    26.6666666666667,
+                    28.333333333333,
+                    28.333333333333,
+                    778.33333333333
+                ],
+                "shell": "input tap 1530 83.3333333333333"
+            },
+            "sale": {
+                "dms": [
+                    0,
+                    816.6666666666667,
+                    0,
+                    0
+                ],
+                "shell": "input tap 45 856.6666666666667"
+            },
+            "attendance": {
+                "dms": [
+                    0,
+                    810,
+                    0,
+                    0
+                ],
+                "shell": "input tap 800 841.6666666666667",
+                "second_shell": "input tap 800 841.6666666666667"
+            },
+            "event": {
+                "dms": [
+                    26.6666666666667,
+                    28.333333333333,
+                    28.333333333333,
+                    778.33333333333
+                ],
+                "shell": "input tap 1530 83.3333333333333"
+            },
+            "guild_attendance": {
+                "dms": [
+                    0,
+                    0,
+                    0,
+                    776.6666666666667
+                ],
+                "days": [
+                    "input tap 541.6666666666667 250",
+                    "input tap 691.6666666666667 250",
+                    "input tap 841.6666666666667 250",
+                    "input tap 991.6666666666667 250",
+                    "input tap 1150 250",
+                    "input tap 1300 250",
+                    "input tap 1458.3333333333333 250"
+                ],
+                "row_reward": "input tap 250 383.3333333333333",
+                "exit": "input tap 1510 66.6666666666667"
+            },
+            "accumualated": {
+                "dms": [
+                    0,
+                    0,
+                    925,
+                    0
+                ],
+                "shell": "input tap 1100 431.25",
+                "second_shell": "input tap 1112.5 843.75"
+            }
+        },
         "first mission": [
             911.6666666666667,
             190.0,
@@ -3651,6 +3876,7 @@
         }
     },
     "1920x1080": {
+        "tap_to_play": "input tap 960 800",
         "shortcut": {
             "0": "1804 286",
             "1": "1804 454",
@@ -3661,6 +3887,80 @@
             "input tap 1488 996",
             "input tap 1754 1000"
         ],
+        "login": {
+            "mission_button": [
+                28,
+                174,
+                1780,
+                766
+            ],
+            "community": {
+                "dms": [
+                    32,
+                    34,
+                    34,
+                    934
+                ],
+                "shell": "input tap 1836 100"
+            },
+            "sale": {
+                "dms": [
+                    0,
+                    980,
+                    0,
+                    0
+                ],
+                "shell": "input tap 54 1028"
+            },
+            "attendance": {
+                "dms": [
+                    0,
+                    972,
+                    0,
+                    0
+                ],
+                "shell": "input tap 960 1010",
+                "second_shell": "input tap 960 1010"
+            },
+            "event": {
+                "dms": [
+                    32,
+                    34,
+                    34,
+                    934
+                ],
+                "shell": "input tap 1836 100"
+            },
+            "guild_attendance": {
+                "dms": [
+                    0,
+                    0,
+                    0,
+                    932
+                ],
+                "days": [
+                    "input tap 650 300",
+                    "input tap 830 300",
+                    "input tap 1010 300",
+                    "input tap 1190 300",
+                    "input tap 1380 300",
+                    "input tap 1560 300",
+                    "input tap 1750 300"
+                ],
+                "row_reward": "input tap 300 460",
+                "exit": "input tap 1812 80"
+            },
+            "accumualated": {
+                "dms": [
+                    0,
+                    0,
+                    1110,
+                    0
+                ],
+                "shell": "input tap 1320 517.5",
+                "second_shell": "input tap 1335 1012.5"
+            }
+        },
         "first mission": [
             1094,
             228,
