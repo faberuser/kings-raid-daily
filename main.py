@@ -683,9 +683,8 @@ class Missions:
         # click ok
         make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['9']['dms'], data['stockage']['9']['shell'], loop=15, sleep_duration=0.5, second_shell=data['stockage']['8-1']['shell']+str(r[0])+' '+str(r[1]))
         logger.info(device.serial+': clicked ok to enter battle')
-        # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15, cutoff=8)
         slp(5)
+        # wait until finish
         make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15, cutoff=8)
         logger.info(device.serial+': battle completed')
         # click exit
@@ -721,9 +720,8 @@ class Missions:
         # click ok
         make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['19']['dms'], data['stockage']['19']['shell'], loop=15, sleep_duration=0.5, second_shell=data['stockage']['18-1']['shell']+str(r[0])+' '+str(r[1]))
         logger.info(device.serial+': clicked ok to enter battle')
-        # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15, cutoff=8)
         slp(5)
+        # wait until finish
         make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15, cutoff=8)
         logger.info(device.serial+': battle completed')
         # click exit
@@ -746,9 +744,8 @@ class Missions:
         # click ok
         make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['26']['dms'], data['stockage']['26']['shell'], loop=10, sleep_duration=0.5)
         logger.info(device.serial+': clicked ok to enter battle')
-        # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15, cutoff=8)
         slp(5)
+        # wait until finish
         make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15, cutoff=8)
         logger.info(device.serial+': battle completed')
         # click exit
@@ -771,9 +768,8 @@ class Missions:
         # click ok
         make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['33']['dms'], data['stockage']['33']['shell'], loop=10, sleep_duration=0.5)
         logger.info(device.serial+': clicked ok to enter battle')
-        # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15, cutoff=8)
         slp(5)
+        # wait until finish
         make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15, cutoff=8)
         logger.info(device.serial+': battle completed')
         # click exit
