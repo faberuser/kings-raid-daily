@@ -43,8 +43,8 @@
                     0,
                     0
                 ],
-                "shell": "input tap 480 505",
-                "second_shell": "input tap 480 505"
+                "shell": "input tap 452 497",
+                "second_shell": "input tap 452 497"
             },
             "event": {
                 "dms": [
@@ -1335,8 +1335,8 @@
                     0,
                     0
                 ],
-                "shell": "input tap 640 505673.3333333333333",
-                "second_shell": "input tap 640 673.3333333333333"
+                "shell": "input tap 602.6666666666667 662.6666666666667",
+                "second_shell": "input tap 602.6666666666667 662.6666666666667"
             },
             "event": {
                 "dms": [
@@ -2627,8 +2627,8 @@
                     0,
                     0
                 ],
-                "shell": "input tap 800 841.6666666666667",
-                "second_shell": "input tap 800 841.6666666666667"
+                "shell": "input tap 753.33333333333333 828.33333333333333",
+                "second_shell": "input tap 753.33333333333333 828.33333333333333"
             },
             "event": {
                 "dms": [
@@ -3919,8 +3919,8 @@
                     0,
                     0
                 ],
-                "shell": "input tap 960 1010",
-                "second_shell": "input tap 960 1010"
+                "shell": "input tap 904 994",
+                "second_shell": "input tap 904 994"
             },
             "event": {
                 "dms": [

@@ -53,21 +53,21 @@ def check_login_rewards(device, once=False):
         im2 = crop(im, data['login']['community']['dms'])
         community = check_similar(im1, im2, 10)
         if community == 'similar':
-            make_sure_loaded('./base/login/sale.png', device, data['login']['sale']['dms'], data['login']['community']['shell'])
+            make_sure_loaded('./base/login/sale.png', device, data['login']['sale']['dms'], data['login']['community']['shell'], sleep_duration=3)
 
         # pass sale page
         im1 = Image.open('./base/login/sale.png')
         im2 = crop(im, data['login']['sale']['dms'])
         sale = check_similar(im1, im2, 10)
         if sale == 'similar':
-            make_sure_loaded('./base/login/attendance.png', device, data['login']['attendance']['dms'], data['login']['sale']['shell'])
+            make_sure_loaded('./base/login/attendance.png', device, data['login']['attendance']['dms'], data['login']['sale']['shell'], sleep_duration=3, loop=10)
 
         # claim login attendance
         im1 = Image.open('./base/login/attendance.png')
         im2 = crop(im, data['login']['attendance']['dms'])
         attendance = check_similar(im1, im2, 10)
         if attendance == 'similar':
-            make_sure_loaded('./base/login/event.png', device, data['login']['event']['dms'], data['login']['attendance']['shell'], second_shell=data['login']['attendance']['second_shell'])
+            make_sure_loaded('./base/login/event.png', device, data['login']['event']['dms'], data['login']['attendance']['shell'], second_shell=data['login']['attendance']['second_shell'], sleep_duration=3, loop=10)
             logger.info(device.serial+': claimed login attendance')
 
         # pass event page
@@ -75,7 +75,7 @@ def check_login_rewards(device, once=False):
         im2 = crop(im, data['login']['event']['dms'])
         event = check_similar(im1, im2, 10)
         if event == 'similar':
-            make_sure_loaded('./base/login/guild_attendance.png', device, data['login']['guild_attendance']['dms'], data['login']['event']['shell'])
+            make_sure_loaded('./base/login/guild_attendance.png', device, data['login']['guild_attendance']['dms'], data['login']['event']['shell'], sleep_duration=3)
 
         # claim guild attendance
         im1 = Image.open('./base/login/guild_attendance.png')
@@ -85,7 +85,7 @@ def check_login_rewards(device, once=False):
             for day in data['login']['guild_attendance']['days']:
                 device.shell(day)
             device.shell(data['login']['guild_attendance']['row_reward'])
-            make_sure_loaded('./base/login/mission_button.png', device, data['login']['mission_button'], data['login']['guild_attendance']['exit'])
+            make_sure_loaded('./base/login/mission_button.png', device, data['login']['mission_button'], data['login']['guild_attendance']['exit'], sleep_duration=3, cutoff=20, loop=10)
             logger.info(device.serial+': claimed guild attendance')
 
         # claim login accumualated
@@ -93,7 +93,7 @@ def check_login_rewards(device, once=False):
         im2 = crop(im, data['login']['accumualated']['dms'])
         accumualated = check_similar(im1, im2, 10)
         if accumualated == 'similar':
-            make_sure_loaded('./base/login/guild_attendance.png', device, data['login']['guild_attendance']['dms'], data['login']['accumualated']['shell'], second_shell=data['login']['accumualated']['second_shell'])
+            make_sure_loaded('./base/login/guild_attendance.png', device, data['login']['guild_attendance']['dms'], data['login']['accumualated']['shell'], second_shell=data['login']['accumualated']['second_shell'], sleep_duration=3, loop=10)
             logger.info(device.serial+': claimed login accumualated')
 
         # return to main page
@@ -579,12 +579,6 @@ class Missions:
         make_sure_loaded('./base/lov/lov.png', device, data['lov']['3']['dms'], data['lov']['3']['shell'], sleep_duration=1)
         logger.info(device.serial+': clicked enter lov')
 
-        # not sure about this, sometime shortcut brought directly to lov screen but sometime it only brought to arena screen. if it brought to arena screen,
-        # comment 3 lines above and uncomment the line below, if oposite keep this.
-
-        # # click mission shortcut
-        # make_sure_loaded('./base/lov/lov.png', device, 0, 469, 0, 0, f'input tap {position}')
-
         # click ready to dual
         make_sure_loaded('./base/lov/party.png', device, data['lov']['4']['dms'], data['lov']['4']['shell'], sleep_duration=0.5, cutoff=20)
         logger.info(device.serial+': clicked ready to dual')
@@ -678,14 +672,14 @@ class Missions:
         # click random reward
         lst = data['stockage']['8-0']['shell']
         r = choice(lst)
-        make_sure_loaded('./base/stockage/ok.png', device, data['stockage']['8-1']['dms'], data['stockage']['8-1']['shell']+str(r[0])+' '+str(r[1]), shell_first=True, sleep_duration=0.5)
-        logger.info(device.serial+': selected random reward')
+        # make_sure_loaded('./base/stockage/ok.png', device, data['stockage']['8-1']['dms'], data['stockage']['8-1']['shell']+str(r[0])+' '+str(r[1]), shell_first=True, sleep_duration=0.5)
+        # logger.info(device.serial+': selected random reward')
         # click ok
-        make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['9']['dms'], data['stockage']['9']['shell'], loop=15, sleep_duration=0.5, second_shell=data['stockage']['8-1']['shell']+str(r[0])+' '+str(r[1]))
-        logger.info(device.serial+': clicked ok to enter battle')
+        make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['9']['dms'], data['stockage']['9']['shell'], cutoff=10, loop=15, sleep_duration=0.5, second_shell=data['stockage']['8-1']['shell']+str(r[0])+' '+str(r[1]))
+        logger.info(device.serial+': selected random reward and clicked ok to enter battle')
         slp(5)
         # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15, cutoff=8)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15)
         logger.info(device.serial+': battle completed')
         # click exit
         make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['11']['dms'], data['stockage']['11']['shell'])
@@ -715,14 +709,14 @@ class Missions:
         # click random book
         lst = data['stockage']['18-0']['shell']
         r = choice(lst)
-        make_sure_loaded('./base/stockage/ok_.png', device, data['stockage']['18-1']['dms'], data['stockage']['18-1']['shell']+str(r[0])+' '+str(r[1]), shell_first=True, sleep_duration=0.5)
-        logger.info(device.serial+': selected random book reward')
+        # make_sure_loaded('./base/stockage/ok_.png', device, data['stockage']['18-1']['dms'], data['stockage']['18-1']['shell']+str(r[0])+' '+str(r[1]), shell_first=True, sleep_duration=0.5)
+        # logger.info(device.serial+': selected random book reward')
         # click ok
-        make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['19']['dms'], data['stockage']['19']['shell'], loop=15, sleep_duration=0.5, second_shell=data['stockage']['18-1']['shell']+str(r[0])+' '+str(r[1]))
-        logger.info(device.serial+': clicked ok to enter battle')
+        make_sure_loaded('./base/stockage/loading_r.png', device, data['stockage']['19']['dms'], data['stockage']['19']['shell'], cutoff=10, loop=15, sleep_duration=0.5, second_shell=data['stockage']['18-1']['shell']+str(r[0])+' '+str(r[1]))
+        logger.info(device.serial+': selected random book reward and clicked ok to enter battle')
         slp(5)
         # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15, cutoff=8)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15)
         logger.info(device.serial+': battle completed')
         # click exit
         make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['21']['dms'], data['stockage']['21']['shell'])
