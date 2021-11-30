@@ -2,6 +2,5 @@ __pycache__
 build
 dist
 .cache
-vms
 config.json
 main.spec

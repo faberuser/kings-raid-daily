@@ -49,6 +49,23 @@ def check_login_rewards(device, once=False):
         count_ = 0
         im = update_cache(device)
 
+        # login
+        # tap to play
+        im1 = Image.open('./base/login/tap_to_play.png')
+        im2 = crop(im, data['tap_to_play']['dms'])
+        tap_to_play = check_similar(im1, im2, 10)
+        if tap_to_play == 'similar':
+            device.shell(data['tap_to_play']['shell'])
+            slp(3)
+
+        # purchase fail
+        im1 = Image.open('./base/login/purchase_fail.png')
+        im2 = crop(im, data['purchase_fail']['dms'])
+        purchase_fail = check_similar(im1, im2, 10)
+        if purchase_fail == 'similar':
+            device.shell(data['purchase_fail']['shell'])
+            slp(3)
+
         # pass community page
         im1 = Image.open('./base/login/community.png')
         im2 = crop(im, data['login']['community']['dms'])
@@ -109,6 +126,7 @@ def check_login_rewards(device, once=False):
             logger.info(device.serial+': claimed login accumualated')
             slp(3)
 
+        # may appear
         # sale 2
         im1 = Image.open('./base/login/sale_2.png')
         im2 = crop(im, data['login']['sale_2']['dms'])
@@ -243,6 +261,11 @@ class Missions:
         logger.info(device.serial+': size '+size_+' detected')
         with open('./sets.json', encoding='utf-8') as j:
             data = json.load(j)[size_]
+
+        with open('./config.json') as cf_:
+            cf = json.load(cf_)
+        for num in cf['devices']:
+            system(cf['ldconsole']+f'\\ldconsole runapp --index {str(num)} --packagename com.vespainteractive.KingsRaid')
 
         def claim():
             # claim rewards
@@ -1097,13 +1120,13 @@ def run():
             print('no device was found after 10 retries, script ended')
             break
         if devices == []:
-            print('no device was found, retrying...')
             print('no device was found, launching from config and retrying...')
             with open('./config.json') as j:
                 re = json.load(j)
             for device in re['devices']:
                 system(re['ldconsole']+'\\ldconsole launch --index '+str(device))
                 print('launched device with index '+str(device))
+            slp(30)
             system(working_dir+'\\adb devices')
             devices = adb.devices()
         elif str(devices[0].serial).startswith('127'):
