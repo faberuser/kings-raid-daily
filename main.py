@@ -3,9 +3,10 @@ from random import choice
 from time import sleep as slp
 from datetime import datetime
 from os import mkdir, getcwd, system, path
+from subprocess import run as run_
 import logging, json
 
-from sys import stdout, stdin
+from sys import stdout
 from msvcrt import kbhit, getwche
 from time import monotonic
 
@@ -264,8 +265,9 @@ class Missions:
 
         with open('./config.json') as cf_:
             cf = json.load(cf_)
-        for num in cf['devices']:
-            system(cf['ldconsole']+f'\\ldconsole runapp --index {str(num)} --packagename com.vespainteractive.KingsRaid')
+        if cf['devices'] != []:
+            for num in cf['devices']:
+                system(cf['ldconsole']+f' runapp --index {str(num)} --packagename com.vespainteractive.KingsRaid')
 
         def claim():
             # claim rewards
@@ -1078,7 +1080,7 @@ def config():
         re['tower'] = tower
 
     if ldconsole != '':
-        re['ldconsole'] = ldconsole.replace('/', '//')
+        re['ldconsole'] = ldconsole.replace('/', '//')+'\\ldconsole'
 
     if devices != '':
         devices_ = []
@@ -1125,9 +1127,29 @@ def run():
                 re = json.load(j)
             if re['devices'] != []:
                 print('launching from config and retrying...')
+                break_ = False
+                devices_dexist = 0
                 for device in re['devices']:
-                    system(re['ldconsole']+'\\ldconsole launch --index '+str(device))
-                    print('launched device with index '+str(device))
+                    try:
+                        re_ = run_(re['ldconsole']+' launch --index '+str(device), capture_output=True).stdout
+                        if str(re_)+'/' == """b"player don't exist!"/""":
+                            devices_dexist += 1
+                            print('device with index '+str(device)+" doesn't exist")
+                        else:
+                            print('launched device with index '+str(device))
+                    except FileNotFoundError:
+                        break_ = True
+                        print("path to LDPlayer is wrong, please config and try again")
+                        input('press any key to exit...')
+                        break
+                    if devices_dexist == len(re['devices']):
+                        print("all configured devices doesn't exit")
+                        input('press any key to exit...')
+                        break_ = True
+                        break
+                if break_ == True:
+                    break
+                print('waiting 30 secs for device(s) fully boot up')
             else:
                 print('retrying...')
             slp(30)
