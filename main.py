@@ -27,14 +27,22 @@ pytesseract.tesseract_cmd = ('./tesseract/tesseract.exe')
 
 
 def update_cache(device):
-    try:
-        device.shell('screencap -p /sdcard/screencap.png')
-        device.pull('/sdcard/screencap.png', './.cache/screencap-'+str(device.serial)+'.png')
-        im = Image.open('./.cache/screencap-'+str(device.serial)+'.png')
-    except:
-        device.shell('screencap -p /screencap.png')
-        device.pull('/screencap.png', './.cache/screencap-'+str(device.serial)+'.png')
-        im = Image.open('./.cache/screencap-'+str(device.serial)+'.png')
+    count = 0
+    while True:
+        try:
+            device.shell('screencap -p /sdcard/screencap.png')
+            device.pull('/sdcard/screencap.png', './.cache/screencap-'+str(device.serial)+'.png')
+            im = Image.open('./.cache/screencap-'+str(device.serial)+'.png')
+            break
+        except RuntimeError:
+            if count == 50:
+                return "device offline"
+            count += 1
+        except:
+            device.shell('screencap -p /screencap.png')
+            device.pull('/screencap.png', './.cache/screencap-'+str(device.serial)+'.png')
+            im = Image.open('./.cache/screencap-'+str(device.serial)+'.png')
+            breal
     return im
 
 
@@ -258,6 +266,11 @@ class Missions:
     def execute(self, device):
         # get device resolution
         im = update_cache(device)
+        if im == 'device offline':
+            if str(devices[0].serial).startswith('127'):
+                return
+            print('device '+device.serial+' is offline, script ended')
+            return
         size_ = f"{im.size[0]}x{im.size[1]}"
         logger.info(device.serial+': size '+size_+' detected')
         with open('./sets.json', encoding='utf-8') as j:
@@ -1150,9 +1163,9 @@ def run():
                 if break_ == True:
                     break
                 print('waiting 30 secs for device(s) fully boot up')
+                slp(30)
             else:
                 print('retrying...')
-            slp(30)
             system(working_dir+'\\adb devices')
             devices = adb.devices()
         elif str(devices[0].serial).startswith('127'):

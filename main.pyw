@@ -7,7 +7,7 @@ if __name__ == "__main__":
     print("this scripts will run in background to check and run the script for new day (at 00:05)")
     try:
         open('./config.json').close()
-    except FileNotFound:
+    except FileNotFoundError:
         re = {
             "buff": True,
             "wb": False,
