@@ -38,6 +38,7 @@ def update_cache(device):
             if count == 50:
                 return "device offline"
             count += 1
+            slp(5)
         except:
             device.shell('screencap -p /screencap.png')
             device.pull('/screencap.png', './.cache/screencap-'+str(device.serial)+'.png')
