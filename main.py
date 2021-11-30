@@ -1061,8 +1061,8 @@ def config():
     while True:
         auto_launch = input('\ndo you want this script to auto launch your emulators? (Y/N) > ')
         if auto_launch.lower().startswith('y'):
-            ldconsole = input("ok, please enter/paste the path to LDPlayer (right click on LDPlayer folder address and 'copy address as text') (leave blank to use previous setting) > ")
-            devices = input('ok, now enter list of index of your emulators (numbers on first column in LDMultiPlayer) (seperate numbers with space) (leave blank to use previous setting > ')
+            ldconsole = input("ok, please enter/paste the path to LDPlayer\n(right click on LDPlayer folder address and 'copy address as text') (leave blank to use previous setting) > ")
+            devices = input('ok, now enter list of index of your emulators\n(numbers on first column in LDMultiPlayer) (seperate numbers with space) (leave blank to use previous setting) > ')
             break
         elif auto_launch.lower().startswith('n'):
             print('ok')
