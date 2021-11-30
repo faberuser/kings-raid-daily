@@ -28,12 +28,12 @@ pytesseract.tesseract_cmd = ('./tesseract/tesseract.exe')
 def update_cache(device):
     try:
         device.shell('screencap -p /sdcard/screencap.png')
-        device.pull('/sdcard/screencap.png', './cache/screencap-'+str(device.serial)+'.png')
-        im = Image.open('./cache/screencap-'+str(device.serial)+'.png')
+        device.pull('/sdcard/screencap.png', './.cache/screencap-'+str(device.serial)+'.png')
+        im = Image.open('./.cache/screencap-'+str(device.serial)+'.png')
     except:
         device.shell('screencap -p /screencap.png')
-        device.pull('/screencap.png', './cache/screencap-'+str(device.serial)+'.png')
-        im = Image.open('./cache/screencap-'+str(device.serial)+'.png')
+        device.pull('/screencap.png', './.cache/screencap-'+str(device.serial)+'.png')
+        im = Image.open('./.cache/screencap-'+str(device.serial)+'.png')
     return im
 
 
@@ -46,6 +46,7 @@ def check_login_rewards(device, once=False):
 
     count = 0
     while True:
+        count_ = 0
         im = update_cache(device)
 
         # pass community page
@@ -53,29 +54,35 @@ def check_login_rewards(device, once=False):
         im2 = crop(im, data['login']['community']['dms'])
         community = check_similar(im1, im2, 10)
         if community == 'similar':
-            make_sure_loaded('./base/login/sale.png', device, data['login']['sale']['dms'], data['login']['community']['shell'], sleep_duration=3)
+            device.shell(data['login']['community']['shell'])
+            slp(3)
 
         # pass sale page
         im1 = Image.open('./base/login/sale.png')
         im2 = crop(im, data['login']['sale']['dms'])
         sale = check_similar(im1, im2, 10)
         if sale == 'similar':
-            make_sure_loaded('./base/login/attendance.png', device, data['login']['attendance']['dms'], data['login']['sale']['shell'], sleep_duration=3, loop=10)
+            device.shell(data['login']['sale']['shell'])
+            slp(3)
 
         # claim login attendance
         im1 = Image.open('./base/login/attendance.png')
         im2 = crop(im, data['login']['attendance']['dms'])
         attendance = check_similar(im1, im2, 10)
         if attendance == 'similar':
-            make_sure_loaded('./base/login/event.png', device, data['login']['event']['dms'], data['login']['attendance']['shell'], second_shell=data['login']['attendance']['second_shell'], sleep_duration=3, loop=10)
+            device.shell(data['login']['attendance']['shell'])
+            slp(1)
+            device.shell(data['login']['attendance']['second_shell'])
             logger.info(device.serial+': claimed login attendance')
+            slp(3)
 
         # pass event page
         im1 = Image.open('./base/login/event.png')
         im2 = crop(im, data['login']['event']['dms'])
         event = check_similar(im1, im2, 10)
         if event == 'similar':
-            make_sure_loaded('./base/login/guild_attendance.png', device, data['login']['guild_attendance']['dms'], data['login']['event']['shell'], sleep_duration=3)
+            device.shell(data['login']['event']['shell'])
+            slp(3)
 
         # claim guild attendance
         im1 = Image.open('./base/login/guild_attendance.png')
@@ -84,17 +91,42 @@ def check_login_rewards(device, once=False):
         if guild_attendance == 'similar':
             for day in data['login']['guild_attendance']['days']:
                 device.shell(day)
+            slp(1)
             device.shell(data['login']['guild_attendance']['row_reward'])
-            make_sure_loaded('./base/login/mission_button.png', device, data['login']['mission_button'], data['login']['guild_attendance']['exit'], sleep_duration=3, cutoff=20, loop=10)
+            slp(1)
+            device.shell(data['login']['guild_attendance']['exit'])
             logger.info(device.serial+': claimed guild attendance')
-
+            slp(3)
+        
         # claim login accumualated
         im1 = Image.open('./base/login/accumualated.png')
         im2 = crop(im, data['login']['accumualated']['dms'])
         accumualated = check_similar(im1, im2, 10)
         if accumualated == 'similar':
-            make_sure_loaded('./base/login/guild_attendance.png', device, data['login']['guild_attendance']['dms'], data['login']['accumualated']['shell'], second_shell=data['login']['accumualated']['second_shell'], sleep_duration=3, loop=10)
+            device.shell(data['login']['accumualated']['shell'])
+            slp(1)
+            device.shell(data['login']['accumualated']['second_shell'])
             logger.info(device.serial+': claimed login accumualated')
+            slp(3)
+
+        # sale 2
+        im1 = Image.open('./base/login/sale_2.png')
+        im2 = crop(im, data['login']['sale_2']['dms'])
+        sale_2 = check_similar(im1, im2, 10)
+        if sale_2 == 'similar':
+            device.shell(data['login']['sale_2']['shell'])
+            slp(1)
+            device.shell(data['login']['sale_2']['second_shell'])
+            logger.info(device.serial+': claimed guild attendance')
+            slp(3)
+
+        # special shop
+        im1 = Image.open('./base/login/special_shop.png')
+        im2 = crop(im, data['login']['special_shop']['dms'])
+        special_shop = check_similar(im1, im2, 10)
+        if special_shop == 'similar':
+            device.shell(data['login']['special_shop']['shell'])
+            slp(3)
 
         # return to main page
         im1 = Image.open('./base/login/mission_button.png')
@@ -956,6 +988,93 @@ def inputimeout(prompt='', timeout=30.0):
     raise TimeoutOccurred
 
 
+def config():
+    buff, wb, lov, dragon, friendship, inn, shop, stockage, tower = (None,)*9
+    print('\ndo you want this script to')
+
+    def con(text):
+        do = None
+        while True:
+            do = input(text+'? (Y/N) (leave blank to use previous setting) > ')
+            if do.lower().startswith('y'):
+                do = True
+                break
+            elif do.lower().startswith('n'):
+                do = False
+                break
+            elif do == '':
+                do = ''
+                break
+            else:
+                print('invalid answer, please try again')
+        return do
+
+    buff = con('use exp and gold buff before doing dailies')
+    wb = con('auto wb')
+    lov = con('auto lov')
+    dragon = con('fight dragon')
+    friendship = con('exchange friendship token')
+    inn = con("do stuff in hero's inn")
+    shop = con("buy random stuff in May's shop")
+    stockage = con('farm random stuff in stockage')
+    tower = con('fight low floor in tower of challenge')
+
+    while True:
+        auto_launch = input('\ndo you want this script to auto launch your emulators? (Y/N) > ')
+        if auto_launch.lower().startswith('y'):
+            ldconsole = input("ok, please enter/paste the path to LDPlayer (right click on LDPlayer folder address and 'copy address as text') (leave blank to use previous setting) > ")
+            devices = input('ok, now enter list of index of your emulators (numbers on first column in LDMultiPlayer) (seperate numbers with space) (leave blank to use previous setting > ')
+            break
+        elif auto_launch.lower().startswith('n'):
+            print('ok')
+            break
+        else:
+            print('invalid answer, please try again')
+
+    fail = False
+    with open('./config.json') as r:
+        re = json.load(r)
+
+    if buff != '':
+        re['buff'] = buff
+    if wb != '':
+        re['wb'] = wb
+    if lov != '':
+        re['lov'] = lov
+    if dragon != '':
+        re['dragon'] = dragon
+    if friendship != '':
+        re['friendship'] = friendship
+    if inn != '':
+        re['inn'] = inn
+    if shop != '':
+        re['shop'] = shop
+    if stockage != '':
+        re['stockage'] = stockage
+    if tower != '':
+        re['tower'] = tower
+
+    if ldconsole != '':
+        re['ldconsole'] = ldconsole.replace('/', '//')
+
+    if devices != '':
+        devices_ = []
+        for num in devices.split():
+            if num.isnumeric():
+                devices_.append(int(num))
+            else:
+                fail = True
+                print('invalid index in emulators config (index must be an interger), please try again')
+                break
+        re['devices'] = devices_
+
+    if fail == True:
+        return
+    
+    with open('./config.json', 'w') as w:
+        json.dump(re, w, indent=4)
+
+
 def load_devices():
     working_dir = getcwd()
     system(working_dir+'\\adb kill-server')
@@ -996,9 +1115,9 @@ def run():
             devices = adb.devices()
             print('device(s) detected')
             print('----------------------------------------------------------------\n')
-            if path.exists('./cache') == False:
-                mkdir('./cache')
-            handler = logging.FileHandler("./cache/log.log", "a", "utf-8")
+            if path.exists('./.cache') == False:
+                mkdir('./.cache')
+            handler = logging.FileHandler("./.cache/log.log", "a", "utf-8")
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             handler.setFormatter(formatter)
             logger.addHandler(handler)
@@ -1014,21 +1133,51 @@ def run():
 if __name__ == "__main__":
     print('please ignore this warning ↑')
     try:
-        auto_daily = inputimeout('do you want this script to auto run when new day (at 00:05) ? (Y/N) > ', timeout=10)
-        if auto_daily.lower().startswith('y'):
-            print("ok, this scripts will run in background to check and run the script for new day (at 00:05) (please don't close this window)")
-            while True:
-                now = datetime.now().strftime("%H:%M")
-                print('checking at '+str(now))
-                if str(now) != '00:05':
-                    slp(60)
-                    continue
-                run()
-        elif auto_daily.lower().startswith('n'):
-            print('ok, running script for once')
-            run()
-        else:
+        print('* press 1 to run this script once')
+        print('* press 2 to run this script in background to check and run when new day (at 00:05)')
+        print('* press 3 to start config this script')
+        auto_daily = inputimeout('> ', timeout=30)
+        if auto_daily.isnumeric() == False:
             input('invalid answer, press any key to exit...')
+        else:
+            try:
+                open('./config.json').close()
+            except FileNotFoundError:
+                print('config not found, creating new one with default settings')
+                re = {
+                    "buff": True,
+                    "wb": False,
+                    "lov": False,
+                    "dragon": True,
+                    "friendship": True,
+                    "inn": True,
+                    "shop": True,
+                    "stockage": True,
+                    "tower": True,
+                    "lil": False,
+                    "devices": [],
+                    "ldconsole": ""
+                }
+                with open('./config.json', 'a') as j:
+                    json.dump(re, j, indent=4)
+            if int(auto_daily) == 1:
+                print('ok, running script for once')
+                run()
+            elif int(auto_daily) == 2:
+                print("ok, this scripts will run in background to check and run the script when new day (at 00:05) (please don't close this window)")
+                while True:
+                    now = datetime.now().strftime("%H:%M")
+                    print('checking at '+str(now))
+                    if str(now) != '00:05':
+                        slp(60)
+                        continue
+                    run()
+            elif int(auto_daily) == 3:
+                print("ok, starting configuration")
+                config()
+                input('config complete, press any key to exit...')
+            else:
+                input('invalid answer, press any key to exit...')
     except TimeoutOccurred:
-        print('timeout, running script for once')
+        print('timeout, running script for once with previous config')
         run()

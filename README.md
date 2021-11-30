@@ -20,18 +20,16 @@
 - Multiple LD Player Emulator with tablet resolution (960x540-(best), 1280x720, 1600x900, 1920x1080)
 - Game language ENGLISH, VIETNAMESE or JAPANESE
 
-#### If you want to stop the script suicide in lov and wb (turned off by default):
-- Open config.json with a text editor
-- Change the value behind lov or wb to False
-*Same as using exp and gold buff*
+#### Config:
+- Run the script and press 3 or edit directly in config.json
 
-#### To run the script:
+#### To run the script once:
 - Open emulator Settings and head to Other settings on the left menu, change @adb_debug/ADB debugging to Open connection
 - Open the emulator and login to your account
 - End all dispatch (if you want to keep the dispatch on, make sure that you have set up an entire team on `Dragon T6 Stage 1` (if set to True))
 - Set up all team can clear all stockage dungeons (If you want to auto world boss or league of victory, please also set up all team and make sure the auto mode is on)
 - Make sure the mission button on the top left is visible
-- Run the shortcut kings-raid-daily
+- Run the shortcut kings-raid-daily and press 1
 
 #### If you want the script to auto startup everytime you boot in Windows for running in background (auto run at 00:05 when new day):
 - Download and install newest [Python version](https://www.python.org/)
@@ -45,6 +43,7 @@
         - Windows `.env\Scripts\activate`
         - Linux `source .env/bin/activate`
 - Press `Windows+R`, type `shell:startup` and enter, then paste the copied shortcut
+* You need to double click the pasted shortcut or restart the PC to take effect.
 
 #### Note:
 - If the script can't find your emulator, try to restart your emulator and try again

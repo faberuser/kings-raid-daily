@@ -1,6 +1,7 @@
 __pycache__
 build
 dist
-cache
-main.spec
+.cache
 vms
+config.json
+main.spec
