@@ -1098,12 +1098,12 @@ def run():
             break
         if devices == []:
             print('no device was found, retrying...')
-            # print('no device was found, launching from config and retrying...')
-            # with open('./config.json') as j:
-            #     re = json.load(j)
-            # for device in re['devices']:
-            #     system(working_dir+'\\ldconsole launch --index '+str(device))
-            #     print('launched device with index '+str(device))
+            print('no device was found, launching from config and retrying...')
+            with open('./config.json') as j:
+                re = json.load(j)
+            for device in re['devices']:
+                system(re['ldconsole']+'\\ldconsole launch --index '+str(device))
+                print('launched device with index '+str(device))
             system(working_dir+'\\adb devices')
             devices = adb.devices()
         elif str(devices[0].serial).startswith('127'):

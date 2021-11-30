@@ -74,16 +74,6 @@
                 "row_reward": "input tap 150 230",
                 "exit": "input tap 906 40"
             },
-            "sale_2": {
-                "dms": [
-                    138,
-                    448,
-                    136,
-                    26
-                ],
-                "shell": "input tap 804 54",
-                "second_shell": "input tap 357 395"
-            },
             "accumualated": {
                 "dms": [
                     0,
@@ -93,6 +83,16 @@
                 ],
                 "shell": "input tap 660 258.75",
                 "second_shell": "input tap 667.5 506.25"
+            },
+            "sale_2": {
+                "dms": [
+                    138,
+                    448,
+                    136,
+                    26
+                ],
+                "shell": "input tap 804 54",
+                "second_shell": "input tap 357 395"
             },
             "special_shop": {
                 "dms": [
@@ -1394,6 +1394,25 @@
                 ],
                 "shell": "input tap 880 345",
                 "second_shell": "input tap 890 675"
+            },
+            "sale_2": {
+                "dms": [
+                    184,
+                    597.3333333333333,
+                    181.3333333333333,
+                    34.6666666666667
+                ],
+                "shell": "input tap 1072 72",
+                "second_shell": "input tap 476 526.6666666666667"
+            },
+            "special_shop": {
+                "dms": [
+                    0,
+                    0,
+                    984,
+                    657.3333333333333
+                ],
+                "shell": "input tap 57.3333333333333 33.3333333333333"
             }
         },
         "first mission": [
@@ -2686,6 +2705,25 @@
                 ],
                 "shell": "input tap 1100 431.25",
                 "second_shell": "input tap 1112.5 843.75"
+            },
+            "sale_2": {
+                "dms": [
+                    230,
+                    746.6666666667,
+                    226.6666666666667,
+                    43.3333333333333
+                ],
+                "shell": "input tap 1340 90",
+                "second_shell": "input tap 595 658.3333333333333"
+            },
+            "special_shop": {
+                "dms": [
+                    0,
+                    0,
+                    1230,
+                    821.6666666666667
+                ],
+                "shell": "input tap 71.6666666666667 41.6666666666667"
             }
         },
         "first mission": [
@@ -3978,6 +4016,25 @@
                 ],
                 "shell": "input tap 1320 517.5",
                 "second_shell": "input tap 1335 1012.5"
+            },
+            "sale_2": {
+                "dms": [
+                    276,
+                    896,
+                    272,
+                    52
+                ],
+                "shell": "input tap 1608 108",
+                "second_shell": "input tap 714 790"
+            },
+            "special_shop": {
+                "dms": [
+                    0,
+                    0,
+                    1476,
+                    986
+                ],
+                "shell": "input tap 86 50"
             }
         },
         "first mission": [
