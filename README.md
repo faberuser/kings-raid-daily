@@ -31,7 +31,7 @@
 #### To run the script once:
 - Run the shortcut kings-raid-daily and press 1
 
-#### If you want the script to auto startup everytime you boot in Windows for running in background (auto run at 00:05 when new day):
+#### If you want the script to auto startup everytime you boot in Windows for running in background (auto run when new day (default is 00:05)):
 - Download newest version of script from [Github](https://github.com/faber6/kings-raid-daily/releases)
 - Unzip file, copy shortcut kings-raid-daily-background
 - Press `Windows+R`, type `shell:startup` and enter, then paste the copied shortcut

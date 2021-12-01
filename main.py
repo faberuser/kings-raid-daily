@@ -69,6 +69,8 @@ def config():
     stockage = con('farm random stuff in stockage')
     tower = con('fight low floor in tower of challenge')
 
+    ldconsole = ''
+    devices = ''
     while True:
         auto_launch = input('\ndo you want this script to auto launch your emulators? (Y/N) > ')
         if auto_launch.lower().startswith('y'):
@@ -80,6 +82,26 @@ def config():
             break
         else:
             print('invalid answer, please try again')
+
+    time_ = ''
+    while True:
+        time_ = input('\nif you want this script to run in background, checking for time and auto run, set the time?\n(default is 00:05, 00:00-00:04 is not recommended because sometime server sync slower than normal) (leave blank to use previous setting) > ')
+        if time_ == '':
+            break
+        if len(time_) != 5:
+            print('time format invalid, please try again (HH:MM)')
+            continue
+        if time_[:2].isnumeric() and time_[-2:].isnumeric():
+            if int(time_[:2]) > 23:
+                print('hour input invalid, please try again (00-23)')
+                continue
+            elif int(time_[-2:]) > 59:
+                print('minute input invalid, please try again (00-59)')
+                continue
+        else:
+            print('hour and minute must be an interger, please try again')
+            continue
+        break
 
     fail = False
     with open('./config.json') as r:
@@ -103,6 +125,8 @@ def config():
         re['stockage'] = stockage
     if tower != '':
         re['tower'] = tower
+    if time_ != '':
+        re['time'] = time_
 
     if ldconsole != '':
         re['ldconsole'] = ldconsole.replace('/', '//')+'\\ldconsole'
@@ -136,7 +160,8 @@ if __name__ == "__main__":
             input('invalid answer, press any key to exit...')
         else:
             try:
-                open('./config.json').close()
+                with open('./config.json') as j:
+                    re = json.load(j)
             except FileNotFoundError:
                 print('config not found, creating new one with default settings')
                 re = {
@@ -151,7 +176,8 @@ if __name__ == "__main__":
                     "tower": True,
                     "lil": False,
                     "devices": [],
-                    "ldconsole": ""
+                    "ldconsole": "",
+                    "time": "00:05"
                 }
                 with open('./config.json', 'a') as j:
                     json.dump(re, j, indent=4)
@@ -163,7 +189,7 @@ if __name__ == "__main__":
                 while True:
                     now = datetime.now().strftime("%H:%M")
                     print('checking at '+str(now))
-                    if str(now) != '00:05':
+                    if str(now) != re['time']:
                         sleep(60)
                         continue
                     run()
