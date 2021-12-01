@@ -1183,7 +1183,7 @@ def run():
                         input('press any key to exit...')
                         break
                     if devices_dexist == len(re['devices']):
-                        print("all configured devices doesn't exit")
+                        print("all configured devices don't exit")
                         input('press any key to exit...')
                         break_ = True
                         break
