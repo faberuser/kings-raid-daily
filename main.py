@@ -264,7 +264,7 @@ class Missions:
         self.wb_ = False
         self.lil_ = False
 
-    def execute(self, device):
+    def execute(self, device, launched=None):
         # get device resolution
         im = update_cache(device)
         if im == 'device offline':
@@ -279,9 +279,15 @@ class Missions:
 
         with open('./config.json') as cf_:
             cf = json.load(cf_)
-        if cf['devices'] != []:
-            for num in cf['devices']:
-                system(cf['ldconsole']+f' runapp --index {str(num)} --packagename com.vespainteractive.KingsRaid')
+        
+        if launched is not None:
+            system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+        else:
+            running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
+            running_list = str(running_list)[2:][:-1].split('\\r\\n')
+            for running in running_list:
+                if running != '':
+                    system(cf['ldconsole']+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
 
         def claim():
             # claim rewards
@@ -306,7 +312,7 @@ class Missions:
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['2']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
             slp(5)
             # claim gold buff 
-            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], cutoff=10, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], second_shell=data['buff']['2']['shell'], cutoff=10, sleep_duration=1, loop=5)
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['3']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
 
             # click back to mission board
@@ -345,7 +351,10 @@ class Missions:
                 lang = _langs_[lang_[0]]
 
             if lang is None:
-                print(device.serial+': language not supported, script eneded')
+                print(device.serial+': language not supported, script ended')
+                if launched is not None:
+                    print(device.serial+': because launched from config so closing after done')
+                    system(cf['ldconsole']+f' quit --index {str(launched)}')
                 return
 
         # check for undone missions
@@ -361,6 +370,9 @@ class Missions:
                 if not_done_ == not_done:
                     if count == 20:
                         print(device.serial+': all avalible missions has been completed, script ended')
+                        if launched is not None:
+                            print(device.serial+': because launched from config so closing after done')
+                            system(cf['ldconsole']+f' quit --index {str(launched)}')
                         break
                     count+=1
             except:
@@ -659,7 +671,7 @@ class Missions:
         logger.info(device.serial+': checked avalible team')
 
         # click register match
-        make_sure_loaded('./base/lov/end.png', device, data['lov']['6']['dms'], data['lov']['6']['shell'], sleep_duration=0.5, cutoff=20, second_shell=data['lov']['6']['second_shell'])
+        make_sure_loaded('./base/lov/end.png', device, data['lov']['6']['dms'], data['lov']['6']['shell'], sleep_duration=0.5, cutoff=25, second_shell=data['lov']['6']['second_shell'])
         logger.info(device.serial+': clicked and exited battle')
 
         # click exit match
@@ -1130,10 +1142,10 @@ def load_devices():
 
 def run():
     devices, working_dir, adb = load_devices()
-    count=0
+    count = 0
     while True:
         if count == 49:
-            print('no device was found after 10 retries, script ended')
+            print('no device was found after 50 retries, script ended')
             break
         if devices == []:
             print('no device was found')
@@ -1143,14 +1155,28 @@ def run():
                 print('launching from config and retrying...')
                 break_ = False
                 devices_dexist = 0
-                for device in re['devices']:
+                for device_ in re['devices']:
                     try:
-                        re_ = run_(re['ldconsole']+' launch --index '+str(device), capture_output=True).stdout
+                        re_ = run_(re['ldconsole']+' launch --index '+str(device_), capture_output=True).stdout
                         if str(re_)+'/' == """b"player don't exist!"/""":
                             devices_dexist += 1
-                            print('device with index '+str(device)+" doesn't exist")
+                            print('device with index '+str(device_)+" doesn't exist")
                         else:
-                            print('launched device with index '+str(device))
+                            print('launched device with index '+str(device_))
+                            print('waiting 30 secs for fully boot up')
+                            slp(30)
+                            while True:
+                                system(working_dir+'\\adb devices')
+                                devices = adb.devices()
+                                if devices != []:
+                                    for device in devices:
+                                        if str(devices[0].serial).startswith('127'):
+                                            continue
+                                        Missions().execute(device, device_)
+                                        break
+                                    break
+                                slp(5)
+                            break_ = True
                     except FileNotFoundError:
                         break_ = True
                         print("path to LDPlayer is wrong, please config and try again")
@@ -1163,8 +1189,6 @@ def run():
                         break
                 if break_ == True:
                     break
-                print('waiting 30 secs for device(s) fully boot up')
-                slp(30)
             else:
                 print('retrying...')
             system(working_dir+'\\adb devices')
@@ -1177,7 +1201,6 @@ def run():
             system(working_dir+'\\adb devices')
             devices = adb.devices()
             print('device(s) detected')
-            print('----------------------------------------------------------------\n')
             if path.exists('./.cache') == False:
                 mkdir('./.cache')
             handler = logging.FileHandler("./.cache/log.log", "a", "utf-8")
@@ -1185,7 +1208,7 @@ def run():
             handler.setFormatter(formatter)
             logger.addHandler(handler)
             for device in devices:
-                thread = Thread(target=Missions().execute, args=(device,))
+                thread = Thread(target=Missions().execute, args=(device,launched,))
                 print('executing on device '+device.serial)
                 thread.start()
             break
