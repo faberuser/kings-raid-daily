@@ -36,14 +36,15 @@
 - Download source code from [Github](https://github.com/faber6/kings-raid-daily/archive/refs/heads/main.zip)
 - Unzip file
 - Create and copy shortcut from `main.pyw`
-* Use Virtual Environment:
+- Use Virtual Environment:
     * Install `virtualenv` from `pip install virtualenv`
     * Create virtual environment in script parent directory `virtualenv .env`
     * Activate:
         - Windows `.env\Scripts\activate`
         - Linux `source .env/bin/activate`
+- Install requirements: `pip install -r requirements.txt`
 - Press `Windows+R`, type `shell:startup` and enter, then paste the copied shortcut
-* You need to double click the pasted shortcut or restart the PC to take effect.
+##### You need to double click the pasted shortcut or restart the PC to take effect.
 
 #### Note:
 - If the script can't find your emulator, try to restart your emulator and try again
