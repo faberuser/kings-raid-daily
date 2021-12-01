@@ -37,7 +37,7 @@
 - Press `Windows+R`, type `shell:startup` and enter, then paste the copied shortcut
 ##### You need to double click the pasted shortcut or restart the PC to take effect
 ##### If you are using your PC during the script running in background and starting to execute when new day, your screen will appear a few of Command Prompt windows when emulator booting up, please ignore this
-##### To end process, open Task Manager and end task kings-raid-daily-background
+##### To end process, open Task Manager and end task kings-raid-daily-background.exe
 
 #### Note:
 - If the script can't find your emulator, try to restart your emulator and try again
