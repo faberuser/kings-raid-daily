@@ -30,7 +30,6 @@ if __name__ == "__main__":
     while True:
         now = datetime.now().strftime("%H:%M")
         print('checking at '+str(now))
-        print(re['time'])
         if str(now) != re['time']:
             sleep(60)
             continue
