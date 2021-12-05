@@ -42,7 +42,7 @@ def update_cache(device):
     return im
 
 
-def check_login_rewards(device, once=False):
+def check_login_rewards(device, once=False, launched=None):
     # get device resolution
     im = update_cache(device)
     size_ = f"{im.size[0]}x{im.size[1]}"
@@ -158,18 +158,35 @@ def check_login_rewards(device, once=False):
         if mb == 'similar':
             break
 
+        # home screen
+        im1 = Image.open('./base/login/home_screen.png')
+        im2 = crop(im, data['login']['home_screen']['dms'])
+        home_screen = check_similar(im1, im2, 15)
+        if home_screen == 'similar':
+            with open('./config.json') as cf_:
+                cf = json.load(cf_)
+            if launched is not None:
+                system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+            else:
+                running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
+                running_list = str(running_list)[2:][:-1].split('\\r\\n')
+                for running in running_list:
+                    if running != '':
+                        system(cf['ldconsole']+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+            slp(3)
+
         if once == True:
             count+=1
-            if count == 7:
+            if count == 9:
                 break
 
 
 def make_sure_loaded(original_img, device, dimensions=None, shell_=None, loop=None, sleep_duration=None, \
-        shell_first=False, cutoff=6, second_img=None, third_img=None, oposite=False, second_shell=None, clr=False):
+        shell_first=False, cutoff=6, second_img=None, third_img=None, oposite=False, second_shell=None, clr=False, launched=None):
     count = 0
     while True:
         if clr == True:
-            check_login_rewards(device, True)
+            check_login_rewards(device, True, launched)
         # do adb shell first if passed
         if shell_ is not None:
             if shell_first is True:
@@ -274,7 +291,6 @@ class Missions:
 
         with open('./config.json') as cf_:
             cf = json.load(cf_)
-        
         if launched is not None:
             system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
         else:
@@ -295,7 +311,7 @@ class Missions:
                 count+=1
 
         # open daily mission board
-        make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], clr=True)
+        make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], clr=True, launched=launched)
 
         with open('./config.json') as m:
             config = json.load(m)
@@ -303,11 +319,11 @@ class Missions:
             # claim exp and gold buff in etc
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['1']['shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
             # claim exp buff
-            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['2']['dms'], data['buff']['2']['shell'], cutoff=10, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['2']['dms'], data['buff']['2']['shell'], cutoff=15, sleep_duration=1, loop=5)
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['2']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
             slp(5)
             # claim gold buff 
-            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], second_shell=data['buff']['2']['shell'], cutoff=10, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], second_shell=data['buff']['2']['shell'], cutoff=15, sleep_duration=1, loop=5)
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['3']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
 
             # click back to mission board
@@ -1091,7 +1107,7 @@ def run():
             print('device(s) detected')
             setup_log()
             for device in devices:
-                thread = Thread(target=Missions().execute, args=(device,launched,))
+                thread = Thread(target=Missions().execute, args=(device,))
                 print('executing on device '+device.serial)
                 thread.start()
             break

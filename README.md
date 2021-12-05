@@ -1,6 +1,10 @@
 # kings-raid-daily
 #### A modern script to do boring daily mission in King's Raid
-#### The difference between this script and normal macro is it can handle running-kasel
+
+## What can this script do
+- Do all dailies except consume stamina and feed lil raider
+- Auto launch emulators in a configured time to do dailies
+- You can exclude scoring content like WB or LOV in doing list
 
 ## Installations
 * Python > 3.8.x
