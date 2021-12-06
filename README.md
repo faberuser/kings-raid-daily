@@ -26,6 +26,7 @@
 
 #### Config:
 - Double click/Open generate-shortcut.bat to generate shortcut point to executables in kings-raid-daily folder
+- 2 cores CPU and 4GB RAM or above is recommended
 - Open emulator Settings and head to Other settings on the left menu, change @adb_debug/ADB debugging to Open connection
 - Run the script and press 3 or edit directly in config.json
 
