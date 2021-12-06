@@ -1333,6 +1333,62 @@
                 "dms": null,
                 "shell": "input tap 325 30"
             }
+        },
+        "loh": {
+            "1": {
+                "dms": [
+                    398,
+                    93,
+                    0,
+                    0
+                ],
+                "shell": "input tap 102 19"
+            },
+            "2": {
+                "dms": null,
+                "shell": "input tap 325 30"
+            },
+            "3": {
+                "dms": [
+                    0,
+                    0,
+                    560,
+                    495
+                ],
+                "shell": "input tap 472 492"
+            },
+            "4": {
+                "dms": [
+                    453,
+                    46,
+                    0,
+                    0
+                ],
+                "shell": "input tap 380 138"
+            },
+            "5": {
+                "dms": [
+                    228,
+                    113,
+                    232,
+                    113
+                ],
+                "shell":"input tap 919 254"
+            },
+            "6": {
+                "dms": [
+                    0,
+                    0,
+                    627,
+                    497
+                ],
+                "shell":"input tap 602 393"
+            },
+            "scripts": {
+                "get_ready": "input tap 731 498",
+                "confirm": "input tap 545 417",
+                "sh": "./base/loh/960/loh_script.sh"
+            }
         }
     },
     "1280x720": {

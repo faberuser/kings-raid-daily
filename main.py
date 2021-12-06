@@ -39,7 +39,7 @@ def inputimeout(prompt='', timeout=30.0):
 
 
 def config():
-    buff, wb, lov, dragon, friendship, inn, shop, stockage, tower = (None,)*9
+    buff, wb, lov, loh, dragon, friendship, inn, shop, stockage, tower = (None,)*10
     print('\ndo you want this script to')
 
     def con(text):
@@ -60,8 +60,9 @@ def config():
         return do
 
     buff = con('use exp and gold buff before doing dailies')
-    wb = con('auto wb')
-    lov = con('auto lov')
+    wb = con('auto wb (world boss)')
+    lov = con('auto lov (league of victory)')
+    loh = con('auto all loh keys (league of honor)')
     dragon = con('fight dragon')
     friendship = con('exchange friendship token')
     inn = con("do stuff in hero's inn")
@@ -113,6 +114,8 @@ def config():
         re['wb'] = wb
     if lov != '':
         re['lov'] = lov
+    if loh != '':
+        re['loh'] = loh
     if dragon != '':
         re['dragon'] = dragon
     if friendship != '':
@@ -168,6 +171,7 @@ if __name__ == "__main__":
                     "buff": True,
                     "wb": False,
                     "lov": False,
+                    "loh": False,
                     "dragon": True,
                     "friendship": True,
                     "inn": True,

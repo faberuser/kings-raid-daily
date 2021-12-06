@@ -2,6 +2,7 @@ __pycache__
 build
 dist
 .cache
+crop.py
 config.json
 main.spec
 main-background.spec

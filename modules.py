@@ -1,6 +1,7 @@
 from threading import Thread
 from random import choice
 from time import sleep as slp
+from time import time as tiime
 from os import mkdir, getcwd, system, path
 from subprocess import run as run_
 import logging, json
@@ -275,6 +276,7 @@ class Missions:
         self.tower_ = False
         self.wb_ = False
         self.lil_ = False
+        self.loh_ = False
 
     def execute(self, device, launched=None):
         # get device resolution
@@ -319,11 +321,11 @@ class Missions:
             # claim exp and gold buff in etc
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['1']['shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
             # claim exp buff
-            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['2']['dms'], data['buff']['2']['shell'], cutoff=15, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/use_exp.png', device, data['buff']['2']['dms'], data['buff']['2']['shell'], cutoff=15, sleep_duration=1, loop=5)
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['2']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
             slp(5)
             # claim gold buff 
-            make_sure_loaded('./base/other/use_hot_time.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], second_shell=data['buff']['2']['shell'], cutoff=15, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/use_gold.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], second_shell=data['buff']['2']['shell'], cutoff=15, sleep_duration=1, loop=5)
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['3']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
 
             # click back to mission board
@@ -380,6 +382,11 @@ class Missions:
             try:
                 if not_done_ == not_done:
                     if count == 20:
+                        if cf['loh'] == True:
+                            print(device.serial+': loh is enabled, suiciding in loh')
+                            re = self.loh(device, data)
+                            if re != 'success':
+                                print(device.serial+': loh is currently unavailable')
                         print(device.serial+': all avalible missions has been completed, script ended')
                         if launched is not None:
                             print(device.serial+': because launched from config so closing after done')
@@ -1016,6 +1023,48 @@ class Missions:
         device.shell(data['lil']['7']['shell'])
         logger.info(device.serial+': successfully did lil raider mission')
         self.lil_ = True
+        return 'success'
+
+    
+    def loh(self, device, data):
+        print(device.serial+': suiciding in loh...')
+        logger.info(device.serial+': suiciding in loh')
+        
+        # exit from mission board
+        shortcut = make_sure_loaded('./base/loh/my_info.png', device, data['loh']['1']['dms'], data['loh']['1']['shell'], sleep_duration=0.5, clr=True)
+        device.shell(data['loh']['2']['shell'])
+        logger.info(device.serial+': exit to main screen')
+
+        # click portal
+        shortcut = make_sure_loaded('./base/loh/portal.png', device, data['loh']['3']['dms'], data['loh']['3']['shell'], sleep_duration=1)
+        logger.info(device.serial+': clicked portal')
+
+        # click arena in portal
+        shortcut = make_sure_loaded('./base/loh/arena.png', device, data['loh']['4']['dms'], data['loh']['4']['shell'], cutoff=15, sleep_duration=0.5)
+        logger.info(device.serial+': clicked arenas')
+
+        # click loh in arena
+        shortcut = make_sure_loaded('./base/loh/notice.png', device, data['loh']['5']['dms'], data['loh']['5']['shell'], cutoff=20, sleep_duration=0.5)
+        logger.info(device.serial+': clicked loh')
+
+        # click ok in notice
+        shortcut = make_sure_loaded('./base/loh/loh.png', device, data['loh']['6']['dms'], data['loh']['6']['shell'], sleep_duration=5)
+        logger.info(device.serial+': clicked ok in notice')
+        device.push(data['loh']['scripts']['sh'], '/sdcard/loh_script.sh')
+        start_time = tiime()
+        seconds = 3360
+        slp(5)
+        while True:
+            current_time = tiime()
+            elapsed_time = current_time - start_time
+            if elapsed_time > seconds:
+                break
+
+            device.shell(data['loh']['scripts']['get_ready'])
+            device.shell(data['loh']['scripts']['confirm'])
+            device.shell('sh /sdcard/loh_script.sh')
+
+        logger.info(device.serial+': successfully suiciding in loh')
         return 'success'
 
 

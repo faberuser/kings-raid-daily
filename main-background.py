@@ -14,6 +14,7 @@ if __name__ == "__main__":
             "buff": True,
             "wb": False,
             "lov": False,
+            "loh": False,
             "dragon": True,
             "friendship": True,
             "inn": True,
