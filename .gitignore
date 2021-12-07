@@ -5,6 +5,5 @@ dist
 crop.py
 calc.py
 config.json
-sets copy.json
 main.spec
 main-background.spec
