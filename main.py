@@ -154,37 +154,40 @@ def config():
 
 if __name__ == "__main__":
     print('please ignore this warning ↑')
+    time = None
+    try:
+        with open('./config.json') as j:
+            re = json.load(j)
+        time = re['time']
+    except FileNotFoundError:
+        print('config not found, creating new one with default settings')
+        re = {
+            "buff": True,
+            "wb": False,
+            "lov": False,
+            "loh": False,
+            "dragon": True,
+            "friendship": True,
+            "inn": True,
+            "shop": True,
+            "stockage": True,
+            "tower": True,
+            "lil": False,
+            "devices": [],
+            "ldconsole": "",
+            "time": "00:05"
+        }
+        with open('./config.json', 'a') as j:
+            json.dump(re, j, indent=4)
+        time = "00:05"
     try:
         print('* press 1 to run this script once')
-        print('* press 2 to run this script in background to check and run when new day (at 00:05)')
+        print(f'* press 2 to run this script in background to check and run when new day (at {time})')
         print('* press 3 to start config this script')
         auto_daily = inputimeout('> ', timeout=30)
         if auto_daily.isnumeric() == False:
             input('invalid answer, press any key to exit...')
         else:
-            try:
-                with open('./config.json') as j:
-                    re = json.load(j)
-            except FileNotFoundError:
-                print('config not found, creating new one with default settings')
-                re = {
-                    "buff": True,
-                    "wb": False,
-                    "lov": False,
-                    "loh": False,
-                    "dragon": True,
-                    "friendship": True,
-                    "inn": True,
-                    "shop": True,
-                    "stockage": True,
-                    "tower": True,
-                    "lil": False,
-                    "devices": [],
-                    "ldconsole": "",
-                    "time": "00:05"
-                }
-                with open('./config.json', 'a') as j:
-                    json.dump(re, j, indent=4)
             if int(auto_daily) == 1:
                 print('ok, running script for once')
                 run()

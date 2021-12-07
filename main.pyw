@@ -5,10 +5,11 @@ import json
 
 if __name__ == "__main__":
     print('please ignore this warning ↑')
-    print("this scripts will run in background to check and run the script for new day (at 00:05)")
+    time = None
     try:
         with open('./config.json') as j:
             re = json.load(j)
+        time = re['time']
     except FileNotFoundError:
         re = {
             "buff": True,
@@ -28,6 +29,8 @@ if __name__ == "__main__":
         }
         with open('./config.json', 'a') as j:
             json.dump(re, j, indent=4)
+        time = "00:05"
+    print(f"this scripts will run in background to check and run the script for new day (at {time})")
     while True:
         now = datetime.now().strftime("%H:%M")
         print('checking at '+str(now))

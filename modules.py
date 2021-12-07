@@ -68,7 +68,7 @@ def check_login_rewards(device, once=False, launched=None):
         # introduction
         im1 = Image.open('./base/login/introduction.png')
         im2 = crop(im, data['introduction']['dms'])
-        introduction = check_similar(im1, im2, 10)
+        introduction = check_similar(im1, im2, 15)
         if introduction == 'similar':
             device.shell(data['introduction']['shell'])
             slp(3)
