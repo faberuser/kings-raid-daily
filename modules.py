@@ -56,6 +56,24 @@ def check_login_rewards(device, once=False, launched=None):
         im = update_cache(device)
 
         # login
+        # update notice
+        im1 = Image.open('./base/login/update_notice.png')
+        im2 = crop(im, data['update_notice']['dms'])
+        update_notice = check_similar(im1, im2, 10)
+        if update_notice == 'similar':
+            device.shell(data['update_notice']['shell'])
+            slp(3)
+            continue
+
+        # introduction
+        im1 = Image.open('./base/login/introduction.png')
+        im2 = crop(im, data['introduction']['dms'])
+        introduction = check_similar(im1, im2, 10)
+        if introduction == 'similar':
+            device.shell(data['introduction']['shell'])
+            slp(3)
+            continue
+
         # tap to play
         im1 = Image.open('./base/login/tap_to_play.png')
         im2 = crop(im, data['tap_to_play']['dms'])
@@ -63,6 +81,7 @@ def check_login_rewards(device, once=False, launched=None):
         if tap_to_play == 'similar':
             device.shell(data['tap_to_play']['shell'])
             slp(3)
+            continue
 
         # purchase fail
         im1 = Image.open('./base/login/purchase_fail.png')
@@ -71,6 +90,7 @@ def check_login_rewards(device, once=False, launched=None):
         if purchase_fail == 'similar':
             device.shell(data['purchase_fail']['shell'])
             slp(3)
+            continue
 
         # pass community page
         im1 = Image.open('./base/login/community.png')
@@ -79,6 +99,7 @@ def check_login_rewards(device, once=False, launched=None):
         if community == 'similar':
             device.shell(data['login']['community']['shell'])
             slp(3)
+            continue
 
         # pass sale page
         im1 = Image.open('./base/login/sale.png')
@@ -87,6 +108,7 @@ def check_login_rewards(device, once=False, launched=None):
         if sale == 'similar':
             device.shell(data['login']['sale']['shell'])
             slp(3)
+            continue
 
         # claim login attendance
         im1 = Image.open('./base/login/attendance.png')
@@ -98,6 +120,7 @@ def check_login_rewards(device, once=False, launched=None):
             device.shell(data['login']['attendance']['second_shell'])
             logger.info(device.serial+': claimed login attendance')
             slp(3)
+            continue
 
         # pass event page
         im1 = Image.open('./base/login/event.png')
@@ -106,6 +129,7 @@ def check_login_rewards(device, once=False, launched=None):
         if event == 'similar':
             device.shell(data['login']['event']['shell'])
             slp(3)
+            continue
 
         # claim guild attendance
         im1 = Image.open('./base/login/guild_attendance.png')
@@ -120,6 +144,7 @@ def check_login_rewards(device, once=False, launched=None):
             device.shell(data['login']['guild_attendance']['exit'])
             logger.info(device.serial+': claimed guild attendance')
             slp(3)
+            continue
         
         # claim login accumualated
         im1 = Image.open('./base/login/accumualated.png')
@@ -131,6 +156,7 @@ def check_login_rewards(device, once=False, launched=None):
             device.shell(data['login']['accumualated']['second_shell'])
             logger.info(device.serial+': claimed login accumualated')
             slp(3)
+            continue
 
         # may appear
         # sale 2
@@ -143,6 +169,7 @@ def check_login_rewards(device, once=False, launched=None):
             device.shell(data['login']['sale_2']['second_shell'])
             logger.info(device.serial+': claimed guild attendance')
             slp(3)
+            continue
 
         # special shop
         im1 = Image.open('./base/login/special_shop.png')
@@ -151,13 +178,7 @@ def check_login_rewards(device, once=False, launched=None):
         if special_shop == 'similar':
             device.shell(data['login']['special_shop']['shell'])
             slp(3)
-
-        # return to main page
-        im1 = Image.open('./base/login/mission_button.png')
-        im2 = crop(im, data['login']['mission_button'])
-        mb = check_similar(im1, im2, 20)
-        if mb == 'similar':
-            break
+            continue
 
         # home screen
         im1 = Image.open('./base/login/home_screen.png')
@@ -166,19 +187,31 @@ def check_login_rewards(device, once=False, launched=None):
         if home_screen == 'similar':
             with open('./config.json') as cf_:
                 cf = json.load(cf_)
-            if launched is not None:
-                system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
-            else:
-                running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
-                running_list = str(running_list)[2:][:-1].split('\\r\\n')
-                for running in running_list:
-                    if running != '':
-                        system(cf['ldconsole']+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
-            slp(3)
+            if cf['ldconsole'] != '':
+                try:
+                    if launched is not None:
+                        system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+                    else:
+                        running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
+                        running_list = str(running_list)[2:][:-1].split('\\r\\n')
+                        for running in running_list:
+                            if running != '':
+                                system(cf['ldconsole']+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+                    slp(3)
+                except FileNotFoundError:
+                    print("path to ldplayer is wrong, please config again")
+                continue
+
+        # return to main page
+        im1 = Image.open('./base/login/mission_button.png')
+        im2 = crop(im, data['login']['mission_button'])
+        mb = check_similar(im1, im2, 20)
+        if mb == 'similar':
+            break
 
         if once == True:
             count+=1
-            if count == 9:
+            if count == 4:
                 break
 
 
@@ -293,14 +326,18 @@ class Missions:
 
         with open('./config.json') as cf_:
             cf = json.load(cf_)
-        if launched is not None:
-            system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
-        else:
-            running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
-            running_list = str(running_list)[2:][:-1].split('\\r\\n')
-            for running in running_list:
-                if running != '':
-                    system(cf['ldconsole']+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+        if cf['ldconsole'] != '':
+            try:
+                if launched is not None:
+                    system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+                else:
+                    running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
+                    running_list = str(running_list)[2:][:-1].split('\\r\\n')
+                    for running in running_list:
+                        if running != '':
+                            system(cf['ldconsole']+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+            except FileNotFoundError:
+                print("path to ldplayer is wrong, please config again")
 
         def claim():
             # claim rewards
@@ -325,7 +362,7 @@ class Missions:
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['2']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
             slp(5)
             # claim gold buff 
-            make_sure_loaded('./base/other/use_gold.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], second_shell=data['buff']['2']['shell'], cutoff=15, sleep_duration=1, loop=5)
+            make_sure_loaded('./base/other/use_gold.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], cutoff=15, sleep_duration=1, loop=5)
             make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['3']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
 
             # click back to mission board
@@ -339,7 +376,7 @@ class Missions:
         im = update_cache(device)
         first_misison = crop(im, data['first mission'])
         image = filter(first_misison)
-        text_lang = image_to_string(image).splitlines()[0].lower()
+        text_lang = image_to_string(image).splitlines()[0].lower().replace('♀', '')
         lang = detect(text_lang)
         if lang == 'en' or lang == 'da' or lang == 'fr':
             lang = 'eng'
@@ -348,20 +385,24 @@ class Missions:
         elif lang == 'vi':
             lang = 'vie'
         else:
-
             with open('./languages.json', encoding='utf-8') as j:
                 langs = json.load(j)
             lang = None
+            missions_ = []
             langs_ = []
             _langs_ = {}
             for lang__ in langs:
+                langs_.append(lang__)
                 for _lang_ in langs[lang__]:
-                    langs_.append(_lang_)
+                    missions_.append(_lang_)
                     _langs_[_lang_] = lang__
-            text_lang = image_to_string(image, lang__).splitlines()[0].lower()
-            lang_ = extractOne(text_lang, langs_)
-            if lang_[1] > 80:
-                lang = _langs_[lang_[0]]
+            for lang__ in langs_:
+                text_lang = image_to_string(image, lang__).splitlines()[0].lower().replace('♀', '')
+                if lang__ == 'jpn':
+                    text_lang = text_lang.replace(' ', '')
+                lang_ = extractOne(text_lang, missions_)
+                if lang_[1] > 80:
+                    lang = _langs_[lang_[0]]
 
             if lang is None:
                 print(device.serial+': language not supported, script ended')
@@ -383,10 +424,9 @@ class Missions:
                 if not_done_ == not_done:
                     if count == 20:
                         if cf['loh'] == True:
-                            print(device.serial+': loh is enabled, suiciding in loh')
-                            re = self.loh(device, data)
+                            re = self.loh(device, data, lang)
                             if re != 'success':
-                                print(device.serial+': loh is currently unavailable')
+                                print(device.serial+': loh not enough currency or unavailable')
                         print(device.serial+': all avalible missions has been completed, script ended')
                         if launched is not None:
                             print(device.serial+': because launched from config so closing after done')
@@ -399,10 +439,10 @@ class Missions:
             count_ = 0
             for mission in visible_missions:
                 pil_image = mission
-                text = image_to_string(pil_image, lang).splitlines()[0].lower()
+                text = image_to_string(pil_image, lang).splitlines()[0].lower().replace('♀', '')
                 if text == ' ':
                     img = filter(pil_image)
-                    text = image_to_string(img, lang).splitlines()[0].lower()
+                    text = image_to_string(img, lang).splitlines()[0].lower().replace('♀', '')
                 re = self.do_mission(text, device, data['shortcut'][str(count_)], data, size_, lang)
                 if re == 'not':
                     if text not in not_done:
@@ -503,15 +543,17 @@ class Missions:
         logger.info(device.serial+': clicked create dragon raid')
 
         with open('./languages.json', encoding='utf-8') as j:
-            self.dragon_text = json.load(j)[lang]['dragon']
+            dragon_text = json.load(j)[lang]['dragon']
         # change hard level to t6 stage 1
         while True:
             im = update_cache(device)
             pil_image = crop(im, data['dragon']['3']['dms'])
             img = filter(pil_image)
-            text = image_to_string(img, lang)
+            text = image_to_string(img, lang).replace('♀', '')
+            if lang == 'jpn':
+                text = text.replace(' ', '')
             text_ = text.splitlines()[0].lower().replace(' ', '')
-            if SequenceMatcher(None, self.dragon_text, text_).ratio() > 0.9:
+            if SequenceMatcher(None, dragon_text, text_).ratio() > 0.9:
                 device.shell(data['dragon']['3']['shell'])
                 break
             else:
@@ -523,7 +565,7 @@ class Missions:
         logger.info(device.serial+': clicked single raid')
 
         # click enter raid
-        make_sure_loaded('./base/dragon/party.png', device, data['dragon']['6']['dms'], data['dragon']['6']['shell'], sleep_duration=0.5, cutoff=15)
+        make_sure_loaded('./base/dragon/party.png', device, data['dragon']['6']['dms'], data['dragon']['6']['shell'], sleep_duration=0.5, cutoff=20)
         logger.info(device.serial+': clicked enter raid')
 
         # check avalible party
@@ -902,7 +944,10 @@ class Missions:
             im = update_cache(device)
             pil_image = crop(im, data['tower']['3']['dms'])
             img = filter(pil_image)
-            text = image_to_string(img, lang).splitlines()[0].lower().replace(' ','')
+            text = image_to_string(img, lang).replace('♀', '')
+            if lang == 'jpn':
+                text = text.replace(' ', '')
+            text = text.splitlines()[0].lower().replace(' ','')
             if SequenceMatcher(None, text, floor).ratio() > 0.9:
                 device.shell(data['tower']['5']['shell'])
                 break
@@ -1026,8 +1071,8 @@ class Missions:
         return 'success'
 
     
-    def loh(self, device, data):
-        print(device.serial+': suiciding in loh...')
+    def loh(self, device, data, lang):
+        print(device.serial+': loh is enabled, suiciding in loh...')
         logger.info(device.serial+': suiciding in loh')
         
         # exit from mission board
@@ -1048,8 +1093,23 @@ class Missions:
         logger.info(device.serial+': clicked loh')
 
         # click ok in notice
-        shortcut = make_sure_loaded('./base/loh/loh.png', device, data['loh']['6']['dms'], data['loh']['6']['shell'], sleep_duration=5)
+        shortcut = make_sure_loaded('./base/loh/loh.png', device, data['loh']['6']['dms'], data['loh']['6']['shell'], sleep_duration=5, loop=10)
         logger.info(device.serial+': clicked ok in notice')
+
+        # check
+        device.shell(data['loh']['7']['shell'])
+        slp(5)
+        im = update_cache(device)
+        im = crop(im, data['loh']['7']['dms'])
+        text = image_to_string(im, lang).lower().replace('♀', '')
+        if lang == 'jpn':
+            text = text.replace(' ', '')
+        with open('./languages.json', encoding='utf-8') as j:
+            re = json.load(j)
+        if SequenceMatcher(None, re[lang]['loh'], text).ratio() > 0.9:
+            return 'not enough currency'
+
+        # push script and continuosly execute
         device.push(data['loh']['scripts']['sh'], '/sdcard/loh_script.sh')
         start_time = tiime()
         seconds = 3360

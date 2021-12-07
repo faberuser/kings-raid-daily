@@ -3,6 +3,7 @@
 
 ## What can this script do
 - Do all dailies except consume stamina and feed lil raider
+- Auto LOH after done all dailies
 - Auto launch emulators in a configured time to do dailies
 - You can exclude scoring content like WB or LOV in doing list
 
@@ -22,7 +23,7 @@
 ## Usage
 #### ONLY SUPPORT THESE SETTINGS:
 - Multiple LD Player Emulator with tablet resolution (960x540-(best), 1280x720, 1600x900, 1920x1080)
-- Game language ENGLISH, VIETNAMESE or JAPANESE
+- Game language ENGLISH-(best), VIETNAMESE or JAPANESE
 
 #### Config:
 - Double click/Open generate-shortcut.bat to generate shortcut point to executables in kings-raid-daily folder
