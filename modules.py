@@ -190,13 +190,13 @@ def check_login_rewards(device, once=False, launched=None):
             if cf['ldconsole'] != '':
                 try:
                     if launched is not None:
-                        system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+                        system('"'+cf['ldconsole']+f'" runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
                     else:
                         running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
                         running_list = str(running_list)[2:][:-1].split('\\r\\n')
                         for running in running_list:
                             if running != '':
-                                system(cf['ldconsole']+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+                                system('"'+cf['ldconsole']+'"'+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
                     slp(3)
                 except FileNotFoundError:
                     print("path to ldplayer is wrong, please config again")
@@ -329,13 +329,13 @@ class Missions:
         if cf['ldconsole'] != '':
             try:
                 if launched is not None:
-                    system(cf['ldconsole']+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+                    system('"'+cf['ldconsole']+f'" runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
                 else:
-                    running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
+                    running_list = run_('"'+cf['ldconsole']+f'" runninglist', capture_output=True).stdout
                     running_list = str(running_list)[2:][:-1].split('\\r\\n')
                     for running in running_list:
                         if running != '':
-                            system(cf['ldconsole']+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+                            system('"'+cf['ldconsole']+'"'+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
             except FileNotFoundError:
                 print("path to ldplayer is wrong, please config again")
 
@@ -408,7 +408,7 @@ class Missions:
                 print(device.serial+': language not supported, script ended')
                 if launched is not None:
                     print(device.serial+': because launched from config so closing after done')
-                    system(cf['ldconsole']+f' quit --index {str(launched)}')
+                    system('"'+cf['ldconsole']+f'" quit --index {str(launched)}')
                 return
 
         # check for undone missions
@@ -430,7 +430,7 @@ class Missions:
                         print(device.serial+': all avalible missions has been completed, script ended')
                         if launched is not None:
                             print(device.serial+': because launched from config so closing after done')
-                            system(cf['ldconsole']+f' quit --index {str(launched)}')
+                            system('"'+cf['ldconsole']+f'" quit --index {str(launched)}')
                         break
                     count+=1
             except:
