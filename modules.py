@@ -192,7 +192,7 @@ def check_login_rewards(device, once=False, launched=None):
                     if launched is not None:
                         system('"'+cf['ldconsole']+f'" runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
                     else:
-                        running_list = run_(cf['ldconsole']+' runninglist', capture_output=True).stdout
+                        running_list = run_('"'+cf['ldconsole']+'" runninglist', capture_output=True).stdout
                         running_list = str(running_list)[2:][:-1].split('\\r\\n')
                         for running in running_list:
                             if running != '':
@@ -1169,7 +1169,7 @@ def run():
                 devices_dexist = 0
                 for device_ in re['devices']:
                     try:
-                        re_ = run_(re['ldconsole']+' launch --index '+str(device_), capture_output=True).stdout
+                        re_ = run_('"'+re['ldconsole']+'" launch --index '+str(device_), capture_output=True).stdout
                         if str(re_)+'/' == """b"player don't exist!"/""":
                             devices_dexist += 1
                             print('device with index '+str(device_)+" doesn't exist")
