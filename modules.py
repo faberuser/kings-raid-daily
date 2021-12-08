@@ -189,14 +189,15 @@ def check_login_rewards(device, once=False, launched=None):
                 cf = json.load(cf_)
             if cf['ldconsole'] != '':
                 try:
+                    path = cf['ldconsole'].replace('|', '"')
                     if launched is not None:
-                        system('"'+cf['ldconsole']+f'" runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+                        system(path+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
                     else:
-                        running_list = run_('"'+cf['ldconsole']+'" runninglist', capture_output=True).stdout
+                        running_list = run_(path+' runninglist', capture_output=True).stdout
                         running_list = str(running_list)[2:][:-1].split('\\r\\n')
                         for running in running_list:
                             if running != '':
-                                system('"'+cf['ldconsole']+'"'+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+                                system(path+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
                     slp(3)
                 except FileNotFoundError:
                     print("path to ldplayer is wrong, please config again")
@@ -326,16 +327,17 @@ class Missions:
 
         with open('./config.json') as cf_:
             cf = json.load(cf_)
+        path = cf['ldconsole'].replace('|', '"')
         if cf['ldconsole'] != '':
             try:
                 if launched is not None:
-                    system('"'+cf['ldconsole']+f'" runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+                    system(path+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
                 else:
-                    running_list = run_('"'+cf['ldconsole']+f'" runninglist', capture_output=True).stdout
+                    running_list = run_(path+' runninglist', capture_output=True).stdout
                     running_list = str(running_list)[2:][:-1].split('\\r\\n')
                     for running in running_list:
                         if running != '':
-                            system('"'+cf['ldconsole']+'"'+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+                            system(path+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
             except FileNotFoundError:
                 print("path to ldplayer is wrong, please config again")
 
@@ -408,7 +410,7 @@ class Missions:
                 print(device.serial+': language not supported, script ended')
                 if launched is not None:
                     print(device.serial+': because launched from config so closing after done')
-                    system('"'+cf['ldconsole']+f'" quit --index {str(launched)}')
+                    system(path+f' quit --index {str(launched)}')
                 return
 
         # check for undone missions
@@ -430,7 +432,7 @@ class Missions:
                         print(device.serial+': all avalible missions has been completed, script ended')
                         if launched is not None:
                             print(device.serial+': because launched from config so closing after done')
-                            system('"'+cf['ldconsole']+f'" quit --index {str(launched)}')
+                            system(path+f' quit --index {str(launched)}')
                         break
                     count+=1
             except:
@@ -1169,7 +1171,8 @@ def run():
                 devices_dexist = 0
                 for device_ in re['devices']:
                     try:
-                        re_ = run_('"'+re['ldconsole']+'" launch --index '+str(device_), capture_output=True).stdout
+                        path = re['ldconsole'].replace('|', '"')
+                        re_ = run_(path+' launch --index '+str(device_), capture_output=True).stdout
                         if str(re_)+'/' == """b"player don't exist!"/""":
                             devices_dexist += 1
                             print('device with index '+str(device_)+" doesn't exist")

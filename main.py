@@ -132,7 +132,7 @@ def config():
         re['time'] = time_
 
     if ldconsole != '':
-        re['ldconsole'] = ldconsole.replace('/', '//')+'\\ldconsole'
+        re['ldconsole'] = '|'+ldconsole.replace('/', '//')+'\\ldconsole|'
 
     if devices != '':
         devices_ = []
