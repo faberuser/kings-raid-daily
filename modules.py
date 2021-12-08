@@ -2,7 +2,7 @@ from threading import Thread
 from random import choice
 from time import sleep as slp
 from time import time as tiime
-from os import mkdir, getcwd, system, path
+from os import mkdir, getcwd, system, path as pth
 from subprocess import run as run_
 import logging, json
 
@@ -1148,7 +1148,7 @@ def load_devices():
 def run():
 
     def setup_log():
-        if path.exists('./.cache') == False:
+        if pth.exists('./.cache') == False:
             mkdir('./.cache')
         handler = logging.FileHandler("./.cache/log.log", "a", "utf-8")
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
