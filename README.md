@@ -34,6 +34,7 @@
 #### Setup:
 - Set up all team can clear all stockage dungeons (if world boss or league of victory was turned on, set up all team and make sure the auto mode is on)
 - End all dispatch (if you want to keep the dispatch running, while dispatch is running make sure that you have set up an entire team on `Dragon T6 Stage 1` (if turned on))
+- Make sure inventory is not full
 
 #### To run the script once:
 - Run the shortcut kings-raid-daily and press 1

@@ -1093,7 +1093,8 @@ class Missions:
         logger.info(device.serial+': clicked loh')
 
         # click ok in notice
-        shortcut = make_sure_loaded('./base/loh/loh.png', device, data['loh']['6']['dms'], data['loh']['6']['shell'], sleep_duration=5, loop=10)
+        shortcut = make_sure_loaded('./base/loh/loh.png', device, data['loh']['6']['dms'], data['loh']['6']['shell'],
+            second_img='./base/loh/previous_result.png', sleep_duration=5, loop=10)
         logger.info(device.serial+': clicked ok in notice')
 
         # check
