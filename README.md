@@ -22,6 +22,7 @@
 
 ## Usage
 #### ONLY SUPPORT THESE SETTINGS:
+- Windows 10 or higher
 - Multiple LD Player Emulator with tablet resolution (960x540-(best), 1280x720, 1600x900, 1920x1080)
 - Game language ENGLISH-(best), VIETNAMESE or JAPANESE
 
