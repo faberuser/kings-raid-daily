@@ -1169,52 +1169,53 @@ def run():
             print('no device was found after 50 retries, script ended')
             break
         if devices == []:
-            print('no device was found')
             with open('./config.json') as j:
                 re = json.load(j)
             if re['devices'] != []:
-                print('launching from config and retrying...')
-                break_ = False
-                devices_dexist = 0
-                for device_ in re['devices']:
-                    try:
-                        path = re['ldconsole'].replace('|', '"')
-                        re_ = run_(path+' launch --index '+str(device_), capture_output=True).stdout
-                        if str(re_)+'/' == """b"player don't exist!"/""":
-                            devices_dexist += 1
-                            print('device with index '+str(device_)+" doesn't exist")
-                        else:
-                            print('launched device with index '+str(device_))
-                            print('waiting 30 secs for fully boot up')
-                            slp(30)
-                            while True:
-                                run_(working_dir+'\\adb devices')
-                                devices = adb.devices()
-                                if devices != []:
-                                    for device in devices:
-                                        if str(devices[0].serial).startswith('127'):
-                                            continue
-                                        setup_log()
-                                        print('executing on device '+device.serial)
-                                        Missions().execute(device, device_)
+                count+=1
+                if count == 4:
+                    print('no device was found after 5 retries, launching from config and retrying...')
+                    break_ = False
+                    devices_dexist = 0
+                    for device_ in re['devices']:
+                        try:
+                            path = re['ldconsole'].replace('|', '"')
+                            re_ = run_(path+' launch --index '+str(device_), capture_output=True).stdout
+                            if str(re_)+'/' == """b"player don't exist!"/""":
+                                devices_dexist += 1
+                                print('device with index '+str(device_)+" doesn't exist")
+                            else:
+                                print('launched device with index '+str(device_))
+                                print('waiting 30 secs for fully boot up')
+                                slp(30)
+                                while True:
+                                    run_(working_dir+'\\adb devices')
+                                    devices = adb.devices()
+                                    if devices != []:
+                                        for device in devices:
+                                            if str(devices[0].serial).startswith('127'):
+                                                continue
+                                            setup_log()
+                                            print('executing on device '+device.serial)
+                                            Missions().execute(device, device_)
+                                            break
                                         break
-                                    break
-                                slp(5)
+                                    slp(5)
+                                break_ = True
+                        except FileNotFoundError:
                             break_ = True
-                    except FileNotFoundError:
-                        break_ = True
-                        print("path to LDPlayer is wrong, please config and try again")
-                        input('press any key to exit...')
+                            print("path to LDPlayer is wrong, please config and try again")
+                            input('press any key to exit...')
+                            break
+                        if devices_dexist == len(re['devices']):
+                            print("all configured devices don't exit")
+                            input('press any key to exit...')
+                            break_ = True
+                            break
+                    if break_ == True:
                         break
-                    if devices_dexist == len(re['devices']):
-                        print("all configured devices don't exit")
-                        input('press any key to exit...')
-                        break_ = True
-                        break
-                if break_ == True:
-                    break
             else:
-                print('retrying...')
+                print('no device was found, retrying...')
             run_(working_dir+'\\adb devices')
             devices = adb.devices()
         elif str(devices[0].serial).startswith('127'):
@@ -1232,4 +1233,4 @@ def run():
                 thread.start()
             break
         slp(5)
-        count+=9
+        count+=1
