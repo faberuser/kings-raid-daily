@@ -1174,7 +1174,6 @@ def run():
             with open('./config.json') as j:
                 re = json.load(j)
             if re['devices'] != []:
-                count+=1
                 if count == 4:
                     print('no device was found after 5 retries, launching from config and retrying...')
                     break_ = False
@@ -1216,8 +1215,7 @@ def run():
                             break
                     if break_ == True:
                         break
-            else:
-                print('no device was found, retrying...')
+            print('no device was found, retrying...')
             run_(working_dir+'\\adb devices')
             devices = adb.devices()
         elif str(devices[0].serial).startswith('127'):
