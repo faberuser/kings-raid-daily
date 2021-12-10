@@ -1120,6 +1120,8 @@ class Missions:
             return 'not enough currency'
 
         # push script and continuosly execute
+        device.shell('rm /sdcard/loh_script.sh')
+        slp(5)
         device.push(data['loh']['scripts']['sh'], '/sdcard/loh_script.sh')
         start_time = tiime()
         seconds = 4000
