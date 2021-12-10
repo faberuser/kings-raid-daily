@@ -579,17 +579,17 @@ class Missions:
 
         # check avalible party
         # slot 1
-        make_sure_loaded('./base/dragon/party_4.png', device, data['dragon']['7']['dms'], data['dragon']['7']['shell'], oposite=True, sleep_duration=0.5)
+        make_sure_loaded('./base/dragon/party_4.png', device, data['dragon']['7']['dms'], data['dragon']['7']['shell'], oposite=True, sleep_duration=1)
         # slot 2
-        make_sure_loaded('./base/dragon/party_3.png', device, data['dragon']['8']['dms'], data['dragon']['8']['shell'], oposite=True, sleep_duration=0.5)
+        make_sure_loaded('./base/dragon/party_3.png', device, data['dragon']['8']['dms'], data['dragon']['8']['shell'], oposite=True, sleep_duration=1)
         # slot 3
-        make_sure_loaded('./base/dragon/party_2.png', device, data['dragon']['9']['dms'], data['dragon']['9']['shell'], oposite=True, sleep_duration=0.5)
+        make_sure_loaded('./base/dragon/party_2.png', device, data['dragon']['9']['dms'], data['dragon']['9']['shell'], oposite=True, sleep_duration=1)
         # slot 4
-        make_sure_loaded('./base/dragon/party_1.png', device, data['dragon']['10']['dms'], data['dragon']['10']['shell'], oposite=True, sleep_duration=0.5)
+        make_sure_loaded('./base/dragon/party_1.png', device, data['dragon']['10']['dms'], data['dragon']['10']['shell'], oposite=True, sleep_duration=1)
         # slot 5
-        make_sure_loaded('./base/dragon/party_6.png', device, data['dragon']['11']['dms'], data['dragon']['11']['shell'], oposite=True, sleep_duration=0.5)
+        make_sure_loaded('./base/dragon/party_6.png', device, data['dragon']['11']['dms'], data['dragon']['11']['shell'], oposite=True, sleep_duration=1)
         # slot 6
-        make_sure_loaded('./base/dragon/party_5.png', device, data['dragon']['12']['dms'], data['dragon']['12']['shell'], oposite=True, sleep_duration=0.5)
+        make_sure_loaded('./base/dragon/party_5.png', device, data['dragon']['12']['dms'], data['dragon']['12']['shell'], oposite=True, sleep_duration=1)
         logger.info(device.serial+': checked all avalible slots')
 
         # click start battle
@@ -736,7 +736,7 @@ class Missions:
         logger.info(device.serial+': clicked ready to dual')
 
         # check avalible team
-        make_sure_loaded('./base/lov/party_.png', device, data['lov']['5']['dms'], data['lov']['5']['shell'], sleep_duration=0.5, oposite=True, cutoff=10)
+        make_sure_loaded('./base/lov/party_.png', device, data['lov']['5']['dms'], data['lov']['5']['shell'], sleep_duration=1, oposite=True, cutoff=20)
         logger.info(device.serial+': checked avalible team')
 
         # click register match
@@ -971,13 +971,13 @@ class Missions:
 
         # check avalible team
         # slot 1
-        make_sure_loaded('./base/tower/party_4.png', device, data['tower']['7']['dms'], data['tower']['7']['shell'], sleep_duration=0.5, oposite=True)
+        make_sure_loaded('./base/tower/party_4.png', device, data['tower']['7']['dms'], data['tower']['7']['shell'], sleep_duration=1, cutoff=20, oposite=True)
         # slot 2
-        make_sure_loaded('./base/tower/party_3.png', device, data['tower']['8']['dms'], data['tower']['8']['shell'], sleep_duration=0.5, oposite=True)
+        make_sure_loaded('./base/tower/party_3.png', device, data['tower']['8']['dms'], data['tower']['8']['shell'], sleep_duration=1, cutoff=20, oposite=True)
         # slot 3
-        make_sure_loaded('./base/tower/party_2.png', device, data['tower']['9']['dms'], data['tower']['9']['shell'], sleep_duration=0.5, oposite=True)
+        make_sure_loaded('./base/tower/party_2.png', device, data['tower']['9']['dms'], data['tower']['9']['shell'], sleep_duration=1, cutoff=20, oposite=True)
         # slot 4
-        make_sure_loaded('./base/tower/party_1.png', device, data['tower']['10']['dms'], data['tower']['10']['shell'], sleep_duration=0.5, oposite=True)
+        make_sure_loaded('./base/tower/party_1.png', device, data['tower']['10']['dms'], data['tower']['10']['shell'], sleep_duration=1, cutoff=20, oposite=True)
         logger.info(device.serial+': checked all avalible slots')
 
         # click start battle to open select battle board
