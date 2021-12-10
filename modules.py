@@ -2,7 +2,7 @@ from threading import Thread
 from random import choice
 from time import sleep as slp
 from time import time as tiime
-from os import mkdir, getcwd, system, path as pth
+from os import mkdir, getcwd, path as pth
 from subprocess import run as run_
 import logging, json
 
@@ -32,18 +32,30 @@ def update_cache(device):
             break
         except RuntimeError:
             if count == 50:
-                return "device offline"
+                im = "device offline"
+                break
             count += 1
             slp(5)
-        except:
-            device.shell('screencap -p /screencap.png')
-            device.pull('/screencap.png', './.cache/screencap-'+str(device.serial)+'.png')
-            im = Image.open('./.cache/screencap-'+str(device.serial)+'.png')
-            breal
+        except PermissionError:
+            slp(5)
+            continue
     return im
 
-
-def check_login_rewards(device, once=False, launched=None):
+update_notice_ = Image.open('./base/login/update_notice.png')
+introduction_ = Image.open('./base/login/introduction.png')
+tap_to_play_ = Image.open('./base/login/tap_to_play.png')
+tap_to_play_2_ = Image.open('./base/login/tap_to_play_2.png')
+community_ = Image.open('./base/login/community.png')
+sale_ = Image.open('./base/login/sale.png')
+attendance_ = Image.open('./base/login/attendance.png')
+event_ = Image.open('./base/login/event.png')
+guild_attendance_ = Image.open('./base/login/guild_attendance.png')
+accumualated_ = Image.open('./base/login/accumualated.png')
+sale_2_ = Image.open('./base/login/sale_2.png')
+special_shop_ = Image.open('./base/login/special_shop.png')
+home_screen_ = Image.open('./base/login/home_screen.png')
+mb_ = Image.open('./base/login/mission_button.png')
+def check_login_rewards(device, launched=None):
     # get device resolution
     im = update_cache(device)
     size_ = f"{im.size[0]}x{im.size[1]}"
@@ -55,133 +67,8 @@ def check_login_rewards(device, once=False, launched=None):
         count_ = 0
         im = update_cache(device)
 
-        # login
-        # update notice
-        im1 = Image.open('./base/login/update_notice.png')
-        im2 = crop(im, data['update_notice']['dms'])
-        update_notice = check_similar(im1, im2, 10)
-        if update_notice == 'similar':
-            device.shell(data['update_notice']['shell'])
-            slp(3)
-            continue
-
-        # introduction
-        im1 = Image.open('./base/login/introduction.png')
-        im2 = crop(im, data['introduction']['dms'])
-        introduction = check_similar(im1, im2, 15)
-        if introduction == 'similar':
-            device.shell(data['introduction']['shell'])
-            slp(3)
-            continue
-
-        # tap to play
-        im1 = Image.open('./base/login/tap_to_play.png')
-        im2 = crop(im, data['tap_to_play']['dms'])
-        tap_to_play = check_similar(im1, im2, 10)
-        if tap_to_play == 'similar':
-            device.shell(data['tap_to_play']['shell'])
-            slp(3)
-            continue
-
-        # purchase fail
-        im1 = Image.open('./base/login/purchase_fail.png')
-        im2 = crop(im, data['purchase_fail']['dms'])
-        purchase_fail = check_similar(im1, im2, 10)
-        if purchase_fail == 'similar':
-            device.shell(data['purchase_fail']['shell'])
-            slp(3)
-            continue
-
-        # pass community page
-        im1 = Image.open('./base/login/community.png')
-        im2 = crop(im, data['login']['community']['dms'])
-        community = check_similar(im1, im2, 10)
-        if community == 'similar':
-            device.shell(data['login']['community']['shell'])
-            slp(3)
-            continue
-
-        # pass sale page
-        im1 = Image.open('./base/login/sale.png')
-        im2 = crop(im, data['login']['sale']['dms'])
-        sale = check_similar(im1, im2, 10)
-        if sale == 'similar':
-            device.shell(data['login']['sale']['shell'])
-            slp(3)
-            continue
-
-        # claim login attendance
-        im1 = Image.open('./base/login/attendance.png')
-        im2 = crop(im, data['login']['attendance']['dms'])
-        attendance = check_similar(im1, im2, 10)
-        if attendance == 'similar':
-            device.shell(data['login']['attendance']['shell'])
-            slp(1)
-            device.shell(data['login']['attendance']['second_shell'])
-            logger.info(device.serial+': claimed login attendance')
-            slp(3)
-            continue
-
-        # pass event page
-        im1 = Image.open('./base/login/event.png')
-        im2 = crop(im, data['login']['event']['dms'])
-        event = check_similar(im1, im2, 10)
-        if event == 'similar':
-            device.shell(data['login']['event']['shell'])
-            slp(3)
-            continue
-
-        # claim guild attendance
-        im1 = Image.open('./base/login/guild_attendance.png')
-        im2 = crop(im, data['login']['guild_attendance']['dms'])
-        guild_attendance = check_similar(im1, im2, 10)
-        if guild_attendance == 'similar':
-            for day in data['login']['guild_attendance']['days']:
-                device.shell(day)
-            slp(1)
-            device.shell(data['login']['guild_attendance']['row_reward'])
-            slp(1)
-            device.shell(data['login']['guild_attendance']['exit'])
-            logger.info(device.serial+': claimed guild attendance')
-            slp(3)
-            continue
-        
-        # claim login accumualated
-        im1 = Image.open('./base/login/accumualated.png')
-        im2 = crop(im, data['login']['accumualated']['dms'])
-        accumualated = check_similar(im1, im2, 10)
-        if accumualated == 'similar':
-            device.shell(data['login']['accumualated']['shell'])
-            slp(1)
-            device.shell(data['login']['accumualated']['second_shell'])
-            logger.info(device.serial+': claimed login accumualated')
-            slp(3)
-            continue
-
-        # may appear
-        # sale 2
-        im1 = Image.open('./base/login/sale_2.png')
-        im2 = crop(im, data['login']['sale_2']['dms'])
-        sale_2 = check_similar(im1, im2, 10)
-        if sale_2 == 'similar':
-            device.shell(data['login']['sale_2']['shell'])
-            slp(1)
-            device.shell(data['login']['sale_2']['second_shell'])
-            logger.info(device.serial+': claimed guild attendance')
-            slp(3)
-            continue
-
-        # special shop
-        im1 = Image.open('./base/login/special_shop.png')
-        im2 = crop(im, data['login']['special_shop']['dms'])
-        special_shop = check_similar(im1, im2, 10)
-        if special_shop == 'similar':
-            device.shell(data['login']['special_shop']['shell'])
-            slp(3)
-            continue
-
-        # home screen
-        im1 = Image.open('./base/login/home_screen.png')
+        # android home screen
+        im1 = home_screen_
         im2 = crop(im, data['login']['home_screen']['dms'])
         home_screen = check_similar(im1, im2, 15)
         if home_screen == 'similar':
@@ -191,37 +78,155 @@ def check_login_rewards(device, once=False, launched=None):
                 try:
                     path = cf['ldconsole'].replace('|', '"')
                     if launched is not None:
-                        system(path+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+                        run_(path+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
                     else:
                         running_list = run_(path+' runninglist', capture_output=True).stdout
                         running_list = str(running_list)[2:][:-1].split('\\r\\n')
                         for running in running_list:
                             if running != '':
-                                system(path+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+                                running_ = '"'+running+'"'
+                                run_(path+f' runapp --name {running_} --packagename com.vespainteractive.KingsRaid')
                     slp(3)
                 except FileNotFoundError:
                     print("path to ldplayer is wrong, please config again")
-                continue
+
+        # login
+        # update notice
+        im1 = update_notice_
+        im2 = crop(im, data['update_notice']['dms'])
+        update_notice = check_similar(im1, im2, 10)
+        if update_notice == 'similar':
+            logger.info(device.serial+': update notice detected')
+            device.shell(data['update_notice']['shell'])
+            slp(3)
+
+        # introduction
+        im1 = introduction_
+        im2 = crop(im, data['introduction']['dms'])
+        introduction = check_similar(im1, im2, 10)
+        if introduction == 'similar':
+            logger.info(device.serial+': introduction detected')
+            device.shell(data['introduction']['shell'])
+            slp(3)
+
+        # tap to play
+        im1 = tap_to_play_
+        im2 = crop(im, data['tap_to_play']['dms'])
+        tap_to_play = check_similar(im1, im2, 10)
+        if tap_to_play == 'similar':
+            logger.info(device.serial+': tap to play detected')
+            device.shell(data['tap_to_play']['shell'])
+            slp(3)
+
+        # tap to play 2
+        im1 = tap_to_play_2_
+        im2 = crop(im, data['tap_to_play']['dms'])
+        tap_to_play_2 = check_similar(im1, im2, 10)
+        if tap_to_play_2 == 'similar':
+            logger.info(device.serial+': tap to play 2 detected')
+            device.shell(data['tap_to_play']['shell'])
+            slp(3)
+
+        # pass community page
+        im1 = community_
+        im2 = crop(im, data['login']['community']['dms'])
+        community = check_similar(im1, im2, 10)
+        if community == 'similar':
+            logger.info(device.serial+': community page detected')
+            device.shell(data['login']['community']['shell'])
+            slp(3)
+
+        # pass sale page
+        im1 = sale_
+        im2 = crop(im, data['login']['sale']['dms'])
+        sale = check_similar(im1, im2, 10)
+        if sale == 'similar':
+            logger.info(device.serial+': sale page detected')
+            device.shell(data['login']['sale']['shell'])
+            slp(3)
+
+        # claim login attendance
+        im1 = attendance_
+        im2 = crop(im, data['login']['attendance']['dms'])
+        attendance = check_similar(im1, im2, 10)
+        if attendance == 'similar':
+            logger.info(device.serial+': login attendance detected')
+            device.shell(data['login']['attendance']['shell'])
+            slp(1)
+            device.shell(data['login']['attendance']['second_shell'])
+            slp(3)
+
+        # pass event page
+        im1 = event_
+        im2 = crop(im, data['login']['event']['dms'])
+        event = check_similar(im1, im2, 10)
+        if event == 'similar':
+            logger.info(device.serial+': event page detected')
+            device.shell(data['login']['event']['shell'])
+            slp(3)
+
+        # claim guild attendance
+        im1 = guild_attendance_
+        im2 = crop(im, data['login']['guild_attendance']['dms'])
+        guild_attendance = check_similar(im1, im2, 10)
+        if guild_attendance == 'similar':
+            logger.info(device.serial+': guild attendance detected')
+            for day in data['login']['guild_attendance']['days']:
+                device.shell(day)
+            slp(1)
+            device.shell(data['login']['guild_attendance']['row_reward'])
+            slp(1)
+            device.shell(data['login']['guild_attendance']['exit'])
+            slp(3)
+        
+        # claim login accumualated
+        im1 = accumualated_
+        im2 = crop(im, data['login']['accumualated']['dms'])
+        accumualated = check_similar(im1, im2, 10)
+        if accumualated == 'similar':
+            logger.info(device.serial+': login accumualated detected')
+            device.shell(data['login']['accumualated']['shell'])
+            slp(1)
+            device.shell(data['login']['accumualated']['second_shell'])
+            slp(3)
+
+        # may appear
+        # sale 2
+        im1 = sale_2_
+        im2 = crop(im, data['login']['sale_2']['dms'])
+        sale_2 = check_similar(im1, im2, 10)
+        if sale_2 == 'similar':
+            logger.info(device.serial+': sale 2 page detected')
+            device.shell(data['login']['sale_2']['shell'])
+            slp(1)
+            device.shell(data['login']['sale_2']['second_shell'])
+            slp(3)
+
+        # special shop
+        im1 = special_shop_
+        im2 = crop(im, data['login']['special_shop']['dms'])
+        special_shop = check_similar(im1, im2, 10)
+        if special_shop == 'similar':
+            logger.info(device.serial+': special shop detected')
+            device.shell(data['login']['special_shop']['shell'])
+            slp(3)
 
         # return to main page
-        im1 = Image.open('./base/login/mission_button.png')
+        im1 = mb_
         im2 = crop(im, data['login']['mission_button'])
         mb = check_similar(im1, im2, 20)
         if mb == 'similar':
             break
 
-        if once == True:
-            count+=1
-            if count == 4:
-                break
+        break
 
 
 def make_sure_loaded(original_img, device, dimensions=None, shell_=None, loop=None, sleep_duration=None, \
-        shell_first=False, cutoff=6, second_img=None, third_img=None, oposite=False, second_shell=None, clr=False, launched=None):
+        shell_first=False, cutoff=6, second_img=None, third_img=None, oposite=False, second_shell=None, ck=True, launched=None):
     count = 0
     while True:
-        if clr == True:
-            check_login_rewards(device, True, launched)
+        if ck == True:
+            check_login_rewards(device, launched)
         # do adb shell first if passed
         if shell_ is not None:
             if shell_first is True:
@@ -273,6 +278,7 @@ def make_sure_loaded(original_img, device, dimensions=None, shell_=None, loop=No
             count+=1
         if sleep_duration is not None:
             slp(sleep_duration)
+
 
 def crop(img, dimesions):
     # size of the image in pixels (size of original image)
@@ -331,13 +337,14 @@ class Missions:
         if cf['ldconsole'] != '':
             try:
                 if launched is not None:
-                    system(path+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
+                    run_(path+f' runapp --index {str(launched)} --packagename com.vespainteractive.KingsRaid')
                 else:
                     running_list = run_(path+' runninglist', capture_output=True).stdout
                     running_list = str(running_list)[2:][:-1].split('\\r\\n')
                     for running in running_list:
                         if running != '':
-                            system(path+f""" runapp --name "{running}" --packagename com.vespainteractive.KingsRaid""")
+                            running_ = '"'+running+'"'
+                            run_(path+f' runapp --name {running_} --packagename com.vespainteractive.KingsRaid')
             except FileNotFoundError:
                 print("path to ldplayer is wrong, please config again")
 
@@ -352,7 +359,7 @@ class Missions:
                 count+=1
 
         # open daily mission board
-        make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], clr=True, launched=launched)
+        make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], launched=launched)
 
         with open('./config.json') as m:
             config = json.load(m)
@@ -410,7 +417,7 @@ class Missions:
                 print(device.serial+': language not supported, script ended')
                 if launched is not None:
                     print(device.serial+': because launched from config so closing after done')
-                    system(path+f' quit --index {str(launched)}')
+                    run_(path+f' quit --index {str(launched)}')
                 return
 
         # check for undone missions
@@ -432,7 +439,7 @@ class Missions:
                         print(device.serial+': all avalible missions has been completed, script ended')
                         if launched is not None:
                             print(device.serial+': because launched from config so closing after done')
-                            system(path+f' quit --index {str(launched)}')
+                            run_(path+f' quit --index {str(launched)}')
                         break
                     count+=1
             except:
@@ -590,7 +597,7 @@ class Missions:
         logger.info(device.serial+': clicked start battle')
 
         # wait until finish
-        make_sure_loaded('./base/dragon/end.png', device, data['dragon']['14']['dms'], sleep_duration=15, cutoff=10)
+        make_sure_loaded('./base/dragon/end.png', device, data['dragon']['14']['dms'], sleep_duration=15, cutoff=10, ck=False)
         logger.info(device.serial+': battle completed')
 
         # click exit battle
@@ -598,7 +605,7 @@ class Missions:
         logger.info(device.serial+': exited battle')
 
         # click exit
-        make_sure_loaded('./base/dragon/my_info.png', device, data['dragon']['16']['dms'], data['dragon']['16']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/dragon/my_info.png', device, data['dragon']['16']['dms'], data['dragon']['16']['shell'], sleep_duration=0.5)
         device.shell(data['dragon']['17']['shell'])
         logger.info(device.serial+': successfully did dragon mission')
         self.dragon_ = True
@@ -621,7 +628,7 @@ class Missions:
         logger.info(device.serial+': clicked exchange friendship points')
 
         # click exit
-        make_sure_loaded('./base/friendship/my_info.png', device, data['friendship']['3']['dms'], data['friendship']['3']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/friendship/my_info.png', device, data['friendship']['3']['dms'], data['friendship']['3']['shell'], sleep_duration=0.5)
         device.shell(data['friendship']['4']['shell'])
         logger.info(device.serial+': successfully did friendship mission')
         self.friendship_ = True
@@ -698,7 +705,7 @@ class Missions:
 
         # click exit
         make_sure_loaded('./base/inn/visit_inn.png', device, data['inn']['15']['dms'], data['inn']['15']['shell'], cutoff=20, sleep_duration=3)
-        make_sure_loaded('./base/inn/my_info.png', device, data['inn']['16']['dms'], data['inn']['16']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/inn/my_info.png', device, data['inn']['16']['dms'], data['inn']['16']['shell'], sleep_duration=0.5)
         device.shell(data['inn']['17']['shell'])
         logger.info(device.serial+': successfully did some stuffs in inn mission')
         self.inn_ = True
@@ -741,7 +748,7 @@ class Missions:
         logger.info(device.serial+': exited match')
 
         # click exit
-        make_sure_loaded('./base/lov/my_info.png', device, data['lov']['8']['dms'], data['lov']['8']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/lov/my_info.png', device, data['lov']['8']['dms'], data['lov']['8']['shell'], sleep_duration=0.5)
         device.shell(data['lov']['9']['shell'])
         logger.info(device.serial+': successfully did lov mission')
         self.lov_ = True
@@ -776,7 +783,7 @@ class Missions:
         logger.info(device.serial+': bought stuff')
 
         # click exit
-        make_sure_loaded('./base/shop/my_info.png', device, data['shop']['5']['dms'], data['shop']['5']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/shop/my_info.png', device, data['shop']['5']['dms'], data['shop']['5']['shell'], sleep_duration=0.5)
         device.shell(data['shop']['6']['shell'])
         logger.info(device.serial+': successfully bought stuffs in shop in inn mission')
         self.shop_ = True
@@ -885,7 +892,7 @@ class Missions:
         logger.info(device.serial+': clicked ok to enter battle')
         slp(5)
         # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15, cutoff=8)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15)
         logger.info(device.serial+': battle completed')
         # click exit
         make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['28']['dms'], data['stockage']['28']['shell'])
@@ -909,7 +916,7 @@ class Missions:
         logger.info(device.serial+': clicked ok to enter battle')
         slp(5)
         # wait until finish
-        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15, cutoff=8)
+        make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15)
         logger.info(device.serial+': battle completed')
         # click exit
         make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['35']['dms'], data['stockage']['35']['shell'])
@@ -917,7 +924,7 @@ class Missions:
 
 
         # click exit
-        make_sure_loaded('./base/stockage/my_info.png', device, data['stockage']['36']['dms'], data['stockage']['36']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/stockage/my_info.png', device, data['stockage']['36']['dms'], data['stockage']['36']['shell'], sleep_duration=0.5)
         device.shell(data['stockage']['37']['shell'])
         logger.info(device.serial+': successfully did stockage mission')
         self.stockage_ = True
@@ -986,7 +993,7 @@ class Missions:
         logger.info(device.serial+': exited battle')
 
         # click exit
-        make_sure_loaded('./base/tower/my_info.png', device, data['tower']['14']['dms'], data['tower']['14']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/tower/my_info.png', device, data['tower']['14']['dms'], data['tower']['14']['shell'], sleep_duration=0.5)
         device.shell(data['tower']['15']['shell'])
         logger.info(device.serial+': successfully did toc mission')
         self.tower_ = True
@@ -1010,7 +1017,7 @@ class Missions:
         if close == 'loop':
             self.wb_ = True
             # click exit
-            make_sure_loaded('./base/wb/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5, clr=True)
+            make_sure_loaded('./base/wb/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5)
             device.shell(data['wb']['9']['shell'])
             return 'success'
         logger.info(device.serial+': loaded from get ready for battle')
@@ -1037,7 +1044,7 @@ class Missions:
         logger.info(device.serial+': exited battle')
         
         # click exit
-        make_sure_loaded('./base/wb/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/wb/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5)
         device.shell(data['wb']['9']['shell'])
         logger.info(device.serial+': successfully did world boss mission')
         self.wb_ = True
@@ -1066,7 +1073,7 @@ class Missions:
         logger.info(device.serial+': exit treats')
 
         # click exit
-        make_sure_loaded('./base/lil/my_info.png', device, data['lil']['6']['dms'], data['lil']['6']['shell'], sleep_duration=0.5, clr=True)
+        make_sure_loaded('./base/lil/my_info.png', device, data['lil']['6']['dms'], data['lil']['6']['shell'], sleep_duration=0.5)
         device.shell(data['lil']['7']['shell'])
         logger.info(device.serial+': successfully did lil raider mission')
         self.lil_ = True
@@ -1078,25 +1085,25 @@ class Missions:
         logger.info(device.serial+': suiciding in loh')
         
         # exit from mission board
-        shortcut = make_sure_loaded('./base/loh/my_info.png', device, data['loh']['1']['dms'], data['loh']['1']['shell'], sleep_duration=0.5, clr=True)
+        shortcut = make_sure_loaded('./base/loh/my_info.png', device, data['loh']['1']['dms'], data['loh']['1']['shell'], sleep_duration=0.5)
         device.shell(data['loh']['2']['shell'])
         logger.info(device.serial+': exit to main screen')
 
         # click portal
-        shortcut = make_sure_loaded('./base/loh/portal.png', device, data['loh']['3']['dms'], data['loh']['3']['shell'], sleep_duration=1)
+        shortcut = make_sure_loaded('./base/loh/portal.png', device, data['loh']['3']['dms'], data['loh']['3']['shell'], sleep_duration=1, ck=False)
         logger.info(device.serial+': clicked portal')
 
         # click arena in portal
-        shortcut = make_sure_loaded('./base/loh/arena.png', device, data['loh']['4']['dms'], data['loh']['4']['shell'], cutoff=15, sleep_duration=0.5)
+        shortcut = make_sure_loaded('./base/loh/arena.png', device, data['loh']['4']['dms'], data['loh']['4']['shell'], cutoff=15, sleep_duration=0.5, ck=False)
         logger.info(device.serial+': clicked arenas')
 
         # click loh in arena
-        shortcut = make_sure_loaded('./base/loh/notice.png', device, data['loh']['5']['dms'], data['loh']['5']['shell'], cutoff=20, sleep_duration=0.5)
+        shortcut = make_sure_loaded('./base/loh/notice.png', device, data['loh']['5']['dms'], data['loh']['5']['shell'], cutoff=20, sleep_duration=0.5, ck=False)
         logger.info(device.serial+': clicked loh')
 
         # click ok in notice
         shortcut = make_sure_loaded('./base/loh/loh.png', device, data['loh']['6']['dms'], data['loh']['6']['shell'],
-            second_img='./base/loh/previous_result.png', sleep_duration=5, loop=10)
+            second_img='./base/loh/previous_result.png', sleep_duration=5, loop=10, ck=False)
         logger.info(device.serial+': clicked ok in notice')
 
         # check
@@ -1115,7 +1122,7 @@ class Missions:
         # push script and continuosly execute
         device.push(data['loh']['scripts']['sh'], '/sdcard/loh_script.sh')
         start_time = tiime()
-        seconds = 3360
+        seconds = 4000
         slp(5)
         while True:
             current_time = tiime()
@@ -1133,14 +1140,14 @@ class Missions:
 
 def load_devices():
     working_dir = getcwd()
-    system(working_dir+'\\adb kill-server')
+    run_(working_dir+'\\adb kill-server')
     adb = Client(host="127.0.0.1", port=5037)
     try:
         devices = adb.devices()
     except:
-        system(working_dir+'\\adb devices')
+        run_(working_dir+'\\adb devices')
         slp(5)
-        system(working_dir+'\\adb devices')
+        run_(working_dir+'\\adb devices')
         devices = adb.devices()
     return devices, working_dir, adb
 
@@ -1181,7 +1188,7 @@ def run():
                             print('waiting 30 secs for fully boot up')
                             slp(30)
                             while True:
-                                system(working_dir+'\\adb devices')
+                                run_(working_dir+'\\adb devices')
                                 devices = adb.devices()
                                 if devices != []:
                                     for device in devices:
@@ -1208,14 +1215,14 @@ def run():
                     break
             else:
                 print('retrying...')
-            system(working_dir+'\\adb devices')
+            run_(working_dir+'\\adb devices')
             devices = adb.devices()
         elif str(devices[0].serial).startswith('127'):
             print('no device was found, retrying...')
             devices, working_dir, adb = load_devices()
         else:
             slp(10)
-            system(working_dir+'\\adb devices')
+            run_(working_dir+'\\adb devices')
             devices = adb.devices()
             print('device(s) detected')
             setup_log()

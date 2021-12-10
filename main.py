@@ -63,12 +63,12 @@ def config():
     wb = con('auto wb (world boss)')
     lov = con('auto lov (league of victory)')
     loh = con('auto all loh keys (league of honor)')
-    dragon = con('fight dragon')
+    dragon = con('fight dragon t6 stage 1')
     friendship = con('exchange friendship token')
     inn = con("do stuff in hero's inn")
     shop = con("buy random stuff in May's shop")
-    stockage = con('farm random stuff in stockage')
-    tower = con('fight low floor in tower of challenge')
+    stockage = con('farm random rewards (fragments/books) in stockage (make sure already set up all team in all dungeons)')
+    tower = con('fight low floor (1/1x) in tower of challenge')
 
     ldconsole = ''
     devices = ''
