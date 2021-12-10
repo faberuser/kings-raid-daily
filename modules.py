@@ -322,7 +322,7 @@ class Missions:
         # get device resolution
         im = update_cache(device)
         if im == 'device offline':
-            if str(devices[0].serial).startswith('127'):
+            if str(device.serial).startswith('127'):
                 return
             print('device '+device.serial+' is offline, script ended')
             return
