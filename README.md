@@ -39,7 +39,7 @@
 - Set up all team can clear all `stockage dungeons` (all 4 dungeons)
 - Make sure inventory is not full
 - If `WB` or `LoV` is enabled: Set up all team and make sure the auto mode is on)
-- If `Dragon` is enabled: End all dispatch or set an entire team (6 heroes) in `Dragon T6 Stage 1` while all of your dispatch teams is running (you can't use dispatching-heroes in raid)
+- If `Dragon` is enabled: End all dispatch **or** set an entire team (6 heroes) in `Dragon T6 Stage 1` while all of your dispatch teams is running (you can't use dispatching-heroes in raid)
 
 #### To run the script once:
 - Run the shortcut `kings-raid-daily` and press 1
