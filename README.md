@@ -3,9 +3,10 @@
 
 ## What can this script do
 - Do all dailies except consume stamina and feed lil raider
-- Auto LOH after done all dailies
 - Auto launch emulators in a configured time to do dailies
-- You can exclude scoring content like WB or LOV in doing list
+- Detect game crash and relaunch
+- Auto LOH after done all dailies
+- You can exclude scoring content like LoV/LoH or WB in doing list
 
 ## Installations
 * Python > 3.8.x
