@@ -50,7 +50,7 @@
 - Press `Windows+R`, type `shell:startup` and enter, then paste the copied shortcut
 ##### You need to double click the pasted shortcut or restart the PC to take effect
 ##### If you are using your PC during the script running in background and starting to execute when new day, your screen will appear a few of Command Prompt windows when emulator booting up, please ignore this
-##### To end process, open `Task Manager` and end `task adb.exe` and `kings-raid-daily-background.exe`
+##### To end process, open `Task Manager` and click `End task` `adb.exe` and `kings-raid-daily-background.exe`
 
 #### Note:
 - If `LoH` is enabled: Make sure that the emulator(s) has been closed at least once after the script done the previous one before ran the new task to make sure auto LoH run normally
