@@ -5,7 +5,7 @@
 - Do all dailies except consume stamina and feed lil raider
 - Auto launch emulators in a configured time to do dailies
 - Detect game crash and relaunch
-- Auto LOH after done all dailies
+- Auto LoH after done all dailies
 - You can exclude scoring content like LoV/LoH or WB in doing list
 
 ## Installations
