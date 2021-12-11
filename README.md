@@ -35,11 +35,11 @@
 
 #### Ingame setup:
 - Set up all team can clear all stockage dungeons (if world boss or league of victory was turned on, set up all team and make sure the auto mode is on)
-- End all dispatch (if you want to keep the dispatch running, while dispatch is running make sure that you have set up an entire team on `Dragon T6 Stage 1` (if turned on))
 - Make sure inventory is not full
+- If Dragon is enabled: End all dispatch or set an entire team (6 heroes) in `Dragon T6 Stage 1` while all of your dispatch teams is running (you can't use dispatching-heroes in raid)
 
 #### To run the script once:
-- Run the shortcut kings-raid-daily and press 1
+- Run the shortcut `kings-raid-daily` and press 1
 
 #### If you want the script to auto startup everytime you boot in Windows for running in background (auto run when new day (default is 00:05)):
 - Download newest version of script from [Github](https://github.com/faber6/kings-raid-daily/releases)
@@ -50,7 +50,7 @@
 ##### To end process, open `Task Manager` and end `task adb.exe` and `kings-raid-daily-background.exe`
 
 #### Note:
-- If LoH is enabled: Make sure that the emulator(s) has been closed at least once after the script done the previous one before ran the new task to make sure auto LoH run normally
+- If `LoH (League of Honor)` is enabled: Make sure that the emulator(s) has been closed at least once after the script done the previous one before ran the new task to make sure auto LoH run normally
 - If the script can't find your emulator, try to restart your emulator and try again
 - Please don't touch anything or start a new emulator/use adb while the script is running
 - If you see the script stuck or stop for more than 1 minute, thats mean there is some problem with the script, you can open an issue on [Github](https://github.com/faber6/kings-raid-daily)
