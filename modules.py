@@ -663,7 +663,7 @@ class Missions:
         # choose hero in inn
         def choose_hero(tap1, tap2):
             make_sure_loaded('./base/inn/inn.png', device, data['inn']['6']['dms'], data['inn']['6']['shell']+str(tap1)+' '+str(tap2),
-                shell_first=True, second_img='./base/inn/inn_.png', cutoff=15, second_shell=data['inn']['2']['shell'])
+                shell_first=True, second_img='./base/inn/inn_.png', cutoff=25, second_shell=data['inn']['2']['shell'])
 
         # give gifts to first hero
         gift()
