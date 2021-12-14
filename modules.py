@@ -1142,16 +1142,17 @@ class Missions:
 
 def load_devices():
     working_dir = getcwd()
-    run_(working_dir+'\\adb kill-server')
+    adb_dir = '"'+working_dir+'\\adb" '
+    run_(adb_dir+'kill-server')
     adb = Client(host="127.0.0.1", port=5037)
     try:
         devices = adb.devices()
     except:
-        run_(working_dir+'\\adb devices')
+        run_(adb_dir+'devices')
         slp(5)
-        run_(working_dir+'\\adb devices')
+        run_(adb_dir+'devices')
         devices = adb.devices()
-    return devices, working_dir, adb
+    return devices, adb_dir, adb
 
 
 def run():
@@ -1164,7 +1165,7 @@ def run():
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
-    devices, working_dir, adb = load_devices()
+    devices, adb_dir, adb = load_devices()
     count = 0
     while True:
         if count == 49:
@@ -1190,7 +1191,7 @@ def run():
                                 print('waiting 30 secs for fully boot up')
                                 slp(30)
                                 while True:
-                                    run_(working_dir+'\\adb devices')
+                                    run_(adb_dir+'devices')
                                     devices = adb.devices()
                                     if devices != []:
                                         for device in devices:
@@ -1216,14 +1217,14 @@ def run():
                     if break_ == True:
                         break
             print('no device was found, retrying...')
-            run_(working_dir+'\\adb devices')
+            run_(adb_dir+'devices')
             devices = adb.devices()
         elif str(devices[0].serial).startswith('127'):
             print('no device was found, retrying...')
-            devices, working_dir, adb = load_devices()
+            devices, adb_dir, adb = load_devices()
         else:
             slp(10)
-            run_(working_dir+'\\adb devices')
+            run_(adb_dir+'devices')
             devices = adb.devices()
             print('device(s) detected')
             setup_log()
