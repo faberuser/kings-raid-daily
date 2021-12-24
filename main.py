@@ -447,7 +447,7 @@ if __name__ == "__main__":
                             continue
                         run()
                     break
-                elif int(auto_daily) == 3:
+                elif int(auto_daily) == 3: # can only use in built executable
                     startup = pth.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
                     parent = getcwd()[:-16]
                     copy(parent+'kings-raid-daily-background.lnk', startup)
