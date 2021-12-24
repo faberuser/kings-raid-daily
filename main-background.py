@@ -23,7 +23,11 @@ if __name__ == "__main__":
             "stockage": True,
             "tower": True,
             "lil": False,
+            "mails": True,
+            "quit_all": False,
+            "bonus_cutoff": 0,
             "devices": [],
+            "max_devices": 1,
             "ldconsole": "",
             "time": "00:05"
         }

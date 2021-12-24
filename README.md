@@ -2,9 +2,9 @@
 #### A modern script to do boring dailies in King's Raid
 
 ## What can this script do
-- Do all dailies except consume stamina and feed lil raider
+- Do all dailiy missions except consume stamina and feed lil raider
 - Auto launch emulators in a configured time to do dailies
-- Detect game crash and relaunch
+- Detect game crash, freeze and relaunch
 - Auto LoH after done all dailies
 - You can exclude scoring content like LoV/LoH or WB in doing list
 
@@ -25,21 +25,23 @@
 ## Usage
 #### ONLY SUPPORT THESE SETTINGS:
 - Windows 10 or higher
-- Multiple LD Player Emulator with tablet resolution (`960x540`-(best), `1280x720`, `1600x900`, `1920x1080`)
 - Game language `ENGLISH`-(best), `VIETNAMESE` or `JAPANESE`
+- Multiple LD Player Emulator with tablet resolution (`960x540`, `1280x720`, `1600x900`, `1920x1080`)
+##### If you want the script to auto LoH, resolution with `1280x720` or higher is recommended because this script is currently having unexpected issue while sending events to `960x540` resolution so sometimes it doesn't work or not as expected
 
 #### Script and Emulator configuration:
 - Double click/Open `generate-shortcut.bat` to generate shortcut point to executables in `kings-raid-daily` folder
 - `2 cores CPU` and `4GB RAM` or above is recommended
 - Open emulator's `Settings` and head to `Other settings` on the left menu, change `@adb_debug`/`ADB debugging` to `Open local connection`
-- Run the script and press 3 or edit directly in `config.json`
+- Run the script `kings-raid-daily` and press 3 or edit directly in `config.json` / import config from previous version by press 4 and select `config.json` file in `kings-raid-daily` folder
 ##### Default configuration will set scoring content include `LoV (League of Victory)`, `LoH (League of Honor)`, `WB (World Boss)` to disable
+##### To view current configuration, run the script `kings-raid-daily` and press 5
 
 #### Ingame setup:
-- Set up all team can clear all `stockage dungeons` (all 4 dungeons)
+- Set up all team can clear all `stockage dungeons` (all 4 dungeons) and make sure **auto mode is on**
 - Make sure inventory is not full
-- If `WB` or `LoV` is enabled: Set up all team and make sure the auto mode is on)
-- If `Dragon` is enabled: End all dispatch __**or**__ set an entire team (6 heroes) in `Dragon T6 Stage 1` while all of your dispatch teams is running (you can't use dispatching-heroes in raid)
+- If `WB` or `LoV` is enabled: Set up all team and make sure **auto mode is on**
+- If `Dragon` is enabled: End all dispatch **or** set an entire team (6 heroes) in `Dragon T6 Stage 1` while all of your dispatch teams is running (you can't use dispatching-heroes in raid)
 
 #### To run the script once:
 - Run the shortcut `kings-raid-daily` and press 1

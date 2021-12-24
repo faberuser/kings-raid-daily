@@ -5,3 +5,5 @@ pytesseract
 langdetect
 fuzzywuzzy
 opencv-python
+beautifultable
+wxPython
