@@ -1,7 +1,8 @@
 from modules import run
 from datetime import datetime
 from time import sleep
-from os import path as pth, mkdir
+from os import path as pth, mkdir, getlogin, getcwd
+from shutil import copy
 import json
 
 from sys import stdout
@@ -423,9 +424,10 @@ if __name__ == "__main__":
         try:
             print('* press 1 to run this script once')
             print(f'* press 2 to run this script in background to check and run when new day (at {time})')
-            print('* press 3 to start config this script')
-            print('* press 4 to import config from previous version')
-            print('* press 5 to view current configuration')
+            print(f'* press 3 to make this script auto run in background upon Windows startup to check and run when new day (at {time})')
+            print('* press 4 to start config this script')
+            print('* press 5 to import config from previous version')
+            print('* press 6 to view current configuration')
             print('(script will run option 1 after 30 secs if no action was executed)')
             auto_daily = inputimeout('> ', timeout=30)
             if auto_daily.isnumeric() == False:
@@ -446,20 +448,25 @@ if __name__ == "__main__":
                         run()
                     break
                 elif int(auto_daily) == 3:
+                    startup = pth.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
+                    parent = getcwd()[:-16]
+                    copy(parent+'kings-raid-daily-background.lnk', startup)
+                    print(f'copied shortcut "kings-raid-daily-background" to "{startup}", script will now auto run in background upon Windows startup\n(restart Windows to take effect)\n')
+                elif int(auto_daily) == 4:
                     print("ok, starting configuration")
                     config()
-                    input('config complete, press any key to exit...')
-                elif int(auto_daily) == 4:
+                    input('config complete, press any key to exit...\n')
+                elif int(auto_daily) == 5:
                     print("ok, waiting for import to complete")
                     re = get_path('*.json')
                     write_config(re)
-                    input('config complete, press any key to exit...')
-                elif int(auto_daily) == 5:
+                    input('config complete, press any key to exit...\n')
+                elif int(auto_daily) == 6:
                     print("ok, viewing configuration")
                     with open('./config.json') as j:
                         cf = json.load(j)
                     print(get_table(cf))
-                    input('press any key to exit...')
+                    input('press any key to exit...\n')
                 else:
                     print('invalid answer, press try again\n')
         except TimeoutOccurred:
