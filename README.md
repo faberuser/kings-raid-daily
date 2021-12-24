@@ -44,15 +44,17 @@
 - If `Dragon` is enabled: End all dispatch **or** set an entire team (6 heroes) in `Dragon T6 Stage 1` while all of your dispatch teams is running (you can't use dispatching-heroes in raid)
 
 #### To run the script once:
+- Double click/Open `generate-shortcut.bat`
 - Run the shortcut `kings-raid-daily` and press 1
 
 #### If you want the script to auto startup everytime you boot in Windows for running in background (auto run when new day (default is 00:05)):
 - Download newest version of script from [Github](https://github.com/faber6/kings-raid-daily/releases)
-- Unzip file, copy shortcut `kings-raid-daily-background`
-- Press `Windows+R`, type `shell:startup` and enter, then paste the copied shortcut
-##### You need to double click the pasted shortcut or restart the PC to take effect
+- Unzip file, double click/Open `generate-shortcut.bat`
+- Run the shortcut `kings-raid-daily` and press 3
+##### You need to double click the shortcut `kings-raid-daily-background` or restart the PC to take effect
 ##### If you are using your PC during the script running in background and starting to execute when new day, your screen will appear a few of Command Prompt windows when emulator booting up, please ignore this
-##### To end process, open `Task Manager` and click `End task` `adb.exe` and `kings-raid-daily-background.exe`
+##### To disable startup, open `Task Manager`, click `Startup` tab then find `kings-raid-daily-background.exe` and disable it
+##### To end process, open `Task Manager` and click `End task` both `adb.exe` and `kings-raid-daily-background.exe`
 
 #### Note:
 - If `LoH` is enabled: Make sure that the emulator(s) has been closed at least once after the script done the previous one before ran the new task to make sure auto LoH run normally
