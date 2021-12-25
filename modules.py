@@ -920,7 +920,7 @@ class Missions:
         logger.info(device.serial+': selected random reward and clicked ok to enter battle')
         slp(5)
         # wait until finish
-        self.make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], sleep_duration=15)
+        self.make_sure_loaded('./base/stockage/end.png', device, data['stockage']['10']['dms'], data['stockage']['10']['shell'], sleep_duration=15)
         logger.info(device.serial+': battle completed')
         # click exit
         self.make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['11']['dms'], data['stockage']['11']['shell'])
@@ -959,7 +959,7 @@ class Missions:
         logger.info(device.serial+': selected random book reward and clicked ok to enter battle')
         slp(5)
         # wait until finish
-        self.make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], sleep_duration=15)
+        self.make_sure_loaded('./base/stockage/end.png', device, data['stockage']['20']['dms'], data['stockage']['20']['shell'], sleep_duration=15)
         logger.info(device.serial+': battle completed')
         # click exit
         self.make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['21']['dms'], data['stockage']['21']['shell'])
@@ -985,7 +985,7 @@ class Missions:
         logger.info(device.serial+': clicked ok to enter battle')
         slp(5)
         # wait until finish
-        self.make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], sleep_duration=15)
+        self.make_sure_loaded('./base/stockage/end.png', device, data['stockage']['27']['dms'], data['stockage']['27']['shell'], sleep_duration=15)
         logger.info(device.serial+': battle completed')
         # click exit
         self.make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['28']['dms'], data['stockage']['28']['shell'])
@@ -1011,7 +1011,7 @@ class Missions:
         logger.info(device.serial+': clicked ok to enter battle')
         slp(5)
         # wait until finish
-        self.make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], sleep_duration=15)
+        self.make_sure_loaded('./base/stockage/end.png', device, data['stockage']['34']['dms'], data['stockage']['34']['shell'], sleep_duration=15)
         logger.info(device.serial+': battle completed')
         # click exit
         self.make_sure_loaded('./base/stockage/loading.png', device, data['stockage']['35']['dms'], data['stockage']['35']['shell'])
