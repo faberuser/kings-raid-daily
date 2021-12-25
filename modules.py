@@ -38,6 +38,7 @@ special_shop_ = Image.open('./base/login/special_shop.png')
 home_screen_ = Image.open('./base/login/home_screen.png')
 mb_ = Image.open('./base/login/mission_button.png')
 loh_new_ = Image.open('./base/loh/loh_new.png')
+kr_discord_ = Image.open('./base/login/kr_discord.png')
 
 
 def crop(img, dimesions):
@@ -345,6 +346,15 @@ class Missions:
             slp(3)
 
         # may appear
+        # kr discord
+        im1 = kr_discord_
+        im2 = im
+        kr_discord = check_similar(im1, im2, 20)
+        if kr_discord == 'similar':
+            logger.info(device.serial+': kr discord page detected')
+            device.shell('monkey -p com.vespainteractive.KingsRaid 1')
+            slp(3)
+
         # sale 2
         im1 = sale_2_
         im2 = crop(im, data['login']['sale_2']['dms'])
