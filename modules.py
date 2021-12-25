@@ -353,6 +353,8 @@ class Missions:
         if kr_discord == 'similar':
             logger.info(device.serial+': kr discord page detected')
             device.shell('monkey -p com.vespainteractive.KingsRaid 1')
+            slp(5)
+            device.shell(data['login']['sale']['shell'])
             slp(3)
 
         # sale 2
