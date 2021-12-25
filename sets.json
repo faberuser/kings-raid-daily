@@ -116,7 +116,7 @@
                     555,
                     0
                 ],
-                "shell": "input tap 660 258.75",
+                "shell": "input tap 660 288.75",
                 "second_shell": "input tap 667.5 506.25"
             },
             "sale_2": {
@@ -1579,7 +1579,7 @@
                     740,
                     0
                 ],
-                "shell": "input tap 880 345",
+                "shell": "input tap 880 385",
                 "second_shell": "input tap 890 675"
             },
             "sale_2": {
@@ -3042,7 +3042,7 @@
                     925,
                     0
                 ],
-                "shell": "input tap 1100 431.25",
+                "shell": "input tap 1100 481.25",
                 "second_shell": "input tap 1112.5 843.75"
             },
             "sale_2": {
@@ -4505,7 +4505,7 @@
                     1110,
                     0
                 ],
-                "shell": "input tap 1320 517.5",
+                "shell": "input tap 1320 577.5",
                 "second_shell": "input tap 1335 1012.5"
             },
             "sale_2": {
