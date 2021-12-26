@@ -33,7 +33,7 @@
 - Double click/Open `generate-shortcut.bat` to generate shortcut point to executables in `kings-raid-daily` folder
 - `2 cores CPU` and `4GB RAM` or above is recommended
 - Open emulator's `Settings` and head to `Other settings` on the left menu, change `@adb_debug`/`ADB debugging` to `Open local connection`
-- Run the script `kings-raid-daily` and press 3 or edit directly in `config.json` / import config from previous version by press 4 and select `config.json` file in `kings-raid-daily` folder
+- Run the script `kings-raid-daily` and press 4 or edit directly in `config.json` / import config from previous version by press 5 and select `config.json` file in `kings-raid-daily` folder
 ##### Default configuration will set scoring content include `LoV (League of Victory)`, `LoH (League of Honor)`, `WB (World Boss)` to disable
 ##### To view current configuration, run the script `kings-raid-daily` and press 5
 
