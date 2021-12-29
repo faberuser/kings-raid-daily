@@ -83,8 +83,8 @@ class Missions:
         self.launched = None
         self.cache_2 = None
         self.game_count = 0
-        self.emulator_count = 0
         self.game_home_screen_count = 0
+        self.error_count = 0
 
     def update_cache(self, device, check_crash=True):
         count = 0
@@ -98,33 +98,12 @@ class Missions:
                         try:
                             if check_similar(self.cache_2, im, 5) == 'similar':
                                 self.game_count+=1
-                                if self.game_count == 50: # game freeze
+                                if self.game_count >= 50: # game freeze
                                     device.shell('am force-stop com.vespainteractive.KingsRaid')
                                     slp(3)
                                     device.shell('monkey -p com.vespainteractive.KingsRaid 1')
                                     slp(3)
                                     self.game_count = 0
-                                    self.emulator_count+=1
-                                    if self.emulator_count == 3: # emulator freeze but not really working, the shell commad just take infinite time
-                                        if self.launched is not None:
-                                            with open('./config.json') as j:
-                                                cf = json.load(j)
-                                            path = cf['ldconsole'].replace('|', '"')
-                                            try:
-                                                run_(path+f' quit --index {str(self.launched)}')
-                                                slp(10)
-                                                run_(path+f' launch --index {str(self.launched)}')
-                                                slp(30)
-                                                while True:
-                                                    devices, adb_dir, adb = load_devices()
-                                                    if devices != []:
-                                                        for device_ in devices:
-                                                            if device_.serial == device.serial:
-                                                                device = device
-                                                                break
-                                            except:
-                                                pass
-                                            self.emulator_count = 0
                                     self.run_execute(device, self.launched)
                                     raise Exception
                             else:
@@ -132,6 +111,10 @@ class Missions:
                                 self.game_count = 0
                                 self.emulator_count = 0
                         except OSError:
+                            self.error_count += 1
+                            if self.error_count >= 50:
+                                self.error_count = 0
+                                break
                             self.cache_2 = im
                             slp(5)
                             continue
@@ -141,14 +124,21 @@ class Missions:
                         self.cache_2 = im
                 break
             except RuntimeError:
+                self.error_count += 1
+                if self.error_count >= 50:
+                    self.error_count = 0
+                    break
                 if count == 50:
                     im = "device offline"
                     break
                 count += 1
                 slp(5)
             except PermissionError or UnidentifiedImageError or ConnectionResetError:
+                self.error_count += 1
+                if self.error_count >= 50:
+                    self.error_count = 0
+                    break
                 slp(5)
-                continue
         return im, device
 
     def make_sure_loaded(self, original_img, device, dimensions=None, shell_=None, loop=None, sleep_duration=None, \
@@ -169,7 +159,7 @@ class Missions:
                     slp(3)
                     device.shell(second_shell)
             # update cache
-            if count_ == 100:
+            if count_ >= 100:
                 im, device = self.update_cache(device)
             else:
                 im, device = self.update_cache(device, False)
@@ -384,7 +374,7 @@ class Missions:
         mb = check_similar(im1, im2, 20)
         if mb == 'similar':
             self.game_home_screen_count += 1
-            if self.game_home_screen_count == 100:
+            if self.game_home_screen_count >= 100:
                 logger.info(device.serial+': game home screen detected')
                 device.shell(data['daily']['shell'])
                 self.game_home_screen_count = 0
@@ -509,18 +499,24 @@ class Missions:
             visible_missions = [crop(im, data['first mission']), crop(im, data['second mission']), \
                 crop(im, data['third mission']), crop(im, data['fourth mission'])]
             if not_done_ == not_done:
-                if count == 20:
+                if count >= 20:
                     self.weekly(device, data)
+                    print('1')
                     if cf['mails'] == True:
+                        print('2')
                         self.mails(device, data)
                     if cf['loh'] == True:
+                        print('3')
                         re = self.loh(device, data, lang)
                         if re != 'success':
                             print(device.serial+': loh not enough currency or unavailable')
+                    print('4')
                     print(device.serial+': all avalible missions has been completed, script ended')
                     if self.launched is not None:
                         print(device.serial+': because launched from config so closing after done')
+                        print('5')
                         run_(path+f' quit --index {str(self.launched)}')
+                        print('6')
                     break
                 count+=1
             not_done_ = not_done
@@ -733,11 +729,11 @@ class Missions:
         # give gifts
         def gift():
             slp(2)
-            self.make_sure_loaded('./base/inn/greet.png', device, data['inn']['3']['dms'], data['inn']['3']['shell'], cutoff=10, \
+            self.make_sure_loaded('./base/inn/greet.png', device, data['inn']['3']['dms'], data['inn']['3']['shell'], second_shell=data['inn']['2']['shell'], cutoff=10, \
                 second_img='./base/inn/greet_.png', third_img='./base/inn/greet__.png', loop=5, shell_first=True)
-            self.make_sure_loaded('./base/inn/start_conversation.png', device, data['inn']['4']['dms'], data['inn']['4']['shell'], cutoff=10, \
+            self.make_sure_loaded('./base/inn/start_conversation.png', device, data['inn']['4']['dms'], data['inn']['4']['shell'], second_shell=data['inn']['2']['shell'], cutoff=10, \
                 second_img='./base/inn/start_conversation_.png', third_img='./base/inn/start_conversation__.png', loop=5, shell_first=True)
-            self.make_sure_loaded('./base/inn/send_gift.png', device, data['inn']['5']['dms'], data['inn']['5']['shell'], cutoff=10, \
+            self.make_sure_loaded('./base/inn/send_gift.png', device, data['inn']['5']['dms'], data['inn']['5']['shell'], second_shell=data['inn']['2']['shell'], cutoff=10, \
                 second_img='./base/inn/send_gift_.png', third_img='./base/inn/send_gift__.png', loop=5, shell_first=True)
         
         # choose hero in inn
@@ -1487,3 +1483,4 @@ def run():
             break
         slp(5)
         count+=1
+    return logger

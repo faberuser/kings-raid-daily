@@ -41,4 +41,5 @@ if __name__ == "__main__":
         if str(now) != re['time']:
             sleep(60)
             continue
-        run()
+        logger = run()
+        logger.info('executed successfully at '+str(now))

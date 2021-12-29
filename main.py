@@ -409,11 +409,21 @@ def get_table(config):
 
 if __name__ == "__main__":
     print('please ignore this warning ↑')
+    with open('./config.json') as j:
+        re = json.load(j)
+    in_ = False
+    for val in defaults:
+        if val not in re:
+            re[val] = defaults[val]
+            in_ = True
+    if in_ == True:
+        with open('./config.json', 'w') as w:
+            json.dump(re, w, indent=4)
+        with open('./config.json') as j:
+            re = json.load(j)
     time = None
     while True:
         try:
-            with open('./config.json') as j:
-                re = json.load(j)
             time = re['time']
         except FileNotFoundError:
             print('config not found, creating new one with default settings')
@@ -428,6 +438,7 @@ if __name__ == "__main__":
             print('* press 4 to start config this script')
             print('* press 5 to import config from previous version')
             print('* press 6 to view current configuration')
+            print('* press 7 to exit')
             print('(script will run option 1 after 30 secs if no action was executed)')
             auto_daily = inputimeout('> ', timeout=30)
             if auto_daily.isnumeric() == False:
@@ -467,6 +478,8 @@ if __name__ == "__main__":
                         cf = json.load(j)
                     print(get_table(cf))
                     input('press any key to exit...\n')
+                elif int(auto_daily) == 7:
+                    break
                 else:
                     print('invalid answer, press try again\n')
         except TimeoutOccurred:

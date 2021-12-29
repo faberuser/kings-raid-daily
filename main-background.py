@@ -42,3 +42,4 @@ if __name__ == "__main__":
             sleep(60)
             continue
         run()
+        logger.info('executed successfully at '+str(now))
