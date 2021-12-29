@@ -409,32 +409,30 @@ def get_table(config):
 
 if __name__ == "__main__":
     print('please ignore this warning ↑')
-    with open('./config.json') as j:
-        re = json.load(j)
-    in_ = False
-    for val in defaults:
-        if val not in re:
-            re[val] = defaults[val]
-            in_ = True
-    if in_ == True:
-        with open('./config.json', 'w') as w:
-            json.dump(re, w, indent=4)
+    try:
         with open('./config.json') as j:
             re = json.load(j)
-    time = None
+        in_ = False
+        for val in defaults:
+            if val not in re:
+                re[val] = defaults[val]
+                in_ = True
+        if in_ == True:
+            with open('./config.json', 'w') as w:
+                json.dump(re, w, indent=4)
+            with open('./config.json') as j:
+                re = json.load(j)
+    except FileNotFoundError:
+        print('config not found, creating new one with default settings')
+        re = defaults
+        with open('./config.json', 'a') as j:
+            json.dump(re, j, indent=4)
+
     while True:
         try:
-            time = re['time']
-        except FileNotFoundError:
-            print('config not found, creating new one with default settings')
-            re = defaults
-            with open('./config.json', 'a') as j:
-                json.dump(re, j, indent=4)
-            time = "00:05"
-        try:
             print('* press 1 to run this script once')
-            print(f'* press 2 to run this script in background to check and run when new day (at {time})')
-            print(f'* press 3 to make this script auto run in background upon Windows startup to check and run when new day (at {time})')
+            print(f"* press 2 to run this script in background to check and run when new day (at {re['time']})")
+            print(f"* press 3 to make this script auto run in background upon Windows startup to check and run when new day (at {re['time']})")
             print('* press 4 to start config this script')
             print('* press 5 to import config from previous version')
             print('* press 6 to view current configuration')
