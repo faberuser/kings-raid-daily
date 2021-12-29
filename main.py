@@ -242,6 +242,7 @@ def write_config(path):
     else:
         with open('./config.json', 'w') as w:
             json.dump(cf, w, indent=4)
+    return cf
 
 def get_table(config):
     table = BeautifulTable()
@@ -430,9 +431,10 @@ if __name__ == "__main__":
 
     while True:
         try:
+            tm = re['time']
             print('* press 1 to run this script once')
-            print(f"* press 2 to run this script in background to check and run when new day (at {re['time']})")
-            print(f"* press 3 to make this script auto run in background upon Windows startup to check and run when new day (at {re['time']})")
+            print(f'* press 2 to run this script in background to check and run when new day (at {tm})')
+            print(f'* press 3 to make this script auto run in background upon Windows startup to check and run when new day (at {tm})')
             print('* press 4 to start config this script')
             print('* press 5 to import config from previous version')
             print('* press 6 to view current configuration')
@@ -461,21 +463,22 @@ if __name__ == "__main__":
                     parent = getcwd()[:-16]
                     copy(parent+'kings-raid-daily-background.lnk', startup)
                     print(f'copied shortcut "kings-raid-daily-background" to "{startup}", script will now auto run in background upon Windows startup\n(restart Windows to take effect)\n')
+                    input('press any key to continue...\n')
                 elif int(auto_daily) == 4:
                     print("ok, starting configuration")
                     config()
-                    input('config complete, press any key to exit...\n')
+                    input('config complete, press any key to continue...\n')
                 elif int(auto_daily) == 5:
                     print("ok, waiting for import to complete")
-                    re = get_path('*.json')
-                    write_config(re)
-                    input('config complete, press any key to exit...\n')
+                    re_ = get_path('*.json')
+                    re = write_config(re_)
+                    input('config complete, press any key to continue...\n')
                 elif int(auto_daily) == 6:
                     print("ok, viewing configuration")
                     with open('./config.json') as j:
                         cf = json.load(j)
                     print(get_table(cf))
-                    input('press any key to exit...\n')
+                    input('press any key to continue...\n')
                 elif int(auto_daily) == 7:
                     break
                 else:
