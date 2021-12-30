@@ -501,22 +501,16 @@ class Missions:
             if not_done_ == not_done:
                 if count >= 20:
                     self.weekly(device, data)
-                    print('1')
                     if cf['mails'] == True:
-                        print('2')
                         self.mails(device, data)
                     if cf['loh'] == True:
-                        print('3')
                         re = self.loh(device, data, lang)
                         if re != 'success':
                             print(device.serial+': loh not enough currency or unavailable')
-                    print('4')
                     print(device.serial+': all avalible missions has been completed, script ended')
                     if self.launched is not None:
                         print(device.serial+': because launched from config so closing after done')
-                        print('5')
                         run_(path+f' quit --index {str(self.launched)}')
-                        print('6')
                     break
                 count+=1
             not_done_ = not_done
