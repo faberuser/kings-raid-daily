@@ -26,13 +26,13 @@
 #### ONLY SUPPORT THESE SETTINGS:
 - Windows 10 or higher
 - Game language `ENGLISH`-(best), `VIETNAMESE` or `JAPANESE`
-- Multiple LD Player Emulator with tablet resolution (`960x540`, `1280x720`, `1600x900`, `1920x1080`)
+- Multiple LDPlayer Emulator with tablet resolution (`960x540`, `1280x720`, `1600x900`, `1920x1080`)
 ##### If you want the script to auto LoH, resolution with `1280x720` or higher is recommended because this script is currently having unexpected issue while sending events to `960x540` resolution so sometimes it doesn't work or not as expected
 
 #### Script and Emulator configuration:
 - Double click/Open `generate-shortcut.bat` to generate shortcut point to executables in `kings-raid-daily` folder
 - `2 cores CPU` and `4GB RAM` or above is recommended
-- Open emulator's `Settings` and head to `Other settings` on the left menu, change `@adb_debug`/`ADB debugging` to `Open local connection`
+- Open emulator's `Settings` and head to `Other settings` (or `Basic` on lower LDPlayer version) on the left menu, change `@adb_debug`/`ADB debugging` to `Open local connection`
 - Run the script `kings-raid-daily` and press 4 or edit directly in `config.json` / import config from previous version by press 5 and select `config.json` file in `kings-raid-daily` folder
 ##### Default configuration will set scoring content include `LoV (League of Victory)`, `LoH (League of Honor)`, `WB (World Boss)` to disable
 ##### To view current configuration, run the script `kings-raid-daily` and press 5
