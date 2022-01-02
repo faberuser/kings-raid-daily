@@ -143,8 +143,6 @@ class Missions:
 
     def make_sure_loaded(self, original_img, device, dimensions=None, shell_=None, loop=None, sleep_duration=None, \
             shell_first=False, cutoff=6, second_img=None, third_img=None, oposite=False, second_shell=None, ck=True, ck_special_shop=True):
-        with open('./config.json') as j:
-            bonus = json.load(j)['bonus_cutoff']
         count = 0
         count_ = 0
         while True:
@@ -171,6 +169,8 @@ class Missions:
             original = average_hash(Image.open(original_img))
             cache = average_hash(cache)
             # compare
+            with open('./config.json') as j:
+                bonus = json.load(j)['bonus_cutoff']
             if original - cache < cutoff+bonus:
                 if oposite == True:
                     pass
@@ -335,18 +335,6 @@ class Missions:
             device.shell(data['loh']['0']['shell'])
             slp(3)
 
-        # may appear
-        # kr discord
-        im1 = kr_discord_
-        im2 = im
-        kr_discord = check_similar(im1, im2, 20)
-        if kr_discord == 'similar':
-            logger.info(device.serial+': kr discord page detected')
-            device.shell('monkey -p com.vespainteractive.KingsRaid 1')
-            slp(5)
-            device.shell(data['login']['sale']['shell'])
-            slp(3)
-
         # sale 2
         im1 = sale_2_
         im2 = crop(im, data['login']['sale_2']['dms'])
@@ -417,7 +405,7 @@ class Missions:
                 count+=1
 
         # open daily mission board
-        self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'])
+        self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], cutoff=8)
 
         with open('./config.json') as m:
             cf = json.load(m)
@@ -425,18 +413,18 @@ class Missions:
 
         if cf['buff'] == True:
             # claim exp and gold buff in etc
-            self.make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['1']['shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
+            self.make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['1']['shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png', cutoff=8)
             # claim exp buff
             self.make_sure_loaded('./base/other/use_exp.png', device, data['buff']['2']['dms'], data['buff']['2']['shell'], cutoff=15, sleep_duration=1, loop=5)
-            self.make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['2']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
+            self.make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['2']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png', cutoff=8)
             slp(5)
             # claim gold buff 
             self.make_sure_loaded('./base/other/use_gold.png', device, data['buff']['3']['dms'], data['buff']['3']['shell'], cutoff=15, sleep_duration=1, loop=5)
-            self.make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['3']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png')
+            self.make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['3']['second_shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png', cutoff=8)
 
             # click back to mission board
             # open daily mission board
-            self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['second_shell'], shell_first=True, sleep_duration=0.5)
+            self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['second_shell'], cutoff=8, shell_first=True, sleep_duration=0.5)
 
         claim()
         logger.info(device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board for the first time')
@@ -526,7 +514,7 @@ class Missions:
                     if text not in not_done:
                         not_done.append(text)
                 else:
-                    self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'])
+                    self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], cutoff=8)
                     claim()
                     logger.info(device.serial+': opened and claimed rewards on daily mission board')
                     break
@@ -667,7 +655,7 @@ class Missions:
         logger.info(device.serial+': clicked start battle')
 
         # wait until finish
-        self.make_sure_loaded('./base/dragon/end.png', device, data['dragon']['14']['dms'], sleep_duration=15, cutoff=10, ck=False)
+        self.make_sure_loaded('./base/dragon/end.png', device, data['dragon']['14']['dms'], sleep_duration=15, cutoff=10, ck=False, loop=4)
         logger.info(device.serial+': battle completed')
 
         # click exit battle
@@ -1180,7 +1168,7 @@ class Missions:
                 count+=1
 
         # change to weekly mission board
-        self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['third_shell'], shell_first=True, sleep_duration=0.5, cutoff=10, loop=20)
+        self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['third_shell'], shell_first=True, sleep_duration=0.5, cutoff=8, loop=20)
         claim()
 
     def mails(self, device, data):
@@ -1276,7 +1264,6 @@ class Missions:
                 re = check_keys(device)
                 if re == 'not enough currency':
                     return 'not enough currency'
-                device.push(data['loh']['scripts']['sh'], '/sdcard/loh_script.sh')
                 count = 0
 
             device.shell(data['loh']['scripts']['get_ready'])

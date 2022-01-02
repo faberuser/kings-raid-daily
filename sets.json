@@ -69,7 +69,7 @@
                     0,
                     0
                 ],
-                "shell": "input tap 27 514"
+                "shell": "input tap 9 530.25"
             },
             "attendance": {
                 "dms": [
@@ -1532,7 +1532,7 @@
                     0,
                     0
                 ],
-                "shell": "input tap 36 685.3333333333"
+                "shell": "input tap 12 707"
             },
             "attendance": {
                 "dms": [
@@ -2995,7 +2995,7 @@
                     0,
                     0
                 ],
-                "shell": "input tap 45 856.6666666666667"
+                "shell": "input tap 15 883.75"
             },
             "attendance": {
                 "dms": [
@@ -4458,7 +4458,7 @@
                     0,
                     0
                 ],
-                "shell": "input tap 54 1028"
+                "shell": "input tap 18 1060.5"
             },
             "attendance": {
                 "dms": [
