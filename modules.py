@@ -19,7 +19,7 @@ from difflib import SequenceMatcher
 from cv2 import bilateralFilter
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 pytesseract.tesseract_cmd = ('./tesseract/tesseract.exe')
 
@@ -386,7 +386,9 @@ class Missions:
         if im == 'device offline':
             if str(device.serial).startswith('127'):
                 return
-            print('device '+device.serial+' is offline, script ended')
+            text = 'device '+device.serial+' is offline, script ended'
+            logger.info(text)
+            print(text)
             return
         size_ = f"{im.size[0]}x{im.size[1]}"
         logger.info(device.serial+': size '+size_+' detected')
@@ -471,9 +473,13 @@ class Missions:
                     lang = _langs_[lang_[0]]
 
             if lang is None:
-                print(device.serial+': language not supported, script ended')
+                text = device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board for the first time'
+                logger.info(text)
+                print(text)
                 if self.launched is not None:
-                    print(device.serial+': because launched from config so closing after done')
+                    text = device.serial+': because launched from config so closing after done'
+                    logger.info(text)
+                    print(text)
                     run_(path+f' quit --index {str(self.launched)}')
                 return
 
@@ -494,12 +500,18 @@ class Missions:
                     if cf['loh'] == True:
                         re = self.loh(device, data, lang)
                         if re != 'success':
-                            print(device.serial+': loh not enough currency or unavailable')
-                    print(device.serial+': all avalible missions has been completed, script ended')
+                            text = device.serial+': loh not enough currency or unavailable'
+                            logger.info(text)
+                            print(text)
+                    text = device.serial+': all avalible missions has been completed, script ended'
+                    logger.info(text)
+                    print(text)
                     if self.launched is not None:
-                        print(device.serial+': because launched from config so closing after done')
+                        text = device.serial+': because launched from config so closing after done'
+                        logger.info(text)
+                        print(text)
                         run_(path+f' quit --index {str(self.launched)}')
-                    break
+                    return
                 count+=1
             not_done_ = not_done
             count_ = 0
@@ -519,7 +531,6 @@ class Missions:
                     logger.info(device.serial+': opened and claimed rewards on daily mission board')
                     break
                 count_+=1
-        return 'done'
 
 
     def do_mission(self, mission, device, pos, data, res, lang):
@@ -1297,7 +1308,15 @@ def run():
     quit_all = False
     if re['quit_all'] == True:
         quit_all = True
-        run_(path+' quitall')
+        try:
+            run_(path+' quitall')
+        except FileNotFoundError:
+            text = "path to LDPlayer is wrong, please config and try again"
+            logger.info(text)
+            print(text)
+            input('press any key to exit...')
+            return
+
 
     def setup_log():
         if pth.exists('./.cache') == False:
@@ -1318,9 +1337,13 @@ def run():
                 setup_log()
                 if count == 4 or quit_all == True:
                     if quit_all == True:
-                        print('quit all emulators, launching from config...')
+                        text = 'quit all emulators, launching from config...'
+                        logger.info(text)
+                        print(text)
                     else:
-                        print('no device was found after 5 retries, launching from config and retrying...')
+                        text = 'no device was found after 5 retries, launching from config and retrying...'
+                        logger.info(text)
+                        print(text)
                     break_ = False
                     devices_dexist = 0
                     if re['max_devices'] == 1:
@@ -1329,9 +1352,13 @@ def run():
                                 re_ = run_(path+' launch --index '+str(device_), capture_output=True).stdout
                                 if str(re_)+'/' == """b"player don't exist!"/""":
                                     devices_dexist += 1
-                                    print('device with index '+str(device_)+" doesn't exist")
+                                    text = 'device with index '+str(device_)+" doesn't exist"
+                                    logger.info(text)
+                                    print(text)
                                 else:
-                                    print('launched device with index '+str(device_))
+                                    text = 'launched device with index '+str(device_)
+                                    logger.info(text)
+                                    print(text)
                                     print('waiting 30 secs for fully boot up')
                                     slp(30)
                                     while True:
@@ -1348,11 +1375,15 @@ def run():
                                     break_ = True
                             except FileNotFoundError:
                                 break_ = True
-                                print("path to LDPlayer is wrong, please config and try again")
+                                text = "path to LDPlayer is wrong, please config and try again"
+                                logger.info(text)
+                                print(text)
                                 input('press any key to exit...')
                                 break
                             if devices_dexist == len(re['devices']):
-                                print("all configured devices don't exit")
+                                text = "all configured devices don't exit"
+                                logger.info(text)
+                                print(text)
                                 input('press any key to exit...')
                                 break_ = True
                                 break
@@ -1382,8 +1413,8 @@ def run():
                                 if running == re['max_devices'] or running == last_run:
                                     slp(10)
                                     for thread_ in threads:
-                                        thread_.join(9000)
                                         if int(thread_.name) not in done:
+                                            thread_.join(9000)
                                             done.append(int(thread_.name))
                                     running = running - len(done)
                             else:
@@ -1396,20 +1427,28 @@ def run():
                                             re_ = run_(path+' launch --index '+str(device_), capture_output=True).stdout
                                             if str(re_)+'/' == """b"player don't exist!"/""":
                                                 devices_dexist += 1
-                                                print('device with index '+str(device_)+" doesn't exist")
+                                                text = 'device with index '+str(device_)+" doesn't exist"
+                                                logger.info(text)
+                                                print(text)
                                             else:
-                                                print('launched device with index '+str(device_))
+                                                text = 'launched device with index '+str(device_)
+                                                logger.info(text) 
+                                                print(text)
                                                 launched.append(int(device_))
                                                 running += 1
                                                 _devices_[device_] = True
                                         except FileNotFoundError:
                                             break_ = True
                                             _break_ = True
-                                            print("path to LDPlayer is wrong, please config and try again")
+                                            text = "path to LDPlayer is wrong, please config and try again"
+                                            logger.info(text)
+                                            print(text)
                                             input('press any key to exit...')
                                             break
                                         if devices_dexist == len(re['devices']):
-                                            print("all configured device(s) don't exit")
+                                            text = "all configured device(s) don't exit"
+                                            logger.info(text)
+                                            print(text)
                                             input('press any key to exit...')
                                             break_ = True
                                             _break_ = True
@@ -1436,7 +1475,9 @@ def run():
                                                 thread = Thread(target=Missions().run_execute, name=str(device_), args=(device,device_,))
                                                 threads.append(thread)
                                                 launched_.append(int(device_))
-                                                print('executing on device '+device.serial)
+                                                text = 'executing on device '+device.serial
+                                                logger.info(text)
+                                                print(text)
                                                 thread.start()
                                                 i+=1
                                         break
@@ -1459,7 +1500,9 @@ def run():
             setup_log()
             for device in devices:
                 thread = Thread(target=Missions().run_execute, args=(device,))
-                print('executing on device '+device.serial)
+                text = 'executing on device '+device.serial
+                logger.info(text)
+                print(text)
                 thread.start()
             break
         slp(5)

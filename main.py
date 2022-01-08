@@ -449,14 +449,15 @@ if __name__ == "__main__":
                     run()
                     break
                 elif int(auto_daily) == 2:
-                    print("ok, this scripts will run in background to check and run the script when new day (at 00:05) (please don't close this window)")
+                    print(f"ok, this scripts will run in background to check and run the script when new day (at {tm}) (please don't close this window)")
                     while True:
                         now = datetime.now().strftime("%H:%M")
                         print('checking at '+str(now))
                         if str(now) != re['time']:
                             sleep(60)
                             continue
-                        run()
+                        logger = run()
+                        logger.info('executed successfully at '+str(now))
                     break
                 elif int(auto_daily) == 3: # can only use in built executable
                     startup = pth.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
