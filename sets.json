@@ -1,4 +1,7 @@
 {
+    "version": "beta-v4.0",
+    "latest": "beta-v3.4",
+    "remind": false,
     "960x540": {
         "tap_to_play": {
             "dms": [

@@ -1,11 +1,12 @@
-from threading import Thread
+from threading import Thread, enumerate
 from random import choice
 from time import sleep as slp
 from time import time as tiime
 from os import mkdir, getcwd, path as pth
 from subprocess import run as run_
 from math import ceil
-import logging, json
+from traceback import format_exc
+import logging, json, ctypes
 
 from ppadb.client import Client
 from PIL import Image, UnidentifiedImageError, ImageFile
@@ -17,9 +18,17 @@ from langdetect import detect, DetectorFactory
 from fuzzywuzzy.process import extractOne
 from difflib import SequenceMatcher
 from cv2 import bilateralFilter
+from requests import get
+
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+if pth.exists('./.cache') == False:
+    mkdir('./.cache')
+handler = logging.FileHandler("./.cache/log.log", "a", "utf-8")
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 pytesseract.tesseract_cmd = ('./tesseract/tesseract.exe')
 
@@ -105,7 +114,7 @@ class Missions:
                                     slp(3)
                                     self.game_count = 0
                                     self.run_execute(device, self.launched)
-                                    raise Exception
+                                    raise Exception('Exception for handling game crash, please ignore this')
                             else:
                                 self.cache_2 = im
                                 self.game_count = 0
@@ -118,7 +127,7 @@ class Missions:
                             self.cache_2 = im
                             slp(5)
                             continue
-                        except Exception:
+                        except Exception('Exception for handling game crash, please ignore this'):
                             raise
                     else:
                         self.cache_2 = im
@@ -367,16 +376,18 @@ class Missions:
                 device.shell(data['daily']['shell'])
                 self.game_home_screen_count = 0
                 self.run_execute(device, launched=self.launched)
-                try:
-                    raise Exception
-                except Exception:
-                    raise
+                raise Exception('Exception for handling game crash, please ignore this')
 
     def run_execute(self, device, launched=None):
         try:
             self.execute(device, launched)
-        except Exception:
+        except Exception('Exception to make sure thread stopped, please ignore this'):
+            raise
+        except Exception('Exception for handling game crash, please ignore this'):
             pass
+        except:
+            var = format_exc()
+            logger.warn(device.serial+': Exception | '+var)
 
     def execute(self, device, launched=None):
         if launched is not None:
@@ -429,7 +440,9 @@ class Missions:
             self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['second_shell'], cutoff=8, shell_first=True, sleep_duration=0.5)
 
         claim()
-        logger.info(device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board for the first time')
+        text = device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board for the first time'
+        logger.info(text)
+        print(text)
 
         # get game language
         im, device = self.update_cache(device)
@@ -473,7 +486,7 @@ class Missions:
                     lang = _langs_[lang_[0]]
 
             if lang is None:
-                text = device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board for the first time'
+                text = device.serial+': language not supported or cannot recognized (supported languages: english, japanese, vietnamese)'
                 logger.info(text)
                 print(text)
                 if self.launched is not None:
@@ -481,7 +494,7 @@ class Missions:
                     logger.info(text)
                     print(text)
                     run_(path+f' quit --index {str(self.launched)}')
-                return
+                raise Exception('Exception to make sure thread stopped, please ignore this')
 
         # check for undone missions
         not_done = []
@@ -511,7 +524,7 @@ class Missions:
                         logger.info(text)
                         print(text)
                         run_(path+f' quit --index {str(self.launched)}')
-                    return
+                    raise Exception('Exception to make sure thread stopped, please ignore this')
                 count+=1
             not_done_ = not_done
             count_ = 0
@@ -1286,6 +1299,10 @@ class Missions:
         return 'success'
 
 
+    def extra_dailies(self, device):
+        pass
+
+
 def load_devices():
     working_dir = getcwd()
     adb_dir = '"'+working_dir+'\\adb" '
@@ -1302,6 +1319,7 @@ def load_devices():
 
 
 def run():
+
     with open('./config.json') as j:
         re = json.load(j)
     path = re['ldconsole'].replace('|', '"')
@@ -1317,14 +1335,34 @@ def run():
             input('press any key to exit...')
             return
 
-
-    def setup_log():
-        if pth.exists('./.cache') == False:
-            mkdir('./.cache')
-        handler = logging.FileHandler("./.cache/log.log", "a", "utf-8")
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+    latest = get("https://api.github.com/repos/faber6/kings-raid-daily/releases/latest")
+    with open('./sets.json') as t:
+        this = json.load(t)
+    if latest.json()["tag_name"] != this['version']:
+        text = (f'\nThere is a new version ({latest.json()["tag_name"]}) of script on https://github.com/faber6/kings-raid-daily/releases'+
+            '\nIf this version not working as expected, please update to a newer version\n')
+        logger.info(text)
+        print(text)
+        def msg_box(this):
+            answ = ctypes.windll.user32.MessageBoxW(0,
+                text[1:].replace('\n','\n\n')+'do you want to remind this later?',
+                f"kings-raid-daily new version ({latest.json()['tag_name']})", 4)
+            if answ == 6: # yes
+                this['remind'] = True
+            elif answ == 7: # no                
+                this['remind'] = False
+            with open('./sets.json', 'w') as w:
+                json.dump(this, w, indent=4)
+            return
+        msg_box_thread = Thread(target=msg_box, name='msg_box', args=(this,))
+        if this['remind'] == True:
+            msg_box_thread.start()
+        else:
+            if latest.json()["tag_name"] != this['latest']:
+                this['latest'] = latest.json()["tag_name"]
+                with open('./sets.json', 'w') as w:
+                    json.dump(this, w, indent=4)
+                msg_box_thread.start()
 
     devices, adb_dir, adb = load_devices()
     count = 0
@@ -1334,7 +1372,6 @@ def run():
             break
         if devices == []:
             if re['devices'] != []:
-                setup_log()
                 if count == 4 or quit_all == True:
                     if quit_all == True:
                         text = 'quit all emulators, launching from config...'
@@ -1497,7 +1534,6 @@ def run():
             run_(adb_dir+'devices')
             devices = adb.devices()
             print('device(s) detected')
-            setup_log()
             for device in devices:
                 thread = Thread(target=Missions().run_execute, args=(device,))
                 text = 'executing on device '+device.serial
