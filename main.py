@@ -1,9 +1,9 @@
 from modules import run
 from datetime import datetime
 from time import sleep
-from os import path as pth, mkdir, getlogin, getcwd
+from os import path as pth, mkdir, getcwd
 from shutil import copy
-import json
+import json, logging
 
 from sys import stdout
 from msvcrt import kbhit, getwche
@@ -11,26 +11,16 @@ from time import monotonic
 from beautifultable import BeautifulTable
 from wx import App, FD_OPEN, FD_FILE_MUST_EXIST, FileDialog, ID_OK
 
-defaults = {
-                "buff": True,
-                "wb": False,
-                "lov": False,
-                "loh": False,
-                "dragon": True,
-                "friendship": True,
-                "inn": True,
-                "shop": True,
-                "stockage": True,
-                "tower": True,
-                "lil": False,
-                "mails": True,
-                "quit_all": False,
-                "bonus_cutoff": 0,
-                "devices": [],
-                "max_devices": 1,
-                "ldconsole": "",
-                "time": "00:05"
-            }
+with open('./sets.json') as j:
+    defaults = json.load(j)['defaults']
+if pth.exists('./.cache') == False:
+    mkdir('./.cache')
+logging.basicConfig(
+    handlers=[logging.FileHandler("./.cache/log.log", "a", "utf-8")],
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S %p",
+)
 
 class TimeoutOccurred(Exception):
     pass
@@ -456,8 +446,8 @@ if __name__ == "__main__":
                         if str(now) != re['time']:
                             sleep(60)
                             continue
-                        logger = run()
-                        logger.info('executed successfully at '+str(now))
+                        run()
+                        logging.info('executed successfully at '+str(now))
                     break
                 elif int(auto_daily) == 3: # can only use in built executable
                     startup = pth.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
@@ -468,6 +458,8 @@ if __name__ == "__main__":
                 elif int(auto_daily) == 4:
                     print("ok, starting configuration")
                     config()
+                    with open('./config.json') as j:
+                        re = json.load(j)
                     input('config complete, press any key to continue...\n')
                 elif int(auto_daily) == 5:
                     print("ok, waiting for import to complete")
