@@ -1416,7 +1416,15 @@ def run():
                                                     logging.info(text)
                                                     print(text)
                                                     thread.start()
-                                                    thread.join()
+                                                    start_time = tiime()
+                                                    seconds = 10800
+                                                    while True:
+                                                        current_time = tiime()
+                                                        elapsed_time = current_time - start_time
+                                                        if elapsed_time > seconds:
+                                                            break
+                                                        if thread.is_alive() == False:
+                                                            break
                                             else:
                                                 text = "'max_devices' set to 1 but 'adb devices' returns "+str(len(devices))+' devices, retrying...'
                                                 logging.info(text)
@@ -1464,10 +1472,10 @@ def run():
                             if running != 0:
                                 if running == re['max_devices'] or running == last_run:
                                     slp(10)
-                                    start_time = tiime()
-                                    seconds = 10800
                                     for thread_ in threads:
                                         if int(thread_.name) not in done:
+                                            start_time = tiime()
+                                            seconds = 10800
                                             while True:
                                                 current_time = tiime()
                                                 elapsed_time = current_time - start_time
