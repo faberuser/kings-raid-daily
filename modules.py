@@ -60,9 +60,7 @@ def crop(img, dimesions):
     return im
 
 
-def check_similar(img1, img2, cutoff):
-    with open('./config.json') as j:
-        bonus = json.load(j)['bonus_cutoff']
+def check_similar(img1, img2, cutoff, bonus):
     # get data for comparing image
     image1 = average_hash(img1)
     image2 = average_hash(img2)
@@ -97,6 +95,8 @@ class Missions:
         self.game_home_screen_count = 0
         self.error_count = 0
 
+        self.gb_cf = None
+
     def update_cache(self, device, check_crash=True):
         count = 0
         while True:
@@ -107,7 +107,7 @@ class Missions:
                 if check_crash == True:
                     if self.cache_2 is not None:
                         try:
-                            if check_similar(self.cache_2, im, 5) == 'similar':
+                            if check_similar(self.cache_2, im, 5, self.gb_cf['bonus_cutoff']) == 'similar':
                                 self.game_count+=1
                                 if self.game_count >= 50: # game freeze
                                     device.shell('am force-stop com.vespainteractive.KingsRaid')
@@ -178,8 +178,7 @@ class Missions:
             original = average_hash(Image.open(original_img))
             cache = average_hash(cache)
             # compare
-            with open('./config.json') as j:
-                bonus = json.load(j)['bonus_cutoff']
+            bonus = self.gb_cf['bonus_cutoff']
             if original - cache < cutoff+bonus:
                 if oposite == True:
                     pass
@@ -224,12 +223,13 @@ class Missions:
 
         count = 0
         community_count = 0
+        bonus = self.gb_cf['bonus_cutoff']
         im, device = self.update_cache(device)
 
         # android home screen
         im1 = home_screen_
         im2 = crop(im, data['login']['home_screen']['dms'])
-        home_screen = check_similar(im1, im2, 15)
+        home_screen = check_similar(im1, im2, 15, bonus)
         if home_screen == 'similar':
             logging.info(device.serial+': android home screen detected')
             device.shell('monkey -p com.vespainteractive.KingsRaid 1')
@@ -239,7 +239,7 @@ class Missions:
         # update notice
         im1 = update_notice_
         im2 = crop(im, data['update_notice']['dms'])
-        update_notice = check_similar(im1, im2, 10)
+        update_notice = check_similar(im1, im2, 10, bonus)
         if update_notice == 'similar':
             logging.info(device.serial+': update notice detected')
             device.shell(data['update_notice']['shell'])
@@ -248,7 +248,7 @@ class Missions:
         # introduction
         im1 = introduction_
         im2 = crop(im, data['introduction']['dms'])
-        introduction = check_similar(im1, im2, 10)
+        introduction = check_similar(im1, im2, 10, bonus)
         if introduction == 'similar':
             logging.info(device.serial+': introduction detected')
             device.shell(data['introduction']['shell'])
@@ -257,7 +257,7 @@ class Missions:
         # tap to play
         im1 = tap_to_play_
         im2 = crop(im, data['tap_to_play']['dms'])
-        tap_to_play = check_similar(im1, im2, 10)
+        tap_to_play = check_similar(im1, im2, 10, bonus)
         if tap_to_play == 'similar':
             logging.info(device.serial+': tap to play detected')
             device.shell(data['tap_to_play']['shell'])
@@ -266,7 +266,7 @@ class Missions:
         # tap to play 2
         im1 = tap_to_play_2_
         im2 = crop(im, data['tap_to_play']['dms'])
-        tap_to_play_2 = check_similar(im1, im2, 10)
+        tap_to_play_2 = check_similar(im1, im2, 10, bonus)
         if tap_to_play_2 == 'similar':
             logging.info(device.serial+': tap to play 2 detected')
             device.shell(data['tap_to_play']['shell'])
@@ -275,7 +275,7 @@ class Missions:
         # pass community page
         im1 = community_
         im2 = crop(im, data['login']['community']['dms'])
-        community = check_similar(im1, im2, 10)
+        community = check_similar(im1, im2, 10, bonus)
         if community == 'similar':
             logging.info(device.serial+': community page detected')
             device.shell(data['login']['community']['shell'])
@@ -284,7 +284,7 @@ class Missions:
         # pass sale page
         im1 = sale_
         im2 = crop(im, data['login']['sale']['dms'])
-        sale = check_similar(im1, im2, 10)
+        sale = check_similar(im1, im2, 10, bonus)
         if sale == 'similar':
             logging.info(device.serial+': sale page detected')
             device.shell(data['login']['sale']['shell'])
@@ -293,7 +293,7 @@ class Missions:
         # claim login attendance
         im1 = attendance_
         im2 = crop(im, data['login']['attendance']['dms'])
-        attendance = check_similar(im1, im2, 10)
+        attendance = check_similar(im1, im2, 10, bonus)
         if attendance == 'similar':
             logging.info(device.serial+': login attendance detected')
             device.shell(data['login']['attendance']['shell'])
@@ -304,7 +304,7 @@ class Missions:
         # pass event page
         im1 = event_
         im2 = crop(im, data['login']['event']['dms'])
-        event = check_similar(im1, im2, 10)
+        event = check_similar(im1, im2, 10, bonus)
         if event == 'similar':
             logging.info(device.serial+': event page detected')
             device.shell(data['login']['event']['shell'])
@@ -313,7 +313,7 @@ class Missions:
         # claim guild attendance
         im1 = guild_attendance_
         im2 = crop(im, data['login']['guild_attendance']['dms'])
-        guild_attendance = check_similar(im1, im2, 10)
+        guild_attendance = check_similar(im1, im2, 10, bonus)
         if guild_attendance == 'similar':
             logging.info(device.serial+': guild attendance detected')
             for day in data['login']['guild_attendance']['days']:
@@ -327,7 +327,7 @@ class Missions:
         # claim login accumualated
         im1 = accumualated_
         im2 = crop(im, data['login']['accumualated']['dms'])
-        accumualated = check_similar(im1, im2, 10)
+        accumualated = check_similar(im1, im2, 10, bonus)
         if accumualated == 'similar':
             logging.info(device.serial+': login accumualated detected')
             device.shell(data['login']['accumualated']['shell'])
@@ -338,7 +338,7 @@ class Missions:
         # check loh new season
         im1 = loh_new_
         im2 = crop(im, data['loh']['0']['dms'])
-        loh_new = check_similar(im1, im2, 10)
+        loh_new = check_similar(im1, im2, 10, bonus)
         if loh_new == 'similar':
             logging.info(device.serial+': new loh season detected')
             device.shell(data['loh']['0']['shell'])
@@ -347,7 +347,7 @@ class Missions:
         # sale 2
         im1 = sale_2_
         im2 = crop(im, data['login']['sale_2']['dms'])
-        sale_2 = check_similar(im1, im2, 10)
+        sale_2 = check_similar(im1, im2, 10, bonus)
         if sale_2 == 'similar':
             logging.info(device.serial+': sale 2 page detected')
             device.shell(data['login']['sale_2']['shell'])
@@ -359,7 +359,7 @@ class Missions:
         if ck_special_shop != False:
             im1 = special_shop_
             im2 = crop(im, data['login']['special_shop']['dms'])
-            special_shop = check_similar(im1, im2, 10)
+            special_shop = check_similar(im1, im2, 10, bonus)
             if special_shop == 'similar':
                 logging.info(device.serial+': special shop detected')
                 device.shell(data['login']['special_shop']['shell'])
@@ -368,7 +368,7 @@ class Missions:
         # return to main page
         im1 = mb_
         im2 = crop(im, data['login']['mission_button'])
-        mb = check_similar(im1, im2, 20)
+        mb = check_similar(im1, im2, 20, bonus)
         if mb == 'similar':
             self.game_home_screen_count += 1
             if self.game_home_screen_count >= 100:
@@ -379,8 +379,19 @@ class Missions:
                 exit()
 
     def run_execute(self, device, launched=None):
+        with open('./config.json') as j:
+            self.gb_cf = json.load(j)
         try:
             self.execute(device, launched)
+        except SystemExit:
+            pass
+        except ConnectionResetError:
+            if launched is not None:
+                text = device.serial+': connection to remote host was forcibly closed, closing emulator'
+                print(text)
+                logging.warn(text)
+                path = self.gb_cf['ldconsole'].replace('|', '"')
+                run_(path+f' quit --index {str(launched)}')
         except:
             var = format_exc()
             logging.warn(device.serial+': Exception | '+var)
@@ -403,6 +414,7 @@ class Missions:
         with open('./sets.json', encoding='utf-8') as j:
             data = json.load(j)[size_]
         device.shell('monkey -p com.vespainteractive.KingsRaid 1')
+        path = self.gb_cf['ldconsole'].replace('|', '"')
 
         def claim():
             # claim rewards
@@ -417,11 +429,7 @@ class Missions:
         # open daily mission board
         self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], cutoff=8)
 
-        with open('./config.json') as m:
-            cf = json.load(m)
-        path = cf['ldconsole'].replace('|', '"')
-
-        if cf['buff'] == True:
+        if self.gb_cf['buff'] == True:
             # claim exp and gold buff in etc
             self.make_sure_loaded('./base/other/etc.png', device, data['buff']['1']['dms'], data['buff']['1']['shell'], second_img='./base/other/etc_2.png', third_img='./base/other/etc_3.png', cutoff=8)
             # claim exp buff
@@ -506,9 +514,9 @@ class Missions:
             if not_done_ == not_done:
                 if count >= 20:
                     self.weekly(device, data)
-                    if cf['mails'] == True:
+                    if self.gb_cf['mails'] == True:
                         self.mails(device, data)
-                    if cf['loh'] == True:
+                    if self.gb_cf['loh'] == True:
                         re = self.loh(device, data, lang)
                         if re != 'success':
                             text = device.serial+': loh not enough currency or unavailable'
@@ -552,58 +560,56 @@ class Missions:
             lst.append(name)
         ext = extractOne(mission, lst)
         re = lang_data[ext[0]]
-        with open('./config.json') as m:
-            config = json.load(m)
         if re == 'dragon':
-            if config['dragon'] == False:
+            if self.gb_cf['dragon'] == False:
                 return 'not'
             if self.dragon_ == True:
                 return 'not'
             return self.dragon(device, pos, data, lang)
         elif re == 'friendship':
-            if config['friendship'] == False:
+            if self.gb_cf['friendship'] == False:
                 return 'not'
             if self.friendship_ == True:
                 return 'not'
             return self.friendship(device, pos, data)
         elif re == 'inn':
-            if config['inn'] == False:
+            if self.gb_cf['inn'] == False:
                 return 'not'
             if self.inn_ == True:
                 return 'not'
             return self.inn(device, pos, data)
         elif re == 'lov':
-            if config['lov'] == False:
+            if self.gb_cf['lov'] == False:
                 return 'not'
             if self.lov_ == True:
                 return 'not'
             return self.lov(device, pos, data)
         elif re == 'shop':
-            if config['shop'] == False:
+            if self.gb_cf['shop'] == False:
                 return 'not'
             if self.shop_ == True:
                 return 'not'
             return self.shop(device, pos, data)
         elif re == 'stockage':
-            if config['stockage'] == False:
+            if self.gb_cf['stockage'] == False:
                 return 'not'
             if self.stockage_ == True:
                 return 'not'
             return self.stockage(device, pos, data)
         elif re == 'tower':
-            if config['tower'] == False:
+            if self.gb_cf['tower'] == False:
                 return 'not'
             if self.tower_ == True:
                 return 'not'
             return self.tower(device, pos, data, lang)
         elif re == 'wb':
-            if config['wb'] == False:
+            if self.gb_cf['wb'] == False:
                 return 'not'
             if self.wb_ == True:
                 return 'not'
             return self.wb(device, pos, data)
         elif re == 'lil':
-            if config['lil'] == False:
+            if self.gb_cf['lil'] == False:
                 return 'not'
             if self.lil_ == True:
                 return 'not'
@@ -1458,10 +1464,22 @@ def run():
                             if running != 0:
                                 if running == re['max_devices'] or running == last_run:
                                     slp(10)
+                                    start_time = tiime()
+                                    seconds = 10800
                                     for thread_ in threads:
                                         if int(thread_.name) not in done:
-                                            thread_.join(9000)
+                                            while True:
+                                                current_time = tiime()
+                                                elapsed_time = current_time - start_time
+                                                if elapsed_time > seconds:
+                                                    break
+                                                if thread_.is_alive() == False:
+                                                    break
                                             done.append(int(thread_.name))
+                                    # for thread_ in threads:
+                                    #     if int(thread_.name) not in done:
+                                    #         thread_.join(9000)
+                                    #         done.append(int(thread_.name))
                                     running = running - len(done)
                             else:
                                 for device_ in _devices_:

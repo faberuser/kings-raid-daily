@@ -39,7 +39,7 @@
 
 #### Ingame setup:
 - Set up all team can clear all `stockage dungeons` (all 4 dungeons) and make sure **auto mode is on**
-- Make sure inventory is not full
+- Make sure inventory is not full in each execution
 - If `WB` or `LoV` is enabled: Set up all team and make sure **auto mode is on**
 - If `Dragon` is enabled: End all dispatch **or** set an entire team (6 heroes) in `Dragon T6 Stage 1` while all of your dispatch teams is running (you can't use dispatching-heroes in raid)
 
