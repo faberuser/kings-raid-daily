@@ -445,7 +445,7 @@ class Missions:
             self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['second_shell'], cutoff=8, shell_first=True, sleep_duration=0.5)
 
         claim()
-        text = device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board for the first time'
+        text = device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board after launch game'
         logging.info(text)
         print(text)
 
@@ -1503,10 +1503,6 @@ def run():
                                                     break
                                                 slp(5)
                                             done.append(int(thread_.name))
-                                    # for thread_ in threads:
-                                    #     if int(thread_.name) not in done:
-                                    #         thread_.join(9000)
-                                    #         done.append(int(thread_.name))
                                     running = running - len(done)
                             else:
                                 for device_ in _devices_:
