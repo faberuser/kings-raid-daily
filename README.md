@@ -63,4 +63,12 @@
 - If you see the script stuck or stop for more than 1 minute, thats mean there is some problem with the script, you can open an issue on [Github](https://github.com/faber6/kings-raid-daily)
 - Make sure manual install new update if there is new version of game
 
+#### You can decrease crash chance when login into game by:
+1. Removal through Google Play Store
+– Open `Play Store`, search `Android System WebView`, `Delete`/`Uninstall`
+2. Removal of the App’s Update
+– Open `Settings` > `Apps` > `Your apps` > Turn on `Show system apps` > Select `Android System WebView` > `More Info` (3 dots at the right upper corner of the screen) > `Uninstall Updates`
+* If you are unable to search for `Android System WebView`, please check once again after deleting the updates for the Chrome app.
+– `Settings` > `Apps` > `Select Chrome` > `More Info` (3 dots at the right upper corner of the screen) > `Uninstall Updates`
+
 ##### Pakages built with pyinstaller and Python 3.9.7
