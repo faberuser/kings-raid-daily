@@ -29,7 +29,7 @@ def echo(string):
     stdout.write(string)
     stdout.flush()
 
-def inputimeout(prompt='', timeout=30.0):
+def inputimeout(prompt='', timeout=60.0):
     echo(prompt)
     begin = monotonic()
     end = begin + timeout
@@ -429,7 +429,7 @@ if __name__ == "__main__":
             print('* press 5 to import config from previous version')
             print('* press 6 to view current configuration')
             print('* press 7 to exit')
-            print('(script will run option 1 after 30 secs if no action was executed)')
+            print('(script will run option 1 after 60 secs if no action was executed)')
             auto_daily = inputimeout('> ', timeout=30)
             if auto_daily.isnumeric() == False:
                 print('answer must be an integer, press try again\n')

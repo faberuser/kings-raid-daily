@@ -450,57 +450,70 @@ class Missions:
         print(text)
 
         # get game language
-        im, device = self.update_cache(device)
-        first_misison = crop(im, data['first mission'])
-        image = filter(first_misison)
-        text_lang = image_to_string(image).splitlines()[0].lower().replace('♀', '')
-        while True:
-            try:
-                lang = detect(text_lang)
-                break
-            except:
-                device.shell(data['daily']['second_shell'])
-                slp(1)
-                claim()
-                slp(5)
-                continue
-        if lang == 'en' or lang == 'da' or lang == 'fr':
-            lang = 'eng'
-        elif lang == 'ja':
-            lang = 'jpn'
-        elif lang == 'vi':
-            lang = 'vie'
-        else:
-            with open('./languages.json', encoding='utf-8') as j:
-                langs = json.load(j)
+        def get_game_lang(device):
             lang = None
-            missions_ = []
-            langs_ = []
-            _langs_ = {}
-            for lang__ in langs:
-                langs_.append(lang__)
-                for _lang_ in langs[lang__]:
-                    missions_.append(_lang_)
-                    _langs_[_lang_] = lang__
-            for lang__ in langs_:
-                text_lang = image_to_string(image, lang__).splitlines()[0].lower().replace('♀', '')
-                if lang__ == 'jpn':
-                    text_lang = text_lang.replace(' ', '')
-                lang_ = extractOne(text_lang, missions_)
-                print(lang_[1])
-                if lang_[1] > 85:
-                    lang = _langs_[lang_[0]]
+            im, device = self.update_cache(device)
+            first_misison = crop(im, data['first mission'])
+            image = filter(first_misison)
+            text_lang = image_to_string(image).splitlines()[0].lower().replace('♀', '')
+            while True:
+                try:
+                    lang = detect(text_lang)
+                    break
+                except:
+                    device.shell(data['daily']['second_shell'])
+                    slp(1)
+                    claim()
+                    slp(5)
+                    continue
+            if lang == 'en' or lang == 'da' or lang == 'fr':
+                lang = 'eng'
+            elif lang == 'ja':
+                lang = 'jpn'
+            elif lang == 'vi':
+                lang = 'vie'
+            else:
+                with open('./languages.json', encoding='utf-8') as j:
+                    langs = json.load(j)
+                missions_ = []
+                langs_ = []
+                _langs_ = {}
+                for lang__ in langs:
+                    langs_.append(lang__)
+                    for _lang_ in langs[lang__]:
+                        missions_.append(_lang_)
+                        _langs_[_lang_] = lang__
+                for lang__ in langs_:
+                    text_lang = image_to_string(image, lang__).splitlines()[0].lower().replace('♀', '')
+                    if lang__ == 'jpn':
+                        text_lang = text_lang.replace(' ', '')
+                    lang_ = extractOne(text_lang, missions_)
+                    if lang_[1] >= 85:
+                        lang = _langs_[lang_[0]]
+            return lang
 
-            if lang is None:
-                text = device.serial+': language not supported or cannot recognized (supported languages: english, japanese, vietnamese)'
+        lcnt = 0
+        while True:
+            lang = get_game_lang(device)
+            if lcnt >= 100:
+                lang = None
+                break
+            if lang == None:
+                self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['second_shell'], cutoff=8, shell_first=True, sleep_duration=0.5)
+                lcnt += 1
+            else:
+                break
+
+        if lang is None:
+            text = device.serial+': language not supported or cannot recognized (supported languages: english, japanese, vietnamese)'
+            logging.info(text)
+            print(text)
+            if self.launched is not None:
+                text = device.serial+': because launched from config so closing after done'
                 logging.info(text)
                 print(text)
-                if self.launched is not None:
-                    text = device.serial+': because launched from config so closing after done'
-                    logging.info(text)
-                    print(text)
-                    run_(path+f' quit --index {str(self.launched)}')
-                exit()
+                run_(path+f' quit --index {str(self.launched)}')
+            exit()
 
         # check for undone missions
         not_done = []
@@ -691,8 +704,8 @@ class Missions:
         logging.info(device.serial+': exited battle')
 
         # click exit
-        self.make_sure_loaded('./base/dragon/my_info.png', device, data['dragon']['16']['dms'], data['dragon']['16']['shell'], sleep_duration=0.5)
-        device.shell(data['dragon']['17']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['dragon']['16']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully did dragon mission')
         self.dragon_ = True
         return 'success'
@@ -714,8 +727,8 @@ class Missions:
         logging.info(device.serial+': clicked exchange friendship points')
 
         # click exit
-        self.make_sure_loaded('./base/friendship/my_info.png', device, data['friendship']['3']['dms'], data['friendship']['3']['shell'], sleep_duration=0.5)
-        device.shell(data['friendship']['4']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['friendship']['3']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully did friendship mission')
         self.friendship_ = True
         return 'success'
@@ -791,8 +804,8 @@ class Missions:
 
         # click exit
         self.make_sure_loaded('./base/inn/visit_inn.png', device, data['inn']['15']['dms'], data['inn']['15']['shell'], cutoff=20, sleep_duration=3)
-        self.make_sure_loaded('./base/inn/my_info.png', device, data['inn']['16']['dms'], data['inn']['16']['shell'], sleep_duration=0.5)
-        device.shell(data['inn']['17']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['inn']['16']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully did some stuffs in inn mission')
         self.inn_ = True
         return 'success'
@@ -834,8 +847,8 @@ class Missions:
         logging.info(device.serial+': exited match')
 
         # click exit
-        self.make_sure_loaded('./base/lov/my_info.png', device, data['lov']['8']['dms'], data['lov']['8']['shell'], sleep_duration=0.5)
-        device.shell(data['lov']['9']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['lov']['8']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully did lov mission')
         self.lov_ = True
         return 'success'
@@ -869,8 +882,8 @@ class Missions:
         logging.info(device.serial+': bought stuff')
 
         # click exit
-        self.make_sure_loaded('./base/shop/my_info.png', device, data['shop']['5']['dms'], data['shop']['5']['shell'], sleep_duration=0.5)
-        device.shell(data['shop']['6']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['shop']['5']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully bought stuffs in shop in inn mission')
         self.shop_ = True
         return 'success'
@@ -1027,8 +1040,8 @@ class Missions:
 
 
         # click exit
-        self.make_sure_loaded('./base/stockage/my_info.png', device, data['stockage']['36']['dms'], data['stockage']['36']['shell'], sleep_duration=0.5)
-        device.shell(data['stockage']['37']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['stockage']['36']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully did stockage mission')
         self.stockage_ = True
         return 'success'
@@ -1096,8 +1109,8 @@ class Missions:
         logging.info(device.serial+': exited battle')
 
         # click exit
-        self.make_sure_loaded('./base/tower/my_info.png', device, data['tower']['14']['dms'], data['tower']['14']['shell'], sleep_duration=0.5)
-        device.shell(data['tower']['15']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['tower']['14']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully did toc mission')
         self.tower_ = True
         return 'success'
@@ -1120,8 +1133,8 @@ class Missions:
         if close == 'loop':
             self.wb_ = True
             # click exit
-            self.make_sure_loaded('./base/wb/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5)
-            device.shell(data['wb']['9']['shell'])
+            self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['wb']['8']['shell'], sleep_duration=0.5, cutoff=15)
+            device.shell(data['my_info']['shell'])
             return 'success'
         logging.info(device.serial+': loaded from get ready for battle')
 
@@ -1147,8 +1160,8 @@ class Missions:
         logging.info(device.serial+': exited battle')
         
         # click exit
-        self.make_sure_loaded('./base/wb/my_info.png', device, data['wb']['8']['dms'], data['wb']['8']['shell'], sleep_duration=0.5)
-        device.shell(data['wb']['9']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['wb']['8']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully did world boss mission')
         self.wb_ = True
         return 'success'
@@ -1176,8 +1189,8 @@ class Missions:
         logging.info(device.serial+': exit treats')
 
         # click exit
-        self.make_sure_loaded('./base/lil/my_info.png', device, data['lil']['6']['dms'], data['lil']['6']['shell'], sleep_duration=0.5)
-        device.shell(data['lil']['7']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['lil']['6']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': successfully did lil raider mission')
         self.lil_ = True
         return 'success'
@@ -1204,8 +1217,8 @@ class Missions:
         logging.info(device.serial+': claiming mails')
 
         # exit from mission board
-        self.make_sure_loaded('./base/mails/my_info.png', device, data['mails']['1']['dms'], data['mails']['1']['shell'], sleep_duration=0.5)
-        device.shell(data['mails']['2']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['mails']['1']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': exit to main screen (1)')
 
         # click mailbox
@@ -1217,8 +1230,8 @@ class Missions:
         logging.info(device.serial+': clicked claim all')
 
         # exit to main screen
-        self.make_sure_loaded('./base/mails/my_info.png', device, data['mails']['1']['dms'], data['mails']['1']['shell'], sleep_duration=0.5)
-        device.shell(data['mails']['2']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['mails']['1']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': exit to main screen (2)')
 
     
@@ -1227,8 +1240,8 @@ class Missions:
         logging.info(device.serial+': suiciding in loh')
         
         # exit from mission board
-        self.make_sure_loaded('./base/loh/my_info.png', device, data['loh']['1']['dms'], data['loh']['1']['shell'], sleep_duration=0.5)
-        device.shell(data['loh']['2']['shell'])
+        self.make_sure_loaded('./base/other/my_info.png', device, data['my_info']['dms'], data['loh']['1']['shell'], sleep_duration=0.5, cutoff=15)
+        device.shell(data['my_info']['shell'])
         logging.info(device.serial+': exit to main screen')
 
         # click portal
@@ -1472,17 +1485,23 @@ def run():
                             if running != 0:
                                 if running == re['max_devices'] or running == last_run:
                                     slp(10)
+                                    thread_count = 0
                                     for thread_ in threads:
                                         if int(thread_.name) not in done:
+                                            thread_count+=1
                                             start_time = tiime()
                                             seconds = 10800
                                             while True:
+                                                if thread_count == 2:
+                                                    thread_count = 0
+                                                    break
                                                 current_time = tiime()
                                                 elapsed_time = current_time - start_time
                                                 if elapsed_time > seconds:
                                                     break
                                                 if thread_.is_alive() == False:
                                                     break
+                                                slp(5)
                                             done.append(int(thread_.name))
                                     # for thread_ in threads:
                                     #     if int(thread_.name) not in done:
@@ -1577,6 +1596,8 @@ def run():
             devices = adb.devices()
             print('device(s) detected')
             for device in devices:
+                if str(device.serial).startswith('127'):
+                    continue
                 thread = Thread(target=Missions().run_execute, args=(device,))
                 text = 'executing on device '+device.serial
                 logging.info(text)

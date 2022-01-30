@@ -61,5 +61,6 @@
 - If the script can't find your emulator, try to restart your emulator and try again
 - Please don't touch anything or start a new emulator/use adb while the script is running
 - If you see the script stuck or stop for more than 1 minute, thats mean there is some problem with the script, you can open an issue on [Github](https://github.com/faber6/kings-raid-daily)
+- Make sure manual install new update if there is new version of game
 
 ##### Pakages built with pyinstaller and Python 3.9.7
