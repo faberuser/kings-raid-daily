@@ -1357,7 +1357,7 @@ def run():
         this = json.load(t)
     if latest.json()["tag_name"] != this['version']:
         text = (f'\nThere is a new version ({latest.json()["tag_name"]}) of script on https://github.com/faber6/kings-raid-daily/releases'+
-            '\nIf this version not working as expected, please update to a newer version\n')
+            '\nIf this version is not working as expected, please update to a newer version\n')
         logging.info(text)
         print(text)
         def msg_box(this):
