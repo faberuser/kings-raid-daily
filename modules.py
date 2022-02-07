@@ -1280,7 +1280,7 @@ class Missions:
                     if SequenceMatcher(None, re[lang]['loh'], text).ratio() > 0.9:
                         return 'not enough currency'
                     return 'continue'
-                except:
+                except LangDetectException:
                     continue
         re = check_keys(device)
         if re == 'not enough currency':
@@ -1302,14 +1302,16 @@ class Missions:
                 break
 
             if count == 50:
-                re = check_keys(device)
-                if re == 'not enough currency':
-                    return 'not enough currency'
+                for i in range(0, 4):
+                    re = check_keys(device)
+                    if re == 'not enough currency':
+                        return 'not enough currency'
                 count = 0
 
             device.shell(data['loh']['scripts']['get_ready'])
             device.shell(data['loh']['scripts']['confirm'])
             device.shell('sh /sdcard/loh_script.sh')
+            self.update_cache(device)
             count+=1
 
         logging.info(device.serial+': successfully suiciding in loh')
@@ -1403,7 +1405,11 @@ def run():
                     break_ = False
                     devices_dexist = 0
                     if re['max_devices'] == 1:
-                        for device_ in re['devices']:
+                        done = []
+                        launched_tem = None
+                        offset = [None] + re['devices'][:-1], re['devices'], re['devices'][1:] + [None]
+                        for value in list(zip(*offset)):
+                            device_ = value[1]
                             try:
                                 re_ = run_(path+' launch --index '+str(device_), capture_output=True).stdout
                                 if str(re_)+'/' == """b"player don't exist!"/""":
@@ -1417,33 +1423,53 @@ def run():
                                     print(text)
                                     print('waiting 30 secs for fully boot up')
                                     slp(30)
+                                    not_found_count = 0
                                     while True:
                                         devices, adb_dir, adb = load_devices()
                                         if devices != []:
-                                            if len(devices) == 1:
+                                            if len(devices) == 1 or launched_tem is not None:
                                                 for device in devices:
                                                     if str(device.serial).startswith('127'):
                                                         continue
-                                                    thread = Thread(target=Missions().run_execute, args=(device, device_,))
-                                                    text = 'executing on device '+device.serial
-                                                    logging.info(text)
-                                                    print(text)
-                                                    thread.start()
-                                                    start_time = tiime()
-                                                    seconds = 10800
-                                                    while True:
-                                                        current_time = tiime()
-                                                        elapsed_time = current_time - start_time
-                                                        if elapsed_time > seconds:
-                                                            break
-                                                        if thread.is_alive() == False:
-                                                            break
+                                                    if device.serial not in done:
+                                                        thread = Thread(target=Missions().run_execute, args=(device, device_,))
+                                                        text = 'executing on device '+device.serial
+                                                        logging.info(text)
+                                                        print(text)
+                                                        thread.start()
+                                                        start_time = tiime()
+                                                        seconds = 10800
+                                                        if launched_tem is not None:
+                                                            run_(path+f' quit --index {str(launched_tem)}')
+                                                        while True:
+                                                            current_time = tiime()
+                                                            elapsed_time = current_time - start_time
+                                                            if elapsed_time > seconds:
+                                                                break
+                                                            if thread.is_alive() == False:
+                                                                break
+                                                        done.append(device.serial)
                                             else:
                                                 text = "'max_devices' set to 1 but 'adb devices' returns "+str(len(devices))+' devices, retrying...'
                                                 logging.info(text)
                                                 print(text)
                                                 continue
                                             break
+                                        if not_found_count >= 20:
+                                            if value[0] is None:
+                                                tem = value[2]
+                                            elif value[2] is None:
+                                                tem = value[0]
+                                            else:
+                                                tem = value[0]
+                                            re_ = run_(path+' launch --index '+str(tem), capture_output=True).stdout
+                                            if str(re_)+'/' == """b"player don't exist!"/""":
+                                                text = 'device with index '+str(tem)+" doesn't exist, unable to continue process"
+                                                logging.info(text)
+                                                print(text)
+                                                return
+                                            launched_tem = tem
+                                        not_found_count+=1
                                         slp(5)
                                     break_ = True
                             except FileNotFoundError:
@@ -1485,16 +1511,11 @@ def run():
                             if running != 0:
                                 if running == re['max_devices'] or running == last_run:
                                     slp(10)
-                                    thread_count = 0
                                     for thread_ in threads:
                                         if int(thread_.name) not in done:
-                                            thread_count+=1
                                             start_time = tiime()
                                             seconds = 10800
                                             while True:
-                                                if thread_count == 2:
-                                                    thread_count = 0
-                                                    break
                                                 current_time = tiime()
                                                 elapsed_time = current_time - start_time
                                                 if elapsed_time > seconds:

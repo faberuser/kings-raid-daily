@@ -116,7 +116,7 @@ def config():
                         break
                 break
             while True:
-                quit_all = input('\ndo you want to quit all of emulators before executing and launching from config (when farming event/raid) ? (Y/N)\n(default is False) (this script wont and cant re-start the previous farming) (leave blank to use previous setting) > ')
+                quit_all = input('\ndo you want to quit all of emulators before executing and launching from config (when farming event/raid/secure executing if failed in previous run) ? (Y/N)\n(default is True) (this script wont and cant re-start the previous farming) (leave blank to use previous setting) > ')
                 if quit_all == '':
                     break
                 if quit_all.lower().startswith('y'):
@@ -290,7 +290,7 @@ def get_table(config):
     if time_cf == '00:05':
         time_cf = str(time_cf)+ ' (Default)'
     quit_all = config['quit_all']
-    if quit_all == False:
+    if quit_all == True:
         quit_all = str(quit_all)+ ' (Default)'
 
     table.append_row(

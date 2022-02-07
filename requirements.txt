@@ -5,6 +5,6 @@ pytesseract
 langdetect
 fuzzywuzzy
 opencv-python
-beautifultable
+beautifultable==1.0.0
 wxPython
 requests

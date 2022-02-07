@@ -12,7 +12,7 @@
         "tower": true,
         "lil": false,
         "mails": true,
-        "quit_all": false,
+        "quit_all": true,
         "bonus_cutoff": 0,
         "devices": [],
         "max_devices": 1,
