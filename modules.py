@@ -15,7 +15,7 @@ from numpy import array
 from imagehash import average_hash
 from pytesseract import pytesseract
 from pytesseract import image_to_string
-from langdetect import detect, DetectorFactory
+from langdetect import detect, lang_detect_exception
 from fuzzywuzzy.process import extractOne
 from difflib import SequenceMatcher
 from cv2 import bilateralFilter
@@ -1261,9 +1261,13 @@ class Missions:
             second_img='./base/loh/previous_result.png', third_img='./base/loh/rewards.png', sleep_duration=10, loop=10, ck_special_shop=False)
         logging.info(device.serial+': clicked ok in notice')
 
+        loh_count = 0
         # check
         def check_keys(device):
             while True:
+                if loh_count >= 10:
+                    loh_count = 0
+                    return 'continue'
                 try:
                     device.shell(data['loh']['7']['second_shell'])
                     slp(3)
@@ -1280,8 +1284,9 @@ class Missions:
                     if SequenceMatcher(None, re[lang]['loh'], text).ratio() > 0.9:
                         return 'not enough currency'
                     return 'continue'
-                except LangDetectException:
+                except lang_detect_exception.LangDetectException:
                     continue
+                loh_count += 1
         re = check_keys(device)
         if re == 'not enough currency':
             return 'not enough currency'
@@ -1301,7 +1306,7 @@ class Missions:
             if elapsed_time > seconds:
                 break
 
-            if count == 50:
+            if count >= 50:
                 for i in range(0, 4):
                     re = check_keys(device)
                     if re == 'not enough currency':
