@@ -94,6 +94,7 @@ class Missions:
         self.game_count = 0
         self.game_home_screen_count = 0
         self.error_count = 0
+        self.loh_count = 0
 
         self.gb_cf = None
 
@@ -1261,12 +1262,11 @@ class Missions:
             second_img='./base/loh/previous_result.png', third_img='./base/loh/rewards.png', sleep_duration=10, loop=10, ck_special_shop=False)
         logging.info(device.serial+': clicked ok in notice')
 
-        loh_count = 0
         # check
         def check_keys(device):
             while True:
-                if loh_count >= 10:
-                    loh_count = 0
+                if self.loh_count >= 10:
+                    self.loh_count = 0
                     return 'continue'
                 try:
                     device.shell(data['loh']['7']['second_shell'])
@@ -1286,7 +1286,7 @@ class Missions:
                     return 'continue'
                 except lang_detect_exception.LangDetectException:
                     continue
-                loh_count += 1
+                self.loh_count += 1
         re = check_keys(device)
         if re == 'not enough currency':
             return 'not enough currency'
