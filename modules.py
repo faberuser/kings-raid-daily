@@ -1286,6 +1286,16 @@ class Missions:
                     return 'continue'
                 except lang_detect_exception.LangDetectException:
                     continue
+                except RuntimeError:
+                    if self.launched is not None:
+                        with open('./config.json') as j:
+                            re = json.load(j)
+                        path = re['ldconsole'].replace('|', '"')
+                        text = device.serial+': because launched from config so closing after done'
+                        logging.info(text)
+                        print(text)
+                        run_(path+f' quit --index {str(self.launched)}')
+                        return 'done'
                 self.loh_count += 1
         re = check_keys(device)
         if re == 'not enough currency':
@@ -1311,6 +1321,8 @@ class Missions:
                     re = check_keys(device)
                     if re == 'not enough currency':
                         return 'not enough currency'
+                    elif re == 'out':
+                        return 'success'
                 count = 0
 
             device.shell(data['loh']['scripts']['get_ready'])
