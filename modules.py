@@ -5,7 +5,7 @@ from time import time as tiime
 from os import mkdir, getcwd, path as pth
 from subprocess import run as run_
 from math import ceil
-from traceback import format_exc
+from traceback import format_exc, print_exc
 from sys import exit
 import logging, json, ctypes
 
@@ -35,21 +35,37 @@ pytesseract.tesseract_cmd = ('./tesseract/tesseract.exe')
 
 
 update_notice_ = Image.open('./base/login/update_notice.png')
+update_notice_.load()
 introduction_ = Image.open('./base/login/introduction.png')
+introduction_.load()
 tap_to_play_ = Image.open('./base/login/tap_to_play.png')
+tap_to_play_.load()
 tap_to_play_2_ = Image.open('./base/login/tap_to_play_2.png')
+tap_to_play_2_.load()
 community_ = Image.open('./base/login/community.png')
+community_.load()
 sale_ = Image.open('./base/login/sale.png')
+sale_.load()
 attendance_ = Image.open('./base/login/attendance.png')
+attendance_.load()
 event_ = Image.open('./base/login/event.png')
+event_.load()
 guild_attendance_ = Image.open('./base/login/guild_attendance.png')
+guild_attendance_.load()
 accumualated_ = Image.open('./base/login/accumualated.png')
+accumualated_.load()
 sale_2_ = Image.open('./base/login/sale_2.png')
+sale_2_.load()
 special_shop_ = Image.open('./base/login/special_shop.png')
+special_shop_.load()
 home_screen_ = Image.open('./base/login/home_screen.png')
+home_screen_.load()
 mb_ = Image.open('./base/login/mission_button.png')
+mb_.load()
 loh_new_ = Image.open('./base/loh/loh_new.png')
+loh_new_.load()
 kr_discord_ = Image.open('./base/login/kr_discord.png')
+kr_discord_.load()
 
 
 def crop(img, dimesions):
@@ -180,6 +196,7 @@ class Missions:
                     # get data for comparing image
                     original = average_hash(Image.open(original_img))
                     cache = average_hash(cache)
+                    break
                 except AttributeError:
                     continue
             # compare
@@ -240,7 +257,7 @@ class Missions:
                 if home_screen == 'similar':
                     logging.info(device.serial+': android home screen detected')
                     device.shell('monkey -p com.vespainteractive.KingsRaid 1')
-                    slp(3)
+                    slp(10)
 
                 # login
                 # update notice
@@ -425,17 +442,8 @@ class Missions:
         with open('./sets.json', encoding='utf-8') as j:
             data = json.load(j)[size_]
         device.shell('monkey -p com.vespainteractive.KingsRaid 1')
+        slp(10)
         path = self.gb_cf['ldconsole'].replace('|', '"')
-
-        def claim():
-            # claim rewards
-            count = 0
-            while True:
-                if count == 9:
-                    break
-                device.shell(data['claim'][0])
-                device.shell(data['claim'][1])
-                count+=1
 
         # open daily mission board
         self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['shell'], cutoff=8)
@@ -455,6 +463,15 @@ class Missions:
             # open daily mission board
             self.make_sure_loaded('./base/other/daily.png', device, data['daily']['dms'], data['daily']['second_shell'], cutoff=8, shell_first=True, sleep_duration=0.5)
 
+        def claim():
+            # claim rewards
+            count = 0
+            while True:
+                if count == 9:
+                    break
+                device.shell(data['claim'][0])
+                device.shell(data['claim'][1])
+                count+=1
         claim()
         text = device.serial+': opened and claimed rewards (and exp/gold buff) on daily mission board after launch game'
         logging.info(text)
@@ -1374,6 +1391,7 @@ def run():
         quit_all = True
         try:
             run_(path+' quitall')
+            slp(10)
         except FileNotFoundError:
             text = "path to LDPlayer is wrong, please config and try again"
             logging.info(text)
