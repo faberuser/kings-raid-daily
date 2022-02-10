@@ -167,17 +167,21 @@ class Missions:
                     slp(3)
                     device.shell(second_shell)
             # update cache
-            if count_ >= 100:
-                im, device = self.update_cache(device)
-            else:
-                im, device = self.update_cache(device, False)
-            if dimensions is not None:
-                cache = crop(im, dimensions)
-            else:
-                cache = im
-            # get data for comparing image
-            original = average_hash(Image.open(original_img))
-            cache = average_hash(cache)
+            while True:
+                try:
+                    if count_ >= 100:
+                        im, device = self.update_cache(device)
+                    else:
+                        im, device = self.update_cache(device, False)
+                    if dimensions is not None:
+                        cache = crop(im, dimensions)
+                    else:
+                        cache = im
+                    # get data for comparing image
+                    original = average_hash(Image.open(original_img))
+                    cache = average_hash(cache)
+                except AttributeError:
+                    continue
             # compare
             bonus = self.gb_cf['bonus_cutoff']
             if original - cache < cutoff+bonus:
@@ -217,167 +221,173 @@ class Missions:
 
     def check_login(self, device, ck_special_shop):
         # get device resolution
-        im, device = self.update_cache(device, check_crash=False)
-        size_ = f"{im.size[0]}x{im.size[1]}"
-        with open('./sets.json', encoding='utf-8') as j:
-            data = json.load(j)[size_]
+        while True:
+            try:
+                im, device = self.update_cache(device, check_crash=False)
+                size_ = f"{im.size[0]}x{im.size[1]}"
+                with open('./sets.json', encoding='utf-8') as j:
+                    data = json.load(j)[size_]
 
-        count = 0
-        community_count = 0
-        bonus = self.gb_cf['bonus_cutoff']
-        im, device = self.update_cache(device)
+                count = 0
+                community_count = 0
+                bonus = self.gb_cf['bonus_cutoff']
+                im, device = self.update_cache(device)
 
-        # android home screen
-        im1 = home_screen_
-        im2 = crop(im, data['login']['home_screen']['dms'])
-        home_screen = check_similar(im1, im2, 15, bonus)
-        if home_screen == 'similar':
-            logging.info(device.serial+': android home screen detected')
-            device.shell('monkey -p com.vespainteractive.KingsRaid 1')
-            slp(3)
+                # android home screen
+                im1 = home_screen_
+                im2 = crop(im, data['login']['home_screen']['dms'])
+                home_screen = check_similar(im1, im2, 15, bonus)
+                if home_screen == 'similar':
+                    logging.info(device.serial+': android home screen detected')
+                    device.shell('monkey -p com.vespainteractive.KingsRaid 1')
+                    slp(3)
 
-        # login
-        # update notice
-        im1 = update_notice_
-        im2 = crop(im, data['update_notice']['dms'])
-        update_notice = check_similar(im1, im2, 10, bonus)
-        if update_notice == 'similar':
-            logging.info(device.serial+': update notice detected')
-            device.shell(data['update_notice']['shell'])
-            slp(3)
+                # login
+                # update notice
+                im1 = update_notice_
+                im2 = crop(im, data['update_notice']['dms'])
+                update_notice = check_similar(im1, im2, 10, bonus)
+                if update_notice == 'similar':
+                    logging.info(device.serial+': update notice detected')
+                    device.shell(data['update_notice']['shell'])
+                    slp(3)
 
-        # introduction
-        im1 = introduction_
-        im2 = crop(im, data['introduction']['dms'])
-        introduction = check_similar(im1, im2, 10, bonus)
-        if introduction == 'similar':
-            logging.info(device.serial+': introduction detected')
-            device.shell(data['introduction']['shell'])
-            slp(3)
+                # introduction
+                im1 = introduction_
+                im2 = crop(im, data['introduction']['dms'])
+                introduction = check_similar(im1, im2, 10, bonus)
+                if introduction == 'similar':
+                    logging.info(device.serial+': introduction detected')
+                    device.shell(data['introduction']['shell'])
+                    slp(3)
 
-        # tap to play
-        im1 = tap_to_play_
-        im2 = crop(im, data['tap_to_play']['dms'])
-        tap_to_play = check_similar(im1, im2, 10, bonus)
-        if tap_to_play == 'similar':
-            logging.info(device.serial+': tap to play detected')
-            device.shell(data['tap_to_play']['shell'])
-            slp(3)
+                # tap to play
+                im1 = tap_to_play_
+                im2 = crop(im, data['tap_to_play']['dms'])
+                tap_to_play = check_similar(im1, im2, 10, bonus)
+                if tap_to_play == 'similar':
+                    logging.info(device.serial+': tap to play detected')
+                    device.shell(data['tap_to_play']['shell'])
+                    slp(3)
 
-        # tap to play 2
-        im1 = tap_to_play_2_
-        im2 = crop(im, data['tap_to_play']['dms'])
-        tap_to_play_2 = check_similar(im1, im2, 10, bonus)
-        if tap_to_play_2 == 'similar':
-            logging.info(device.serial+': tap to play 2 detected')
-            device.shell(data['tap_to_play']['shell'])
-            slp(3)
+                # tap to play 2
+                im1 = tap_to_play_2_
+                im2 = crop(im, data['tap_to_play']['dms'])
+                tap_to_play_2 = check_similar(im1, im2, 10, bonus)
+                if tap_to_play_2 == 'similar':
+                    logging.info(device.serial+': tap to play 2 detected')
+                    device.shell(data['tap_to_play']['shell'])
+                    slp(3)
 
-        # pass community page
-        im1 = community_
-        im2 = crop(im, data['login']['community']['dms'])
-        community = check_similar(im1, im2, 10, bonus)
-        if community == 'similar':
-            logging.info(device.serial+': community page detected')
-            device.shell(data['login']['community']['shell'])
-            slp(3)
+                # pass community page
+                im1 = community_
+                im2 = crop(im, data['login']['community']['dms'])
+                community = check_similar(im1, im2, 10, bonus)
+                if community == 'similar':
+                    logging.info(device.serial+': community page detected')
+                    device.shell(data['login']['community']['shell'])
+                    slp(3)
 
-        # pass sale page
-        im1 = sale_
-        im2 = crop(im, data['login']['sale']['dms'])
-        sale = check_similar(im1, im2, 10, bonus)
-        if sale == 'similar':
-            logging.info(device.serial+': sale page detected')
-            device.shell(data['login']['sale']['shell'])
-            slp(3)
+                # pass sale page
+                im1 = sale_
+                im2 = crop(im, data['login']['sale']['dms'])
+                sale = check_similar(im1, im2, 10, bonus)
+                if sale == 'similar':
+                    logging.info(device.serial+': sale page detected')
+                    device.shell(data['login']['sale']['shell'])
+                    slp(3)
 
-        # claim login attendance
-        im1 = attendance_
-        im2 = crop(im, data['login']['attendance']['dms'])
-        attendance = check_similar(im1, im2, 10, bonus)
-        if attendance == 'similar':
-            logging.info(device.serial+': login attendance detected')
-            device.shell(data['login']['attendance']['shell'])
-            slp(1)
-            device.shell(data['login']['attendance']['second_shell'])
-            slp(3)
+                # claim login attendance
+                im1 = attendance_
+                im2 = crop(im, data['login']['attendance']['dms'])
+                attendance = check_similar(im1, im2, 10, bonus)
+                if attendance == 'similar':
+                    logging.info(device.serial+': login attendance detected')
+                    device.shell(data['login']['attendance']['shell'])
+                    slp(1)
+                    device.shell(data['login']['attendance']['second_shell'])
+                    slp(3)
 
-        # pass event page
-        im1 = event_
-        im2 = crop(im, data['login']['event']['dms'])
-        event = check_similar(im1, im2, 10, bonus)
-        if event == 'similar':
-            logging.info(device.serial+': event page detected')
-            device.shell(data['login']['event']['shell'])
-            slp(3)
+                # pass event page
+                im1 = event_
+                im2 = crop(im, data['login']['event']['dms'])
+                event = check_similar(im1, im2, 10, bonus)
+                if event == 'similar':
+                    logging.info(device.serial+': event page detected')
+                    device.shell(data['login']['event']['shell'])
+                    slp(3)
 
-        # claim guild attendance
-        im1 = guild_attendance_
-        im2 = crop(im, data['login']['guild_attendance']['dms'])
-        guild_attendance = check_similar(im1, im2, 10, bonus)
-        if guild_attendance == 'similar':
-            logging.info(device.serial+': guild attendance detected')
-            for day in data['login']['guild_attendance']['days']:
-                device.shell(day)
-            slp(1)
-            device.shell(data['login']['guild_attendance']['row_reward'])
-            slp(1)
-            device.shell(data['login']['guild_attendance']['exit'])
-            slp(3)
-        
-        # claim login accumualated
-        im1 = accumualated_
-        im2 = crop(im, data['login']['accumualated']['dms'])
-        accumualated = check_similar(im1, im2, 10, bonus)
-        if accumualated == 'similar':
-            logging.info(device.serial+': login accumualated detected')
-            device.shell(data['login']['accumualated']['shell'])
-            slp(1)
-            device.shell(data['login']['accumualated']['second_shell'])
-            slp(3)
+                # claim guild attendance
+                im1 = guild_attendance_
+                im2 = crop(im, data['login']['guild_attendance']['dms'])
+                guild_attendance = check_similar(im1, im2, 10, bonus)
+                if guild_attendance == 'similar':
+                    logging.info(device.serial+': guild attendance detected')
+                    for day in data['login']['guild_attendance']['days']:
+                        device.shell(day)
+                    slp(1)
+                    device.shell(data['login']['guild_attendance']['row_reward'])
+                    slp(1)
+                    device.shell(data['login']['guild_attendance']['exit'])
+                    slp(3)
+                
+                # claim login accumualated
+                im1 = accumualated_
+                im2 = crop(im, data['login']['accumualated']['dms'])
+                accumualated = check_similar(im1, im2, 10, bonus)
+                if accumualated == 'similar':
+                    logging.info(device.serial+': login accumualated detected')
+                    device.shell(data['login']['accumualated']['shell'])
+                    slp(1)
+                    device.shell(data['login']['accumualated']['second_shell'])
+                    slp(3)
 
-        # check loh new season
-        im1 = loh_new_
-        im2 = crop(im, data['loh']['0']['dms'])
-        loh_new = check_similar(im1, im2, 10, bonus)
-        if loh_new == 'similar':
-            logging.info(device.serial+': new loh season detected')
-            device.shell(data['loh']['0']['shell'])
-            slp(3)
+                # check loh new season
+                im1 = loh_new_
+                im2 = crop(im, data['loh']['0']['dms'])
+                loh_new = check_similar(im1, im2, 10, bonus)
+                if loh_new == 'similar':
+                    logging.info(device.serial+': new loh season detected')
+                    device.shell(data['loh']['0']['shell'])
+                    slp(3)
 
-        # sale 2
-        im1 = sale_2_
-        im2 = crop(im, data['login']['sale_2']['dms'])
-        sale_2 = check_similar(im1, im2, 10, bonus)
-        if sale_2 == 'similar':
-            logging.info(device.serial+': sale 2 page detected')
-            device.shell(data['login']['sale_2']['shell'])
-            slp(1)
-            device.shell(data['login']['sale_2']['second_shell'])
-            slp(3)
+                # sale 2
+                im1 = sale_2_
+                im2 = crop(im, data['login']['sale_2']['dms'])
+                sale_2 = check_similar(im1, im2, 10, bonus)
+                if sale_2 == 'similar':
+                    logging.info(device.serial+': sale 2 page detected')
+                    device.shell(data['login']['sale_2']['shell'])
+                    slp(1)
+                    device.shell(data['login']['sale_2']['second_shell'])
+                    slp(3)
 
-        # special shop
-        if ck_special_shop != False:
-            im1 = special_shop_
-            im2 = crop(im, data['login']['special_shop']['dms'])
-            special_shop = check_similar(im1, im2, 10, bonus)
-            if special_shop == 'similar':
-                logging.info(device.serial+': special shop detected')
-                device.shell(data['login']['special_shop']['shell'])
-                slp(3)
+                # special shop
+                if ck_special_shop != False:
+                    im1 = special_shop_
+                    im2 = crop(im, data['login']['special_shop']['dms'])
+                    special_shop = check_similar(im1, im2, 10, bonus)
+                    if special_shop == 'similar':
+                        logging.info(device.serial+': special shop detected')
+                        device.shell(data['login']['special_shop']['shell'])
+                        slp(3)
 
-        # return to main page
-        im1 = mb_
-        im2 = crop(im, data['login']['mission_button'])
-        mb = check_similar(im1, im2, 20, bonus)
-        if mb == 'similar':
-            self.game_home_screen_count += 1
-            if self.game_home_screen_count >= 100:
-                logging.info(device.serial+': game home screen detected')
-                device.shell(data['daily']['shell'])
-                self.game_home_screen_count = 0
-                self.run_execute(device, launched=self.launched)
-                exit()
+                # return to main page
+                im1 = mb_
+                im2 = crop(im, data['login']['mission_button'])
+                mb = check_similar(im1, im2, 20, bonus)
+                if mb == 'similar':
+                    self.game_home_screen_count += 1
+                    if self.game_home_screen_count >= 100:
+                        logging.info(device.serial+': game home screen detected')
+                        device.shell(data['daily']['shell'])
+                        self.game_home_screen_count = 0
+                        self.run_execute(device, launched=self.launched)
+                        exit()
+                
+                break
+            except AttributeError:
+                continue
 
     def run_execute(self, device, launched=None):
         with open('./config.json') as j:
