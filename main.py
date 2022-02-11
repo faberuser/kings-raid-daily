@@ -55,7 +55,7 @@ def inputimeout(prompt='', timeout=60.0):
 
 def config():
     buff, wb, lov, loh, dragon, friendship, inn, shop, stockage, tower = (None,)*10
-    print('\ndo you want this script to')
+    print('\nDo you want this script to:')
 
     def con(text):
         do = None
@@ -71,52 +71,52 @@ def config():
                 do = ''
                 break
             else:
-                print('invalid answer, please try again')
+                print('Invalid answer, please try again')
         return do
 
-    buff = con('use exp and gold buff before doing dailies')
-    wb = con('auto wb (world boss)')
-    lov = con('auto lov (league of victory)')
-    loh = con('auto all loh keys (league of honor)')
-    dragon = con('fight dragon t6 stage 1')
-    friendship = con('exchange friendship token')
-    inn = con("do stuff in hero's inn")
-    shop = con("buy random stuff in May's shop")
-    stockage = con('farm random rewards (fragments/books) in stockage (make sure already set up all team in all dungeons)')
-    tower = con('fight low floor (1/1x) in tower of challenge')
+    buff = con('Use exp and gold buff before doing dailies')
+    wb = con('Auto wb (world boss)')
+    lov = con('Use 1 key in lov (league of victory)')
+    loh = con('Auto all loh keys (league of honor)')
+    dragon = con('Fight dragon t6 stage 1')
+    friendship = con('Exchange friendship token')
+    inn = con("Do stuff in hero's inn")
+    shop = con("Buy random stuff in May's shop")
+    stockage = con('Farm random rewards (fragments/books) in stockage (make sure already set up all team in all dungeons)')
+    tower = con('Fight low floor (1/1x) in tower of challenge')
 
     ldconsole = ''
     devices = ''
     quit_all = ''
     max_devices = ''
     while True:
-        auto_launch = input('\ndo you want this script to auto launch your emulators? (Y/N) > ')
+        auto_launch = input('\nDo you want this script to auto launch your emulators? (Y/N) > ')
         if auto_launch.lower().startswith('y'):
-            ldconsole = input("\nok, please enter/paste the path to LDPlayer\n(right click on LDPlayer folder address and 'copy address as text') (leave blank to use previous setting) > ")
+            ldconsole = input("\nOk, please enter/paste the path to LDPlayer\n(right click on LDPlayer folder address and 'copy address as text') (leave blank to use previous setting) > ")
             while True:
-                devices = input('\nok, now enter list of index of your emulators\n(numbers on first column in LDMultiPlayer) (seperate numbers with space) (leave blank to use previous setting) > ')
+                devices = input('\nNow enter list of index of your emulators\n(numbers on first column in LDMultiPlayer) (seperate numbers with space) (leave blank to use previous setting) > ')
                 if devices != '':
                     devices_ = []
                     for num in devices.split():
                         if num.isnumeric():
                             devices_.append(int(num))
                         else:
-                            print('invalid index in emulators config (index must be an interger), please try again')
+                            print('Invalid index in emulators config (index must be an interger), please try again')
                             continue
                     while True:
-                        max_devices = input('\nnow put the max number of emulators will be launched and running at the same time\n(default is 1) (putting large number is not recommended for low end pc) (leave blank to use previous setting) > ')
+                        max_devices = input('\nNow put the max number of emulators will be launched and running at the same time\n(default is 1) (putting large number is not recommended for low end pc) (leave blank to use previous setting) > ')
                         if max_devices == '':
                             break
                         if max_devices.isnumeric() == False:
-                            print('value must be an interger (>=1/greater or equal to 1), please try again')
+                            print('Value must be an interger (>=1/greater or equal to 1), please try again')
                             continue
                         if int(max_devices) < 1:
-                            print('value must be an interger (>=1/greater or equal to 1), please try again')
+                            print('Value must be an interger (>=1/greater or equal to 1), please try again')
                             continue
                         break
                 break
             while True:
-                quit_all = input('\ndo you want to quit all of emulators before executing and launching from config (when farming event/raid/secure executing if failed in previous run) ? (Y/N)\n(default is True) (this script wont and cant re-start the previous farming) (leave blank to use previous setting) > ')
+                quit_all = input('\nDo you want to quit all of emulators before executing and launching from config (when farming event/raid/secure executing if failed in previous run) ? (Y/N)\n(default is True) (this script wont and cant re-start the previous farming) (leave blank to use previous setting) > ')
                 if quit_all == '':
                     break
                 if quit_all.lower().startswith('y'):
@@ -126,45 +126,45 @@ def config():
                 break
             break
         elif auto_launch.lower().startswith('n'):
-            print('ok')
+            print('Ok')
             break
         else:
-            print('invalid answer, please try again')
+            print('Invalid answer, please try again')
 
     time_ = ''
     while True:
-        time_ = input('\nif you want this script to run in background, checking for time and auto run, set the time?\n(default is 00:05, 00:00-00:04 is not recommended because sometime server sync slower than normal) (leave blank to use previous setting) > ')
+        time_ = input('\nIf you want this script to run in background, checking for time and auto run, set the time?\n(default is 00:05, 00:00-00:04 is not recommended because sometime server sync slower than normal) (leave blank to use previous setting) > ')
         if time_ == '':
             break
         time_ = time_.replace(' ', '')
         if len(time_) != 5:
-            print('time format invalid, please try again (HH:MM)')
+            print('Time format invalid, please try again (HH:MM)')
             continue
         if time_[2] != ':':
-            print('time format invalid, please try again (HH:MM)')
+            print('Time format invalid, please try again (HH:MM)')
             continue
         if time_[:2].isnumeric() and time_[-2:].isnumeric():
             if int(time_[:2]) > 23:
-                print('hour input invalid, please try again (00->23)')
+                print('Hour input invalid, please try again (00->23)')
                 continue
             elif int(time_[-2:]) > 59:
-                print('minute input invalid, please try again (00->59)')
+                print('Minute input invalid, please try again (00->59)')
                 continue
         else:
-            print('hour and minute must be an interger with 2 digits, please try again')
+            print('Hour and minute must be an interger with 2 digits, please try again')
             continue
         break
 
     bonus_cutoff = ''
     while True:
-        bonus_cutoff = input('\nset bonus cutoff for image checking (>=0)\n(default is 0) (leave blank to use previous setting or not sure what to put in) > ')
+        bonus_cutoff = input('\nSet bonus cutoff for image checking (>=0)\n(default is 0) (leave blank to use previous setting or not sure what to put in) > ')
         if bonus_cutoff == '':
             break
         if bonus_cutoff.isnumeric() == False:
-            print('value must be an interger (>=0/greater or equal to 0), please try again')
+            print('Value must be an interger (>=0/greater or equal to 0), please try again')
             continue
         if int(bonus_cutoff) < 0:
-            print('value must be an interger (>=0/greater or equal to 0), please try again')
+            print('Value must be an interger (>=0/greater or equal to 0), please try again')
             continue
         break
 
@@ -399,7 +399,7 @@ def get_table(config):
     return table
 
 if __name__ == "__main__":
-    print('please ignore this warning ↑')
+    print('please ignore this warning ↑\n')
     try:
         with open('./config.json') as j:
             re = json.load(j)
@@ -414,7 +414,7 @@ if __name__ == "__main__":
             with open('./config.json') as j:
                 re = json.load(j)
     except FileNotFoundError:
-        print('config not found, creating new one with default settings')
+        print('Config not found, creating new one with default settings')
         re = defaults
         with open('./config.json', 'a') as j:
             json.dump(re, j, indent=4)
@@ -422,24 +422,24 @@ if __name__ == "__main__":
     while True:
         try:
             tm = re['time']
-            print('* press 1 to run this script once')
-            print(f'* press 2 to run this script in background to check and run when new day (at {tm})')
-            print(f'* press 3 to make this script auto run in background upon Windows startup to check and run when new day (at {tm})')
-            print('* press 4 to start config this script')
-            print('* press 5 to import config from previous version')
-            print('* press 6 to view current configuration')
-            print('* press 7 to exit')
-            print('(script will run option 1 after 60 secs if no action was executed)')
-            auto_daily = inputimeout('> ', timeout=30)
+            print('1) Run this script once')
+            print(f'2) Run this script in background to check and run when new day (at {tm})')
+            print(f'3) Make this script auto run in background upon Windows startup to check and run when new day (at {tm})')
+            print('4) Start config this script')
+            print('5) Import config from previous version')
+            print('6) View current configuration')
+            print('7) Exit Program')
+            print('(Script will run option 1 after 60 secs if no action was executed)')
+            auto_daily = inputimeout('\nSelect an option > ', timeout=30)
             if auto_daily.isnumeric() == False:
-                print('answer must be an integer, press try again\n')
+                print('Answer must be an integer, press try again\n')
             else:
                 if int(auto_daily) == 1:
-                    print('ok, running script for once')
+                    print('Ok, running script for once')
                     run()
                     break
                 elif int(auto_daily) == 2:
-                    print(f"ok, this scripts will run in background to check and run the script when new day (at {tm}) (please don't close this window)")
+                    print(f"Ok, this scripts will run in background to check and run the script when new day (at {tm}) (please don't close this window)")
                     while True:
                         now = datetime.now().strftime("%H:%M")
                         print('checking at '+str(now))
@@ -453,30 +453,30 @@ if __name__ == "__main__":
                     startup = pth.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
                     parent = getcwd()[:-16]
                     copy(parent+'kings-raid-daily-background.lnk', startup)
-                    print(f'copied shortcut "kings-raid-daily-background" to "{startup}", script will now auto run in background upon Windows startup\n(restart Windows to take effect)\n')
-                    input('press any key to continue...\n')
+                    print(f'Copied shortcut "kings-raid-daily-background" to "{startup}", script will now auto run in background upon Windows startup\n(Restart Windows to take effect)\n')
+                    input('Press any key to continue...\n')
                 elif int(auto_daily) == 4:
-                    print("ok, starting configuration")
+                    print("Ok, starting configuration")
                     config()
                     with open('./config.json') as j:
                         re = json.load(j)
-                    input('config complete, press any key to continue...\n')
+                    input('Config complete, press any key to continue...\n')
                 elif int(auto_daily) == 5:
-                    print("ok, waiting for import to complete")
+                    print("Ok, waiting for import to complete")
                     re_ = get_path('*.json')
                     re = write_config(re_)
-                    input('config complete, press any key to continue...\n')
+                    input('Config complete, press any key to continue...\n')
                 elif int(auto_daily) == 6:
-                    print("ok, viewing configuration")
+                    print("Ok, viewing configuration")
                     with open('./config.json') as j:
                         cf = json.load(j)
                     print(get_table(cf))
-                    input('press any key to continue...\n')
+                    input('Press any key to continue...\n')
                 elif int(auto_daily) == 7:
                     break
                 else:
-                    print('invalid answer, press try again\n')
+                    print('Invalid answer, press try again\n')
         except TimeoutOccurred:
-            print('timeout, running script for once with current config')
+            print('Timeout, running script for once with current config')
             run()
             break
