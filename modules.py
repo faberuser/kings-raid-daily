@@ -130,7 +130,7 @@ class Missions:
                                     device.shell('am force-stop com.vespainteractive.KingsRaid')
                                     slp(3)
                                     device.shell('monkey -p com.vespainteractive.KingsRaid 1')
-                                    slp(3)
+                                    slp(30)
                                     self.game_count = 0
                                     self.run_execute(device, self.launched)
                                     exit()
@@ -257,7 +257,7 @@ class Missions:
                 if home_screen == 'similar':
                     logging.info(device.serial+': android home screen detected')
                     device.shell('monkey -p com.vespainteractive.KingsRaid 1')
-                    slp(10)
+                    slp(30)
 
                 # login
                 # update notice
@@ -442,7 +442,7 @@ class Missions:
         with open('./sets.json', encoding='utf-8') as j:
             data = json.load(j)[size_]
         device.shell('monkey -p com.vespainteractive.KingsRaid 1')
-        slp(10)
+        slp(30)
         path = self.gb_cf['ldconsole'].replace('|', '"')
 
         # open daily mission board
@@ -790,7 +790,7 @@ class Missions:
         # choose hero in inn
         def choose_hero(tap1, tap2):
             self.make_sure_loaded('./base/inn/inn.png', device, data['inn']['6']['dms'], data['inn']['6']['shell']+str(tap1)+' '+str(tap2),
-                shell_first=True, second_img='./base/inn/inn_.png', cutoff=25, second_shell=data['inn']['2']['shell'])
+                shell_first=True, second_img='./base/inn/inn_.png', cutoff=25, second_shell=data['inn']['2']['shell'], loop=5)
 
         # give gifts to first hero
         gift()
