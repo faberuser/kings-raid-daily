@@ -484,11 +484,16 @@ class Missions:
             first_misison = crop(im, data['first mission'])
             image = filter(first_misison)
             text_lang = image_to_string(image).splitlines()[0].lower().replace('♀', '')
+            detect_lang_count = 0
             while True:
                 try:
                     lang = detect(text_lang)
                     break
                 except:
+                    if detect_lang_count >= 50:
+                        lang = '???'
+                        break
+                    detect_lang_count+=1
                     device.shell(data['daily']['second_shell'])
                     slp(1)
                     claim()
