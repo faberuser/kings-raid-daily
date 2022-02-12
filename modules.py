@@ -1087,7 +1087,7 @@ class Missions:
         logging.info(device.serial+': loaded from mission shortcut')
 
         # click tower of challenge
-        self.make_sure_loaded('./base/tower/toc.png', device, data['tower']['2']['dms'], data['tower']['2']['shell'], sleep_duration=1)
+        self.make_sure_loaded('./base/tower/toc.png', device, data['tower']['2']['dms'], data['tower']['2']['shell'], sleep_duration=1, cutoff=8)
         logging.info(device.serial+': clicked toc')
 
         # change to floor 1
@@ -1133,7 +1133,7 @@ class Missions:
         logging.info(device.serial+': clicked start battle')
 
         # click exit battle
-        self.make_sure_loaded('./base/tower/toc.png', device, data['tower']['2']['dms'], data['tower']['13']['shell'])
+        self.make_sure_loaded('./base/tower/toc.png', device, data['tower']['2']['dms'], data['tower']['13']['shell'], cutoff=8)
         logging.info(device.serial+': exited battle')
 
         # click exit
