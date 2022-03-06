@@ -297,8 +297,8 @@ class Missions:
                     slp(3)
 
                 # if chrome is opening
-                current_window = run_("""adb shell "dumpsys window windows | grep -E mCurrentFocus" """, capture_output=True).stdout
-                if 'org.chromium.chrome.browser' in str(current_window):
+                current_window = device.shell("dumpsys window windows | grep -E mCurrentFocus")
+                if 'com.android.chrome' in str(current_window):
                     logging.info(device.serial+': chrome window detected')
                     device.shell('am force-stop com.android.chrome')
                     slp(3)
