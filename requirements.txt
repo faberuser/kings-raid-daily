@@ -8,3 +8,4 @@ opencv-python
 beautifultable==1.0.0
 wxPython
 requests
+beautifulsoup4
