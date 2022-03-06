@@ -1,7 +1,7 @@
 from modules import run
 from datetime import datetime
 from time import sleep
-from os import path as pth, mkdir, getcwd
+from os import path as pth, mkdir, getcwd, system
 from shutil import copy
 import json, logging
 
@@ -52,6 +52,7 @@ def inputimeout(prompt='', timeout=60.0):
     echo('\r' + '\n')
     raise TimeoutOccurred
 
+clear = lambda: system('cls')
 
 def config():
     buff, wb, lov, loh, dragon, friendship, inn, shop, stockage, tower = (None,)*10
@@ -84,10 +85,12 @@ def config():
     shop = con("Buy random stuff in May's shop")
     stockage = con('Farm random rewards (fragments/books) in stockage (make sure already set up all team in all dungeons)')
     tower = con('Fight low floor (1/1x) in tower of challenge')
+    quit_all = con('Quit all of emulators before executing and launching from config')
+    double_check = con('Launch second execution after first one for double-check')
+    update_apk = con('Auto update APK from official site')
 
     ldconsole = ''
     devices = ''
-    quit_all = ''
     max_devices = ''
     while True:
         auto_launch = input('\nDo you want this script to auto launch your emulators? (Y/N) > ')
@@ -114,15 +117,6 @@ def config():
                             print('Value must be an interger (>=1/greater or equal to 1), please try again')
                             continue
                         break
-                break
-            while True:
-                quit_all = input('\nDo you want to quit all of emulators before executing and launching from config (when farming event/raid/secure executing if failed in previous run) ? (Y/N)\n(default is True) (this script wont and cant re-start the previous farming) (leave blank to use previous setting) > ')
-                if quit_all == '':
-                    break
-                if quit_all.lower().startswith('y'):
-                    quit_all = True
-                elif quit_all.lower().startswith('n'):
-                    quit_all = False
                 break
             break
         elif auto_launch.lower().startswith('n'):
@@ -195,6 +189,10 @@ def config():
         re['time'] = time_
     if quit_all != '':
         re['quit_all'] = quit_all
+    if double_check != '':
+        re['double_check'] = double_check
+    if update_apk != '':
+        re['update_apk'] = update_apk
     if bonus_cutoff != '':
         re['bonus_cutoff'] = int(bonus_cutoff)
     if ldconsole != '':
@@ -292,6 +290,12 @@ def get_table(config):
     quit_all = config['quit_all']
     if quit_all == True:
         quit_all = str(quit_all)+ ' (Default)'
+    double_check = config['double_check']
+    if double_check == False:
+        double_check = str(double_check)+ ' (Default)'
+    update_apk = config['update_apk']
+    if update_apk == True:
+        update_apk = str(update_apk)+ ' (Default)'
 
     table.append_row(
         [
@@ -367,6 +371,18 @@ def get_table(config):
     )
     table.append_row(
         [
+            "Launch second execution for double-check",
+            str(double_check),
+        ]
+    )
+    table.append_row(
+        [
+            "Auto update APK from official site",
+            str(update_apk),
+        ]
+    )
+    table.append_row(
+        [
             "Bonus cutoff for image checking",
             str(bonus_cutoff),
         ]
@@ -422,6 +438,7 @@ if __name__ == "__main__":
     while True:
         try:
             tm = re['time']
+            clear()
             print('1) Run this script once')
             print(f'2) Run this script in background to check and run when new day (at {tm})')
             print(f'3) Make this script auto run in background upon Windows startup to check and run when new day (at {tm})')
@@ -435,10 +452,14 @@ if __name__ == "__main__":
                 print('Answer must be an integer, press try again\n')
             else:
                 if int(auto_daily) == 1:
+                    clear()
                     print('Ok, running script for once')
                     run()
+                    if re['double_check'] == True:
+                        run()
                     break
                 elif int(auto_daily) == 2:
+                    clear()
                     print(f"Ok, this scripts will run in background to check and run the script when new day (at {tm}) (please don't close this window)")
                     while True:
                         now = datetime.now().strftime("%H:%M")
@@ -447,26 +468,32 @@ if __name__ == "__main__":
                             sleep(60)
                             continue
                         run()
+                        if re['double_check'] == True:
+                            run()
                         logging.info('executed successfully at '+str(now))
                     break
                 elif int(auto_daily) == 3: # can only use in built executable
+                    clear()
                     startup = pth.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
                     parent = getcwd()[:-16]
                     copy(parent+'kings-raid-daily-background.lnk', startup)
                     print(f'Copied shortcut "kings-raid-daily-background" to "{startup}", script will now auto run in background upon Windows startup\n(Restart Windows to take effect)\n')
                     input('Press any key to continue...\n')
                 elif int(auto_daily) == 4:
+                    clear()
                     print("Ok, starting configuration")
                     config()
                     with open('./config.json') as j:
                         re = json.load(j)
                     input('Config complete, press any key to continue...\n')
                 elif int(auto_daily) == 5:
+                    clear()
                     print("Ok, waiting for import to complete")
                     re_ = get_path('*.json')
                     re = write_config(re_)
                     input('Config complete, press any key to continue...\n')
                 elif int(auto_daily) == 6:
+                    clear()
                     print("Ok, viewing configuration")
                     with open('./config.json') as j:
                         cf = json.load(j)
@@ -479,4 +506,6 @@ if __name__ == "__main__":
         except TimeoutOccurred:
             print('Timeout, running script for once with current config')
             run()
+            if re['double_check'] == True:
+                run()
             break

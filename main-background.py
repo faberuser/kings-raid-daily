@@ -34,4 +34,6 @@ if __name__ == "__main__":
             sleep(60)
             continue
         run()
+        if re['double_check'] == True:
+            run()
         logging.info('executed successfully at '+str(now))

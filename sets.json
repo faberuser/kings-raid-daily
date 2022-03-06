@@ -13,16 +13,26 @@
         "lil": false,
         "mails": true,
         "quit_all": true,
+        "double_check": false,
+        "update_apk": true,
         "bonus_cutoff": 0,
         "devices": [],
         "max_devices": 1,
         "ldconsole": "",
         "time": "00:05"
     },
-    "version": "beta-v3.6",
-    "latest": "beta-v3.3",
-    "remind": false,
+    "version": "beta-v3.7",
+    "latest": "beta-v3.7",
+    "remind": true,
     "960x540": {
+        "update_apk": {
+            "dms": [
+                0,
+                90.75,
+                0,
+                0
+            ]
+        },
         "my_info": {
             "dms": [
                 446,
@@ -1495,6 +1505,14 @@
         }
     },
     "1280x720": {
+        "update_apk": {
+            "dms": [
+                0,
+                121,
+                0,
+                0
+            ]
+        },
         "my_info": {
             "dms": [
                 594.6666666666667,
@@ -2967,6 +2985,14 @@
         }
     },
     "1600x900": {
+        "update_apk": {
+            "dms": [
+                0,
+                151.25,
+                0,
+                0
+            ]
+        },
         "my_info": {
             "dms": [
                 743.3333333333333,
@@ -4439,6 +4465,14 @@
         }
     },
     "1920x1080": {
+        "update_apk": {
+            "dms": [
+                0,
+                181.5,
+                0,
+                0
+            ]
+        },
         "my_info": {
             "dms": [
                 892,

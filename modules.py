@@ -2,7 +2,7 @@ from threading import Thread, enumerate
 from random import choice
 from time import sleep as slp
 from time import time as tiime
-from os import mkdir, getcwd, path as pth
+from os import mkdir, getcwd, listdir, remove, path as pth
 from subprocess import run as run_
 from math import ceil
 from traceback import format_exc, print_exc
@@ -20,7 +20,8 @@ from fuzzywuzzy.process import extractOne
 from difflib import SequenceMatcher
 from cv2 import bilateralFilter
 from requests import get
-
+from bs4 import BeautifulSoup
+from urllib.request import urlretrieve
 
 if pth.exists('./.cache') == False:
     mkdir('./.cache')
@@ -66,7 +67,8 @@ loh_new_ = Image.open('./base/loh/loh_new.png')
 loh_new_.load()
 kr_discord_ = Image.open('./base/login/kr_discord.png')
 kr_discord_.load()
-
+update_apk_ = Image.open('./base/other/update_apk.png')
+update_apk_.load()
 
 def crop(img, dimesions):
     # size of the image in pixels (size of original image)
@@ -260,6 +262,47 @@ class Missions:
                     slp(30)
 
                 # login
+                # update apk
+                im1 = update_apk_
+                im2 = crop(im, data['update_apk']['dms'])
+                update_apk = check_similar(im1, im2, 10, bonus)
+                if update_apk == 'similar':
+                    if self.gb_cf['update_apk'] == True:
+                        text = device.serial+': New APK required to launch, downloading new APK from official site and installing...'
+                        logging.info(text)
+                        print(text)
+                    else:
+                        text = device.serial+": New APK required to launch but 'update_apk' set to False, terminated"
+                        logging.info(text)
+                        print(text)
+                        exit()
+                    device.shell('am force-stop com.vespainteractive.KingsRaid')
+                    slp(3)
+                    cnt = get('https://client-app.kingsraid.com/apk/KingsRaid_Live_Android_x86.html').content
+                    soup = BeautifulSoup(cnt, 'html.parser').find_all('div', {'class': 'imgContainer'})[0]
+                    name = soup.a.get('href')
+                    if pth.exists('./'+name) == True:
+                        print('File already downloaded, installing from local...')
+                    else:
+                        for file in listdir('./'):
+                            if file.endswith('.apk'):
+                                remove('./'+file)
+                        urlretrieve('https://client-app.kingsraid.com/apk/'+name, './'+name)
+                    slp(3)
+                    run_('adb install -r '+name)
+                    slp(3)
+                    device.shell('am force-stop com.android.chrome')
+                    slp(3)
+                    device.shell('monkey -p com.vespainteractive.KingsRaid 1')
+                    slp(3)
+
+                # if chrome is opening
+                current_window = run_("""adb shell "dumpsys window windows | grep -E mCurrentFocus" """, capture_output=True).stdout
+                if 'org.chromium.chrome.browser' in str(current_window):
+                    logging.info(device.serial+': chrome window detected')
+                    device.shell('am force-stop com.android.chrome')
+                    slp(3)
+
                 # update notice
                 im1 = update_notice_
                 im2 = crop(im, data['update_notice']['dms'])
@@ -1414,7 +1457,7 @@ def run():
         print(text)
         def msg_box(this):
             answ = ctypes.windll.user32.MessageBoxW(0,
-                text[1:].replace('\n','\n\n')+'do you want to remind this later?',
+                text[1:].replace('\n','\n\n')+'Do you want to remind this later?',
                 f"kings-raid-daily new version ({latest.json()['tag_name']})", 4)
             if answ == 6: # yes
                 this['remind'] = True
@@ -1426,12 +1469,10 @@ def run():
         msg_box_thread = Thread(target=msg_box, name='msg_box', args=(this,))
         if this['remind'] == True:
             msg_box_thread.start()
-        else:
-            if latest.json()["tag_name"] != this['latest']:
-                this['latest'] = latest.json()["tag_name"]
-                with open('./sets.json', 'w') as w:
-                    json.dump(this, w, indent=4)
-                msg_box_thread.start()
+    if latest.json()["tag_name"] != this['latest']:
+        this['latest'] = latest.json()["tag_name"]
+        with open('./sets.json', 'w') as w:
+            json.dump(this, w, indent=4)
 
     devices, adb_dir, adb = load_devices()
     count = 0
@@ -1544,8 +1585,11 @@ def run():
                         if len(_devices_) % 2 == 0:
                             last_run = 0
                         else:
-                            run_times = ceil(len(_devices_) / 2)
+                            run_times = ceil(len(_devices_) / re['max_devices'])
                             last_run = len(_devices_) - run_times
+                            if last_run == 0:
+                                if len(_devices_) == 1 and run_times == 1:
+                                    last_run = 1
                         threads = []
                         launched = []
                         launched_ = []
@@ -1570,7 +1614,8 @@ def run():
                                                 elapsed_time = current_time - start_time
                                                 if elapsed_time > seconds:
                                                     break
-                                                if thread_.is_alive() == False:
+                                                # if thread_.is_alive() == False:
+                                                if thread_._is_stopped == True:
                                                     break
                                                 slp(5)
                                             done.append(int(thread_.name))
