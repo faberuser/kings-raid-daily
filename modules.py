@@ -289,7 +289,7 @@ class Missions:
                                 remove('./'+file)
                         urlretrieve('https://client-app.kingsraid.com/apk/'+name, './'+name)
                     slp(3)
-                    run_('adb install -r '+name)
+                    run_('"'+getcwd()+'\\adb" ' + f'-s {device.serial} install -r '+name)
                     slp(3)
                     device.shell('am force-stop com.android.chrome')
                     slp(3)
@@ -1614,8 +1614,8 @@ def run():
                                                 elapsed_time = current_time - start_time
                                                 if elapsed_time > seconds:
                                                     break
-                                                # if thread_.is_alive() == False:
-                                                if thread_._is_stopped == True:
+                                                if thread_.is_alive() == False:
+                                                # if thread_._is_stopped == True:
                                                     break
                                                 slp(5)
                                             done.append(int(thread_.name))
