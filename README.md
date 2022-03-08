@@ -7,6 +7,7 @@
 - Detect game crash, freeze and relaunch
 - Auto LoH after done all dailies
 - You can exclude scoring content like LoV/LoH or WB in doing list
+- Auto download and install/update the game
 
 ## Installations
 * Python > 3.7.x
