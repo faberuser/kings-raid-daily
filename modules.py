@@ -296,7 +296,7 @@ class Missions:
                     device.shell('monkey -p com.vespainteractive.KingsRaid 1')
                     slp(3)
 
-                # if chrome is opening
+                # if chrome or play store is opening
                 current_window = device.shell("dumpsys window windows | grep -E mCurrentFocus")
                 if 'com.android.chrome' in str(current_window):
                     logging.info(device.serial+': chrome window detected')
