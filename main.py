@@ -414,6 +414,14 @@ def get_table(config):
 
     return table
 
+def run_execute(re):
+    run()
+    if re['double_check'] == True:
+        text = "'double_check' set to True, launching second execution..."
+        logging.info(text)
+        print(text)
+        run()
+
 if __name__ == "__main__":
     print('please ignore this warning ↑\n')
     try:
@@ -454,9 +462,7 @@ if __name__ == "__main__":
                 if int(auto_daily) == 1:
                     clear()
                     print('Ok, running script for once')
-                    run()
-                    if re['double_check'] == True:
-                        run()
+                    run_execute(re)
                     break
                 elif int(auto_daily) == 2:
                     clear()
@@ -467,9 +473,7 @@ if __name__ == "__main__":
                         if str(now) != re['time']:
                             sleep(60)
                             continue
-                        run()
-                        if re['double_check'] == True:
-                            run()
+                        run_execute(re)
                         logging.info('executed successfully at '+str(now))
                     break
                 elif int(auto_daily) == 3: # can only use in built executable
@@ -505,7 +509,5 @@ if __name__ == "__main__":
                     print('Invalid answer, press try again\n')
         except TimeoutOccurred:
             print('Timeout, running script for once with current config')
-            run()
-            if re['double_check'] == True:
-                run()
+            run_execute(re)
             break

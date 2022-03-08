@@ -302,6 +302,10 @@ class Missions:
                     logging.info(device.serial+': chrome window detected')
                     device.shell('am force-stop com.android.chrome')
                     slp(3)
+                elif 'com.android.vending' in str(current_window):
+                    logging.info(device.serial+': play store window detected')
+                    device.shell('am force-stop com.android.vending')
+                    slp(3)
 
                 # update notice
                 im1 = update_notice_
@@ -1537,7 +1541,7 @@ def run():
                                                             elapsed_time = current_time - start_time
                                                             if elapsed_time > seconds:
                                                                 break
-                                                            if thread.is_alive() == False:
+                                                            if thread.is_alive() == False or thread_._is_stopped == True:
                                                                 break
                                                         done.append(device.serial)
                                             else:
@@ -1614,59 +1618,81 @@ def run():
                                                 elapsed_time = current_time - start_time
                                                 if elapsed_time > seconds:
                                                     break
-                                                if thread_.is_alive() == False:
-                                                # if thread_._is_stopped == True:
+                                                if thread_.is_alive() == False or thread_._is_stopped == True:
                                                     break
                                                 slp(5)
                                             done.append(int(thread_.name))
                                     running = running - len(done)
                             else:
-                                for device_ in _devices_:
-                                    if running == re['max_devices']:
-                                        break
-                                    elif _devices_[device_] == False:
-                                        try:
-                                            path = re['ldconsole'].replace('|', '"')
-                                            re_ = run_(path+' launch --index '+str(device_), capture_output=True).stdout
-                                            if str(re_)+'/' == """b"player don't exist!"/""":
-                                                devices_dexist += 1
-                                                text = 'device with index '+str(device_)+" doesn't exist"
+                                def launch_devices(running, devices_dexist):
+                                    dvices = []
+                                    for device_ in _devices_:
+                                        if running == re['max_devices']:
+                                            break
+                                        elif _devices_[device_] == False:
+                                            try:
+                                                path = re['ldconsole'].replace('|', '"')
+                                                re_ = run_(path+' launch --index '+str(device_), capture_output=True).stdout
+                                                if str(re_)+'/' == """b"player don't exist!"/""":
+                                                    devices_dexist += 1
+                                                    text = 'device with index '+str(device_)+" doesn't exist"
+                                                    logging.info(text)
+                                                    print(text)
+                                                else:
+                                                    text = 'launched device with index '+str(device_)
+                                                    logging.info(text) 
+                                                    print(text)
+                                                    if int(device_) not in launched:
+                                                        launched.append(int(device_))
+                                                    running += 1
+                                                    dvices.append(device_)
+                                                    # _devices_[device_] = True
+                                            except FileNotFoundError:
+                                                break_ = True
+                                                _break_ = True
+                                                text = "path to LDPlayer is wrong, please config and try again"
                                                 logging.info(text)
                                                 print(text)
-                                            else:
-                                                text = 'launched device with index '+str(device_)
-                                                logging.info(text) 
+                                                input('press any key to exit...')
+                                                break
+                                            if devices_dexist == len(re['devices']):
+                                                text = "all configured device(s) don't exit"
+                                                logging.info(text)
                                                 print(text)
-                                                launched.append(int(device_))
-                                                running += 1
-                                                _devices_[device_] = True
-                                        except FileNotFoundError:
-                                            break_ = True
-                                            _break_ = True
-                                            text = "path to LDPlayer is wrong, please config and try again"
-                                            logging.info(text)
-                                            print(text)
-                                            input('press any key to exit...')
-                                            break
-                                        if devices_dexist == len(re['devices']):
-                                            text = "all configured device(s) don't exit"
-                                            logging.info(text)
-                                            print(text)
-                                            input('press any key to exit...')
-                                            break_ = True
-                                            _break_ = True
-                                            break
+                                                input('press any key to exit...')
+                                                break_ = True
+                                                _break_ = True
+                                                break
+                                    return running, devices_dexist, dvices
+                                running_ = running
+                                devices_dexist_ = devices_dexist
+                                running, devices_dexist, dvices = launch_devices(running, devices_dexist)
                                 print('waiting 30 secs for fully boot up')
                                 slp(30)
+                                max_devices_count = 0
                                 while True:
                                     devices, adb_dir, adb = load_devices()
                                     if devices != []:
                                         if len(devices) == running:
+                                            for dvc in dvices:
+                                                if _devices_[dvc] == False:
+                                                    _devices_[dvc] = True
                                             pass
                                         else:
-                                            text = "'max_devices' set to "+str(re['max_devices'])+" but 'adb devices' returns "+str(len(devices))+' devices, retrying...'
+                                            text = "'max_devices' set to "+str(re['max_devices'])+" but 'adb devices' returns "+str(len(devices))+' devices, retrying for '+str(50-max_devices_count)+' times...'
                                             logging.info(text)
                                             print(text)
+                                            max_devices_count+=1
+                                            if max_devices_count >= 50:
+                                                print('not enough device(s) to continue running, quitall and retrying...')
+                                                run_(path+' quitall')
+                                                slp(5)
+                                                running = running_
+                                                devices_dexist = devices_dexist_
+                                                running, devices_dexist, dvices = launch_devices(running, devices_dexist)
+                                                print('waiting 30 secs for fully boot up')
+                                                slp(30)
+                                                max_devices_count = 0
                                             continue
                                         for device in devices:
                                             if str(device.serial).startswith('127'):

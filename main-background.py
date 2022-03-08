@@ -35,5 +35,8 @@ if __name__ == "__main__":
             continue
         run()
         if re['double_check'] == True:
+            text = "'double_check' set to True, launching second execution..."
+            logging.info(text)
+            print(text)
             run()
         logging.info('executed successfully at '+str(now))
