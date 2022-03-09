@@ -1,5 +1,5 @@
 # kings-raid-daily
-#### A modern script to do boring dailies in King's Raid
+#### A script to do boring dailies in King's Raid
 
 ## What can this script do
 - Do all dailiy missions except consume stamina and feed lil raider
@@ -61,7 +61,7 @@
 - If `LoH` is enabled: Make sure that the emulator(s) has been closed at least once after the script done the previous one before ran the new task to make sure auto LoH run normally
 - If the script can't find your emulator, try to restart your emulator and try again
 - Please don't touch anything or start a new emulator/use adb while the script is running
-- If you see the script stuck or stop for more than 1 minute, thats mean there is some problem with the script, you can open an issue on [Github](https://github.com/faber6/kings-raid-daily)
+- If there is some problem with the script, you can open an issue on [Github](https://github.com/faber6/kings-raid-daily)
 - Make sure manual install new update if there is new version of game
 
 #### You can decrease crash chance when login into game by:
