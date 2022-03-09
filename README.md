@@ -15,7 +15,6 @@
     * Create virtual environment `virtualenv .env`
     * Activate:
         - Windows `.env\Scripts\activate`
-        - Linux `source .env/bin/activate`
 1. Install requirements from requirements.txt:
   * `pip install -r requirements.txt`
 2. Run:
