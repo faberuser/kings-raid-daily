@@ -873,7 +873,7 @@ class Missions:
         while True:
             if count == 6:
                 break
-            self.make_sure_loaded('./base/inn/mini_game.png', device, data['inn']['12']['dms'], data['inn']['12']['shell'])
+            self.make_sure_loaded('./base/inn/mini_game.png', device, data['inn']['12']['dms'], data['inn']['12']['shell'], cutoff=20)
             slp(0.5)
             device.shell(data['inn']['13']['shell'])
             slp(0.5)
