@@ -118,6 +118,7 @@ class Missions:
 
     def update_cache(self, device, check_crash=True):
         count = 0
+        im = None
         while True:
             try:
                 device.shell('screencap -p /sdcard/screencap.png')
@@ -1541,7 +1542,7 @@ def run():
                                                             elapsed_time = current_time - start_time
                                                             if elapsed_time > seconds:
                                                                 break
-                                                            if thread.is_alive() == False or thread_._is_stopped == True:
+                                                            if thread.is_alive() == False or thread._is_stopped == True:
                                                                 break
                                                         done.append(device.serial)
                                             else:
