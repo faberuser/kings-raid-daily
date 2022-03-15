@@ -21,8 +21,8 @@
         "ldconsole": "",
         "time": "00:05"
     },
-    "version": "beta-v3.7",
-    "latest": "beta-v3.7",
+    "version": "beta-v3.7.1",
+    "latest": "beta-v3.7.1",
     "remind": true,
     "960x540": {
         "update_apk": {
