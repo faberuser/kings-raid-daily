@@ -264,45 +264,51 @@ class Missions:
 
                 # login
                 # update apk
-                im1 = update_apk_
-                im2 = crop(im, data['update_apk']['dms'])
-                update_apk = check_similar(im1, im2, 10, bonus)
-                if update_apk == 'similar':
-                    if self.gb_cf['update_apk'] == True:
-                        text = device.serial+': New APK required to launch, downloading new APK from official site and installing...'
-                        logging.info(text)
-                        print(text)
-                    else:
-                        text = device.serial+": New APK required to launch but 'update_apk' set to False, terminated"
-                        logging.info(text)
-                        print(text)
-                        exit()
-                    device.shell('am force-stop com.vespainteractive.KingsRaid')
-                    slp(3)
-                    cnt = get('https://client-app.kingsraid.com/apk/KingsRaid_Live_Android_x86.html').content
-                    soup = BeautifulSoup(cnt, 'html.parser').find_all('div', {'class': 'imgContainer'})[0]
-                    name = soup.a.get('href')
-                    if pth.exists('./'+name) == True:
-                        print('File already downloaded, installing from local...')
-                    else:
-                        for file in listdir('./'):
-                            if file.endswith('.apk'):
-                                remove('./'+file)
-                        urlretrieve('https://client-app.kingsraid.com/apk/'+name, './'+name)
-                    slp(3)
-                    run_('"'+getcwd()+'\\adb" ' + f'-s {device.serial} install -r '+name)
-                    slp(3)
-                    device.shell('am force-stop com.android.chrome')
-                    slp(3)
-                    device.shell('monkey -p com.vespainteractive.KingsRaid 1')
-                    slp(3)
+                def update_apk_check():
+                    im1 = update_apk_
+                    im2 = crop(im, data['update_apk']['dms'])
+                    update_apk = check_similar(im1, im2, 10, bonus)
+                    if update_apk == 'similar':
+                        if self.gb_cf['update_apk'] == True:
+                            text = device.serial+': New APK required to launch, downloading new APK from official site and installing...'
+                            logging.info(text)
+                            print(text)
+                        else:
+                            text = device.serial+": New APK required to launch but 'update_apk' set to False, terminated"
+                            logging.info(text)
+                            print(text)
+                            exit()
+                        device.shell('am force-stop com.vespainteractive.KingsRaid')
+                        slp(3)
+                        cnt = get('https://client-app.kingsraid.com/apk/KingsRaid_Live_Android_x86.html').content
+                        soup = BeautifulSoup(cnt, 'html.parser').find_all('div', {'class': 'imgContainer'})[0]
+                        name = soup.a.get('href')
+                        if pth.exists('./'+name) == True:
+                            print('File already downloaded, installing from local...')
+                        else:
+                            for file in listdir('./'):
+                                if file.endswith('.apk'):
+                                    remove('./'+file)
+                            urlretrieve('https://client-app.kingsraid.com/apk/'+name, './'+name)
+                        slp(3)
+                        run_('"'+getcwd()+'\\adb" ' + f'-s {device.serial} install -r '+name)
+                        slp(3)
+                        device.shell('am force-stop com.android.chrome')
+                        slp(3)
+                        device.shell('monkey -p com.vespainteractive.KingsRaid 1')
+                        slp(3)
+                        return True
+                    return False
+                update_apk_check()
 
                 # if chrome or play store is opening
                 current_window = device.shell("dumpsys window windows | grep -E mCurrentFocus")
                 if 'com.android.chrome' in str(current_window):
-                    logging.info(device.serial+': chrome window detected')
-                    device.shell('am force-stop com.android.chrome')
-                    slp(3)
+                    slp(30)
+                    if update_apk_check() == False:
+                        logging.info(device.serial+': chrome window detected')
+                        device.shell('am force-stop com.android.chrome')
+                        slp(3)
                 elif 'com.android.vending' in str(current_window):
                     logging.info(device.serial+': play store window detected')
                     device.shell('am force-stop com.android.vending')
@@ -872,7 +878,7 @@ class Missions:
         # click 'Mini Game'
         count = 0
         while True:
-            if count == 6:
+            if count == 7:
                 break
             self.make_sure_loaded('./base/inn/mini_game.png', device, data['inn']['12']['dms'], data['inn']['12']['shell'], cutoff=20)
             slp(0.5)
