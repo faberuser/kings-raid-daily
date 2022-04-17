@@ -19,7 +19,7 @@
   * `pip install -r requirements.txt`
 2. Run:
   * `python main.py`
-  * To config press 3 or change value in `config.json` file to let the script do or don't do stuffs
+  * To config press 4 or change value in `config.json` file to let the script do or don't do stuffs
   * To to dailies press 1
 
 ## Usage
