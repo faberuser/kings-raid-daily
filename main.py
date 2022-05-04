@@ -449,7 +449,7 @@ if __name__ == "__main__":
             clear()
             print('1) Run this script once')
             print(f'2) Run this script in background to check and run when new day (at {tm})')
-            print(f'3) Make this script auto run in background upon Windows startup to check and run when new day (at {tm})')
+            print(f'3) Make this script auto start in background upon Windows startup to check and run when new day (at {tm})')
             print('4) Start config this script')
             print('5) Import config from previous version')
             print('6) View current configuration')

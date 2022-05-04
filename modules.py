@@ -39,6 +39,8 @@ update_notice_ = Image.open('./base/login/update_notice.png')
 update_notice_.load()
 introduction_ = Image.open('./base/login/introduction.png')
 introduction_.load()
+policy_ = Image.open('./base/login/policy.png')
+policy_.load()
 tap_to_play_ = Image.open('./base/login/tap_to_play.png')
 tap_to_play_.load()
 tap_to_play_2_ = Image.open('./base/login/tap_to_play_2.png')
@@ -330,6 +332,19 @@ class Missions:
                 if introduction == 'similar':
                     logging.info(device.serial+': introduction detected')
                     device.shell(data['introduction']['shell'])
+                    slp(3)
+
+                # policy
+                im1 = policy_
+                im2 = crop(im, data['policy']['dms'])
+                policy = check_similar(im1, im2, 10, bonus)
+                if policy == 'similar':
+                    logging.info(device.serial+': policy detected')
+                    device.shell(data['policy']['shell'])
+                    slp(1)
+                    device.shell(data['policy']['second_shell'])
+                    slp(1)
+                    device.shell(data['policy']['third_shell'])
                     slp(3)
 
                 # tap to play

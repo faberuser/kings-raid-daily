@@ -57,11 +57,11 @@
 ##### To end process, open `Task Manager` and click `End task` both `adb.exe` and `kings-raid-daily-background.exe`
 
 #### Note:
-- If `LoH` is enabled: Make sure that the emulator(s) has been closed at least once after the script done the previous one before ran the new task to make sure auto LoH run normally
+- After a game update, make sure to open all of your emulator(s) and make sure the script can login to your account fluently
 - If the script can't find your emulator, try to restart your emulator and try again
 - Please don't touch anything or start a new emulator/use adb while the script is running
+- Please check and sort inventory, use friendship points (shop in Hero's Inn) regularly
 - If there is some problem with the script, you can open an issue on [Github](https://github.com/faber6/kings-raid-daily)
-- Make sure manual install new update if there is new version of game
 
 #### You can decrease crash chance when login into game by:
 1. Removal through Google Play Store
