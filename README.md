@@ -2,7 +2,7 @@
 #### A script to do boring dailies in King's Raid
 
 ## What can this script do
-- Do all dailiy missions except consume stamina and feed lil raider
+- Do all dailiy missions except consume stamina
 - Auto launch emulators in a configured time to do dailies
 - Detect game crash, freeze and relaunch
 - Auto LoH after done all dailies
@@ -10,7 +10,7 @@
 - Auto download and install/update the game
 
 ## Installations
-* Python > 3.7.x
+* Python >= 3.8.x
 * Use Virtual Environment:
     * Create virtual environment `virtualenv .env`
     * Activate:
